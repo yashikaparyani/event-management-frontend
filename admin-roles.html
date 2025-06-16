@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role Management - Admin Dashboard</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <nav class="admin-nav">
+            <div class="nav-header">
+                <h2>Admin Dashboard</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="admin.html"><i class="fas fa-users"></i> Users</a></li>
+                <li class="active"><a href="admin-roles.html"><i class="fas fa-user-tag"></i> Roles</a></li>
+                <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+
+        <main class="admin-content">
+            <div class="content-header">
+                <h1>Role Management</h1>
+                <button id="addRoleBtn" class="btn-primary">
+                    <i class="fas fa-plus"></i> Add New Role
+                </button>
+            </div>
+
+            <div class="roles-container">
+                <div class="roles-list" id="rolesList">
+                    <!-- Roles will be populated here -->
+                </div>
+                <div class="roles-matrix" id="rolesMatrixContainer">
+                    <!-- Permissions matrix will be rendered here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Role Modal -->
+    <div id="roleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Role</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="roleForm">
+                    <div class="form-group">
+                        <label for="roleName">Role Name</label>
+                        <input type="text" id="roleName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="roleDescription">Description</label>
+                        <textarea id="roleDescription" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Permissions</label>
+                        <div class="permissions-grid" id="permissionsGrid">
+                            <!-- Permissions will be populated here -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="isDefault">
+                            Set as default role
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Save Role</button>
+                        <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/admin-roles.js"></script>
+</body>
+</html> 

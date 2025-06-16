@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Event Management</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar Navigation -->
+        <nav class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2>Admin Panel</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="active">
+                    <a href="#dashboard"><i class="fas fa-home"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="#roles"><i class="fas fa-user-shield"></i> Roles & Permissions</a>
+                </li>
+                <li>
+                    <a href="#users"><i class="fas fa-users"></i> Users</a>
+                </li>
+                <li>
+                    <a href="#events"><i class="fas fa-calendar-alt"></i> Events</a>
+                </li>
+                <li>
+                    <a href="#reports"><i class="fas fa-chart-bar"></i> Reports</a>
+                </li>
+                <li>
+                    <a href="#settings"><i class="fas fa-cog"></i> Settings</a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="header-search">
+                    <input type="search" placeholder="Search...">
+                </div>
+                <div class="header-user">
+                    <span id="userName">Admin User</span>
+                    <img src="https://ui-avatars.com/api/?name=Admin+User" alt="Admin" class="avatar">
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div id="dashboard-content" class="admin-content-section">
+                <div class="dashboard-header">
+                    <h1>Dashboard Overview</h1>
+                    <p>Welcome back, <span id="welcomeName">Admin</span>!</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div class="stat-info">
+                            <h3>Total Users</h3>
+                            <p id="totalUsers">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-check"></i>
+                        <div class="stat-info">
+                            <h3>Active Events</h3>
+                            <p id="totalEvents">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-user-check"></i>
+                        <div class="stat-info">
+                            <h3>Pending Approvals</h3>
+                            <p id="pendingApprovals">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-ticket-alt"></i>
+                        <div class="stat-info">
+                            <h3>Total Registrations</h3>
+                            <p id="totalRegistrations">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Approvals Section -->
+                <div class="pending-approvals">
+                    <h2>Pending User Approvals</h2>
+                    <div class="approval-list" id="pendingUsersList">
+                        <div class="loading">Loading pending approvals...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Content (New Section) -->
+            <div id="users-content" class="admin-content-section">
+                <div class="dashboard-header">
+                    <h1>User Management</h1>
+                    <button class="btn btn-primary" onclick="window.location.href='admin-create.html'">Add New User</button>
+                </div>
+                <div class="users-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- User rows will be loaded here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Roles & Permissions Content (Dynamic Matrix) -->
+            <div id="roles-content" class="admin-content-section">
+                <div class="dashboard-header">
+                    <h1>Roles & Permissions</h1>
+                </div>
+                <div class="roles-matrix" id="rolesMatrixContainer">
+                    <!-- Dynamic permissions matrix will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Events Content -->
+            <div id="events-content" class="admin-content-section">
+                <div class="dashboard-header">
+                    <h1>Event Management</h1>
+                    <button class="btn btn-primary" onclick="window.location.href='admin-create-event.html'">Create New Event</button>
+                </div>
+                <div class="events-list-container" id="eventsListContainer">
+                    <!-- Events will be loaded here -->
+                    <p class="loading">Loading events...</p>
+                </div>
+            </div>
+
+            <!-- Reports Content (Existing, but ensuring consistency) -->
+            <div id="reports-content" class="admin-content-section">
+                <div class="dashboard-header">
+                    <h1>Reports</h1>
+                </div>
+                <p>Content for Reports will go here.</p>
+            </div>
+
+            <!-- Settings Content (Existing, but ensuring consistency) -->
+            <div id="settings-content" class="admin-content-section">
+                <div class="dashboard-header">
+                    <h1>Settings</h1>
+                </div>
+                <p>Content for Settings will go here.</p>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="js/admin-dashboard.js"></script>
+</body>
+</html>

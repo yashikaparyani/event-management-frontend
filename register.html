@@ -1,0 +1,113 @@
+<!-- client/register.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register - Event Management System</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .error-message {
+      display: none;
+      color: #dc3545;
+      padding: 8px 0;
+      text-align: center;
+      font-size: 14px;
+    }
+    .error-message.show {
+      display: block;
+    }
+    .success-message {
+      display: none;
+      color: #28a745;
+      padding: 8px 0;
+      text-align: center;
+      font-size: 14px;
+    }
+    .success-message.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <div class="form-header">
+      <i class="fas fa-user-plus"></i>
+      <h2>Create Account</h2>
+    </div>
+
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+      </div>
+
+      <div class="form-group">
+        <label for="role">Role</label>
+        <select id="role" name="role" required>
+          <option value="">Select a role</option>
+          <option value="audience">Audience</option>
+          <option value="participant">Participant</option>
+          <option value="coordinator">Coordinator</option>
+          <option value="volunteer">Volunteer</option>
+        </select>
+      </div>
+
+      <!-- Participant Fields -->
+      <div id="participantFields" class="role-fields" style="display: none;">
+        <div class="form-group">
+          <label for="eventInterest">Event Interests</label>
+          <textarea id="eventInterest" name="eventInterest" placeholder="What types of events are you interested in?"></textarea>
+        </div>
+      </div>
+
+      <!-- Coordinator Fields -->
+      <div id="coordinatorFields" class="role-fields" style="display: none;">
+        <div class="form-group">
+          <label for="coordinationArea">Coordination Area</label>
+          <input type="text" id="coordinationArea" name="coordinationArea" placeholder="e.g., Technical Events, Cultural Events" />
+        </div>
+        <div class="form-group">
+          <label for="experience">Experience</label>
+          <textarea id="experience" name="experience" placeholder="Describe your event coordination experience"></textarea>
+        </div>
+      </div>
+
+      <!-- Volunteer Fields -->
+      <div id="volunteerFields" class="role-fields" style="display: none;">
+        <div class="form-group">
+          <label for="availability">Availability</label>
+          <input type="text" id="availability" name="availability" placeholder="e.g., Weekends, Evenings" />
+        </div>
+        <div class="form-group">
+          <label for="skills">Skills</label>
+          <textarea id="skills" name="skills" placeholder="List your relevant skills"></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-user-plus"></i> Register
+      </button>
+
+      <div id="errorMsg" class="error-message"></div>
+    </form>
+
+    <div class="form-footer">
+      Already have an account? <a href="login.html">Login here</a>
+    </div>
+  </div>
+
+  <script src="js/register.js"></script>
+</body>
+</html>

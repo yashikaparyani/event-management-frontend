@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="landing-container">
+         <nav class="main-nav">
+            <div class="nav-brand">
+                <h1>Event Management</h1>
+            </div>
+            <div class="nav-links">
+                <div>
+                    <a href="login.html">Login</a>
+                    <a href="register.html" class="btn-primary">Register</a>
+                </div>
+            </div>
+        </nav>
+
+        <main class="hero-section">
+            <div class="hero-content">
+                <h1>Welcome to Event Management System</h1>
+                <p>Your one-stop solution for managing events, participants, and volunteers</p>
+            </div>
+
+            <div class="carousel-container">
+                <img src="https://placehold.co/550x350/ADD8E6/FFFFFF/png?text=Event+1" alt="Event Image 1" class="carousel-image active">
+                <img src="https://placehold.co/550x350/87CEEB/FFFFFF/png?text=Event+2" alt="Event Image 2" class="carousel-image">
+                <img src="https://placehold.co/550x350/6495ED/FFFFFF/png?text=Event+3" alt="Event Image 3" class="carousel-image">
+            </div>
+
+        </main>
+
+    </div>
+
+    <script>
+        // Check if user is logged in
+        const token = localStorage.getItem('token');
+        if (token) {
+            // Redirect to appropriate dashboard based on role
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user && user.role && user.role.name) {
+                switch(user.role.name) {
+                    case 'admin':
+                        window.location.replace('admin-dashboard.html');
+                        break;
+                    case 'coordinator':
+                        window.location.replace('coordinator-dashboard.html');
+                        break;
+                    case 'participant':
+                        window.location.replace('participant-dashboard.html');
+                        break;
+                    case 'volunteer':
+                        window.location.replace('volunteer-dashboard.html');
+                        break;
+                    case 'audience':
+                        window.location.replace('audience-dashboard.html');
+                        break;
+                    default:
+                        // If role not recognized, clear storage and go to login
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('user');
+                        window.location.replace('login.html');
+                }
+            }
+        }
+
+        // Carousel functionality
+        let currentImageIndex = 0;
+        const images = document.querySelectorAll('.carousel-image');
+        const totalImages = images.length;
+
+        function showNextImage() {
+            images[currentImageIndex].classList.remove('active');
+            currentImageIndex = (currentImageIndex + 1) % totalImages;
+            images[currentImageIndex].classList.add('active');
+        }
+
+        // Start carousel
+        setInterval(showNextImage, 2000); // Change image every 2 seconds
+
+    </script>
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Basic confetti effect on page load
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                ticks: 1000// Increased ticks to make confetti last longer
+            });
+        });
+    </script>
+</body>
+</html>
