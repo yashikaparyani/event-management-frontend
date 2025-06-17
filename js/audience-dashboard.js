@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Check if user is an audience member
-    if (user.role !== 'audience') {
+    if (user.role.name !== 'audience') {
         window.location.href = 'login.html';
         return;
     }
