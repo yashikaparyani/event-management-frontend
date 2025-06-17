@@ -80,7 +80,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
     try {
         console.log('Sending login request to backend...');
-        const response = await fetch('http://localhost:5000/api/auth/login', {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.AUTH.LOGIN), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

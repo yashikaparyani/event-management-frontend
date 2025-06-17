@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             console.log('Sending registration data:', formData);
 
-            const response = await fetch('http://localhost:5000/api/auth/register', {
+            const response = await fetch(getApiUrl(config.ENDPOINTS.AUTH.REGISTER), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

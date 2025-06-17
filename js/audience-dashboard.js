@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadUpcomingEvents() {
     try {
-        const response = await fetch('http://localhost:5000/api/events/upcoming', {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.UPCOMING), {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -79,7 +79,7 @@ async function loadUpcomingEvents() {
 
 async function loadUserRegistrations() {
     try {
-        const response = await fetch('http://localhost:5000/api/events/registered', {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.REGISTERED), {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -122,7 +122,7 @@ async function loadUserRegistrations() {
 
 async function registerForEvent(eventId) {
     try {
-        const response = await fetch(`http://localhost:5000/api/events/${eventId}/register`, {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.REGISTER(eventId)), {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,

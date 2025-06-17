@@ -21,10 +21,8 @@ let allPermissions = [];
 // Fetch all roles
 async function fetchRolesAndMatrix() {
     try {
-        const response = await fetch('http://localhost:5000/api/roles', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+        const response = await fetch(getApiUrl(config.ENDPOINTS.ROLES.LIST), {
+            headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) throw new Error('Failed to fetch roles');
         const roles = await response.json();
@@ -41,10 +39,8 @@ async function fetchRolesAndMatrix() {
 // Fetch all permissions
 async function fetchPermissionsAndMatrix() {
     try {
-        const response = await fetch('http://localhost:5000/api/permissions', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+        const response = await fetch(getApiUrl(config.ENDPOINTS.PERMISSIONS.LIST), {
+            headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) throw new Error('Failed to fetch permissions');
         allPermissions = await response.json();
@@ -113,7 +109,7 @@ function displayPermissions() {
 // Add new role
 async function addRole(roleData) {
     try {
-        const response = await fetch('http://localhost:5000/api/roles', {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.ROLES.LIST), {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -132,7 +128,7 @@ async function addRole(roleData) {
 // Edit role
 async function editRole(roleId) {
     try {
-        const response = await fetch(`http://localhost:5000/api/roles/${roleId}`, {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.ROLES.UPDATE(roleId)), {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -161,7 +157,7 @@ async function editRole(roleId) {
 // Update role
 async function updateRole(roleId, roleData) {
     try {
-        const response = await fetch(`http://localhost:5000/api/roles/${roleId}`, {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.ROLES.UPDATE(roleId)), {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -182,7 +178,7 @@ async function deleteRole(roleId) {
     if (!confirm('Are you sure you want to delete this role?')) return;
     
     try {
-        const response = await fetch(`http://localhost:5000/api/roles/${roleId}`, {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.ROLES.DELETE(roleId)), {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`

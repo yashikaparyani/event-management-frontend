@@ -88,10 +88,10 @@ async function loadDashboardData() {
     try {
         const token = localStorage.getItem('token');
         const [statsResponse, pendingUsersResponse] = await Promise.all([
-            fetch('http://localhost:5000/api/dashboard/stats', {
+            fetch(getApiUrl(config.ENDPOINTS.DASHBOARD.STATS), {
                 headers: { 'Authorization': `Bearer ${token}` }
             }),
-            fetch('http://localhost:5000/api/auth/pending-users', {
+            fetch(getApiUrl(config.ENDPOINTS.AUTH.PENDING_USERS), {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
         ]);
@@ -129,7 +129,7 @@ function updateDashboardStats(data) {
 async function handleUserApproval(userId, status) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5000/api/approve-user/${userId}`, {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.USERS.APPROVE(userId)), {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -191,7 +191,7 @@ async function loadUsersContent() {
     usersTableBody.innerHTML = '<tr><td colspan="5" class="text-center">Loading users...</td></tr>';
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/api/users', {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.USERS.LIST), {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -231,7 +231,7 @@ function renderUsersTable(users) {
 async function updateUserStatus(userId, status) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5000/api/users/${userId}/status`, {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.USERS.STATUS(userId)), {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -257,7 +257,7 @@ async function deleteUser(userId) {
     }
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.USERS.DELETE(userId)), {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -287,8 +287,8 @@ async function fetchPermissionsAndMatrix() {
     try {
         const token = localStorage.getItem('token');
         const [rolesResponse, permissionsResponse] = await Promise.all([
-            fetch('http://localhost:5000/api/roles', { headers: { 'Authorization': `Bearer ${token}` } }),
-            fetch('http://localhost:5000/api/permissions', { headers: { 'Authorization': `Bearer ${token}` } })
+            fetch(getApiUrl(config.ENDPOINTS.ROLES.LIST), { headers: { 'Authorization': `Bearer ${token}` } }),
+            fetch(getApiUrl(config.ENDPOINTS.PERMISSIONS.LIST), { headers: { 'Authorization': `Bearer ${token}` } })
         ]);
 
         if (!rolesResponse.ok || !permissionsResponse.ok) {
@@ -310,7 +310,7 @@ async function fetchPermissionsAndMatrix() {
 async function updateRole(roleId, roleData) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5000/api/roles/${roleId}`, {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.ROLES.UPDATE(roleId)), {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -385,7 +385,7 @@ function handlePermissionChange(checkbox) {
     const isChecked = checkbox.checked;
 
     // Fetch the current role data to get its existing permissions
-    fetch(`http://localhost:5000/api/roles/${roleId}`, {
+    fetch(getApiUrl(config.ENDPOINTS.ROLES.UPDATE(roleId)), {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
     })
     .then(response => response.json())
@@ -401,7 +401,7 @@ function handlePermissionChange(checkbox) {
         }
         
         // Find the full permission objects for the update
-        fetch('http://localhost:5000/api/permissions', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
+        fetch(getApiUrl(config.ENDPOINTS.PERMISSIONS.LIST), { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
             .then(res => res.json())
             .then(allAvailablePermissions => {
                 const fullPermissionsForUpdate = allAvailablePermissions.filter(p => updatedPermissions.includes(p.name));
@@ -427,7 +427,7 @@ async function loadEventsContent() {
     eventsListContainer.innerHTML = '<p class="text-center">Loading events...</p>';
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/api/events', {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.LIST), {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -487,7 +487,7 @@ async function deleteEvent(eventId) {
     }
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5000/api/events/${eventId}`, {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.DELETE(eventId)), {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`

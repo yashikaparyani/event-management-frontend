@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Function to fetch roles and populate the dropdown
     async function fetchRoles() {
         try {
-            const response = await fetch('http://localhost:5000/api/roles', {
+            const response = await fetch(getApiUrl(config.ENDPOINTS.ROLES.LIST), {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!response.ok) {
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/api/auth/register', {
+            const response = await fetch(getApiUrl(config.ENDPOINTS.AUTH.REGISTER), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
