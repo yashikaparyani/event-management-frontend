@@ -44,6 +44,7 @@
             // Redirect to appropriate dashboard based on role
             const user = JSON.parse(localStorage.getItem('user'));
             if (user && user.role && user.role.name) {
+                console.log('User logged in with role:', user.role.name);
                 switch(user.role.name) {
                     case 'admin':
                         window.location.replace('admin-dashboard.html');
@@ -61,11 +62,16 @@
                         window.location.replace('audience-dashboard.html');
                         break;
                     default:
-                        // If role not recognized, clear storage and go to login
+                        // If role not recognized, clear storage and stay on home page
+                        console.warn('Unknown role:', user.role.name);
                         localStorage.removeItem('token');
                         localStorage.removeItem('user');
-                        window.location.replace('login.html');
                 }
+            } else {
+                // If user data is corrupted, clear storage
+                console.warn('Invalid user data, clearing storage');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
             }
         }
 

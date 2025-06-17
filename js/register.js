@@ -34,6 +34,35 @@ document.addEventListener('DOMContentLoaded', () => {
         errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
+    // Helper function to redirect to appropriate dashboard
+    function redirectToDashboard(roleName) {
+        console.log('Redirecting to dashboard for role:', roleName);
+        let redirectUrl = '';
+        
+        switch(roleName) {
+            case 'admin':
+                redirectUrl = 'admin-dashboard.html';
+                break;
+            case 'coordinator':
+                redirectUrl = 'coordinator-dashboard.html';
+                break;
+            case 'participant':
+                redirectUrl = 'participant-dashboard.html';
+                break;
+            case 'volunteer':
+                redirectUrl = 'volunteer-dashboard.html';
+                break;
+            case 'audience':
+                redirectUrl = 'audience-dashboard.html';
+                break;
+            default:
+                redirectUrl = 'home.html';
+        }
+        
+        console.log('Performing redirect to:', redirectUrl);
+        window.location.replace(redirectUrl);
+    }
+
     // Handle form submission
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -111,21 +140,65 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Show success message based on status
-            if (result.status === 'approved') {
-                showMessage('Registration successful! Redirecting to login...', false);
-                // For approved users, they can go straight to login
-                setTimeout(() => {
-                    window.location.replace('login.html');
-                }, 2000);
+            // Handle successful registration based on role
+            if (formData.role === 'audience') {
+                // For audience users, automatically log them in and redirect to dashboard
+                showMessage('Registration successful! Logging you in...', false);
+                
+                // Auto-login for audience users
+                try {
+                    const loginResponse = await fetch(getApiUrl(config.ENDPOINTS.AUTH.LOGIN), {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email: formData.email,
+                            password: formData.password
+                        })
+                    });
+
+                    if (loginResponse.ok) {
+                        const loginData = await loginResponse.json();
+                        
+                        // Store token and user data
+                        localStorage.setItem('token', loginData.token);
+                        localStorage.setItem('user', JSON.stringify(loginData.user));
+                        
+                        // Redirect to audience dashboard
+                        setTimeout(() => {
+                            redirectToDashboard('audience');
+                        }, 1500);
+                    } else {
+                        // If auto-login fails, redirect to login page
+                        showMessage('Registration successful! Please login to continue.', false);
+                        setTimeout(() => {
+                            window.location.replace('login.html');
+                        }, 2000);
+                    }
+                } catch (loginError) {
+                    console.error('Auto-login error:', loginError);
+                    showMessage('Registration successful! Please login to continue.', false);
+                    setTimeout(() => {
+                        window.location.replace('login.html');
+                    }, 2000);
+                }
             } else {
-                showMessage('Registration successful! Your account is pending approval. You will be notified once approved.', false);
-                // For pending users, clear any potential partial login state before redirecting to login
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                setTimeout(() => {
-                    window.location.replace('login.html');
-                }, 3000);
+                // For other roles, show appropriate message and redirect to login
+                if (result.status === 'approved') {
+                    showMessage('Registration successful! Redirecting to login...', false);
+                    setTimeout(() => {
+                        window.location.replace('login.html');
+                    }, 2000);
+                } else {
+                    showMessage('Registration successful! Your account is pending approval. You will be notified once approved.', false);
+                    // Clear any potential partial login state before redirecting to login
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    setTimeout(() => {
+                        window.location.replace('login.html');
+                    }, 3000);
+                }
             }
 
         } catch (error) {

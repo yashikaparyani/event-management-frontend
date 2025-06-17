@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinator Dashboard - Event Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-calendar-alt"></i>
+                <h2>Event Management</h2>
+            </div>
+            <ul class="nav-links">
+                <li class="active">
+                    <a href="#dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#events">
+                        <i class="fas fa-calendar"></i>
+                        <span>My Events</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#create">
+                        <i class="fas fa-plus"></i>
+                        <span>Create Event</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#profile">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search events...">
+                </div>
+                <div class="user-info">
+                    <span id="userName">Loading...</span>
+                    <img src="https://via.placeholder.com/40" alt="Profile" class="profile-pic">
+                </div>
+            </header>
+
+            <div class="content-area">
+                <div class="welcome-section">
+                    <h1>Welcome, <span id="welcomeName">Coordinator</span>!</h1>
+                    <p>Manage and coordinate your events effectively.</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>My Events</h3>
+                            <a href="#events" class="view-all">View All</a>
+                        </div>
+                        <div class="card-body" id="myEvents">
+                            <div class="event-item">
+                                <div class="event-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="event-details">
+                                    <h4>Loading events...</h4>
+                                    <p><i class="fas fa-clock"></i> Please wait</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <button class="btn btn-primary" onclick="window.location.href='admin-create-event.html'">
+                                    <i class="fas fa-plus"></i> Create New Event
+                                </button>
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-users"></i> Manage Participants
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is logged in
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user'));
+
+            if (!token || !user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Check if user is a coordinator
+            if (user.role.name !== 'coordinator') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Update user information in the UI
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('welcomeName').textContent = user.name;
+
+            // Handle logout
+            document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            });
+        });
+    </script>
+</body>
+</html> 
