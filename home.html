@@ -6,6 +6,46 @@
     <title>Event Management System</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-info span {
+            color: #333;
+            font-weight: 500;
+        }
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+        }
+        .dashboard-link {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .dashboard-link:hover {
+            background: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <div class="landing-container">
@@ -14,9 +54,16 @@
                 <h1>Event Management</h1>
             </div>
             <div class="nav-links">
-                <div>
+                <div id="guestLinks">
                     <a href="login.html">Login</a>
                     <a href="register.html" class="btn-primary">Register</a>
+                </div>
+                <div id="userLinks" style="display: none;">
+                    <div class="user-info">
+                        <span id="userName">Welcome</span>
+                        <a href="#" id="dashboardLink" class="dashboard-link">Go to Dashboard</a>
+                        <a href="#" id="logoutBtn" class="logout-btn">Logout</a>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -28,9 +75,9 @@
             </div>
 
             <div class="carousel-container">
-                <img src="https://placehold.co/550x350/ADD8E6/FFFFFF/png?text=Event+1" alt="Event Image 1" class="carousel-image active">
-                <img src="https://placehold.co/550x350/87CEEB/FFFFFF/png?text=Event+2" alt="Event Image 2" class="carousel-image">
-                <img src="https://placehold.co/550x350/6495ED/FFFFFF/png?text=Event+3" alt="Event Image 3" class="carousel-image">
+                <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Event Image 1" class="carousel-image active">
+                <img src="https://plus.unsplash.com/premium_photo-1661306437817-8ab34be91e0c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Event Image 2" class="carousel-image">
+                <img src="https://images.unsplash.com/photo-1504384764586-bb4cdc1707b0?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Event Image 3" class="carousel-image">
             </div>
 
         </main>
@@ -40,35 +87,58 @@
     <script>
         // Check if user is logged in
         const token = localStorage.getItem('token');
-        if (token) {
-            // Redirect to appropriate dashboard based on role
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (user && user.role && user.role.name) {
-                console.log('User logged in with role:', user.role.name);
-                switch(user.role.name) {
-                    case 'admin':
-                        window.location.replace('admin-dashboard.html');
-                        break;
-                    case 'coordinator':
-                        window.location.replace('coordinator-dashboard.html');
-                        break;
-                    case 'participant':
-                        window.location.replace('participant-dashboard.html');
-                        break;
-                    case 'volunteer':
-                        window.location.replace('volunteer-dashboard.html');
-                        break;
-                    case 'audience':
-                        window.location.replace('audience-dashboard.html');
-                        break;
-                    default:
-                        // If role not recognized, clear storage and stay on home page
-                        console.warn('Unknown role:', user.role.name);
-                        localStorage.removeItem('token');
-                        localStorage.removeItem('user');
-                }
-            } else {
-                // If user data is corrupted, clear storage
+        const user = JSON.parse(localStorage.getItem('user'));
+        
+        if (token && user && user.role && user.role.name) {
+            // User is logged in, show user-specific navigation
+            console.log('User logged in with role:', user.role.name);
+            
+            // Hide guest links and show user links
+            document.getElementById('guestLinks').style.display = 'none';
+            document.getElementById('userLinks').style.display = 'block';
+            
+            // Update user name
+            document.getElementById('userName').textContent = `Welcome, ${user.name}`;
+            
+            // Set dashboard link based on role
+            let dashboardUrl = '';
+            switch(user.role.name) {
+                case 'admin':
+                    dashboardUrl = 'admin-dashboard.html';
+                    break;
+                case 'coordinator':
+                    dashboardUrl = 'coordinator-dashboard.html';
+                    break;
+                case 'participant':
+                    dashboardUrl = 'participant-dashboard.html';
+                    break;
+                case 'volunteer':
+                    dashboardUrl = 'volunteer-dashboard.html';
+                    break;
+                case 'audience':
+                    dashboardUrl = 'audience-dashboard.html';
+                    break;
+                default:
+                    dashboardUrl = 'home.html';
+            }
+            
+            document.getElementById('dashboardLink').href = dashboardUrl;
+            
+            // Handle logout
+            document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.reload();
+            });
+            
+        } else {
+            // User is not logged in, show guest navigation
+            document.getElementById('guestLinks').style.display = 'block';
+            document.getElementById('userLinks').style.display = 'none';
+            
+            // Clear any corrupted data
+            if (token || user) {
                 console.warn('Invalid user data, clearing storage');
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');

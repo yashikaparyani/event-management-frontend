@@ -26,97 +26,124 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'login.html';
     });
 
-    // Load upcoming events
-    loadUpcomingEvents();
-    // Load user's registrations
-    loadUserRegistrations();
+    // Load all events for audience
+    loadAllEvents();
 });
 
-async function loadUpcomingEvents() {
+let allEventsCache = [];
+
+// Add event listeners for sidebar navigation
+function setupSidebarFilters() {
+    document.getElementById('allEventsNav').addEventListener('click', function(e) {
+        e.preventDefault();
+        setActiveNav('allEventsNav');
+        renderEvents(allEventsCache);
+    });
+    document.getElementById('upcomingEventsNav').addEventListener('click', function(e) {
+        e.preventDefault();
+        setActiveNav('upcomingEventsNav');
+        const now = new Date();
+        const upcoming = allEventsCache.filter(ev => new Date(ev.date) > now);
+        renderEvents(upcoming);
+    });
+    document.getElementById('currentEventsNav').addEventListener('click', function(e) {
+        e.preventDefault();
+        setActiveNav('currentEventsNav');
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        const current = allEventsCache.filter(ev => {
+            const evDate = new Date(ev.date);
+            return evDate >= today && evDate < tomorrow;
+        });
+        renderEvents(current);
+    });
+}
+
+function setActiveNav(id) {
+    document.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function renderEvents(events) {
+    const eventsContainer = document.getElementById('upcomingEvents');
+    if (!events.length) {
+        eventsContainer.innerHTML = '<p>No events found.</p>';
+        return;
+    }
+    eventsContainer.innerHTML = events.map((event, idx) => {
+        // Limit description to 20 words
+        let desc = event.description || '';
+        const words = desc.split(' ');
+        let preview = desc;
+        if (words.length > 20) {
+            preview = words.slice(0, 20).join(' ') + '...';
+        }
+        return `
+            <div class="event-card">
+                <img src="${event.imageUrl || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="Event Image" class="event-card-image">
+                <div class="event-card-content">
+                    <div class="event-header">
+                        <h3>${event.title}</h3>
+                        <span class="event-badge">${event.organizer || ''}</span>
+                    </div>
+                    <div class="event-details">
+                        <p><i class="fas fa-calendar"></i> ${new Date(event.date).toLocaleDateString()} ${event.time ? ('| ' + event.time) : ''}</p>
+                        <p><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
+                    </div>
+                    <div class="event-description">
+                        ${preview}
+                    </div>
+                    <button class="btn btn-secondary view-details-btn" data-event-idx="${idx}">View Details</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+    // Add event listeners for view details buttons
+    document.querySelectorAll('.view-details-btn').forEach((btn, idx) => {
+        btn.addEventListener('click', function() {
+            const event = events[idx];
+            document.getElementById('modalEventImage').src = event.imageUrl || 'https://via.placeholder.com/400x200?text=No+Image';
+            document.getElementById('modalEventTitle').textContent = event.title;
+            document.getElementById('modalEventDate').textContent = new Date(event.date).toLocaleDateString();
+            document.getElementById('modalEventTime').textContent = event.time || '';
+            document.getElementById('modalEventLocation').textContent = event.location;
+            document.getElementById('modalEventOrganizer').textContent = event.organizer || '';
+            document.getElementById('modalEventDescription').textContent = event.description || '';
+            document.getElementById('eventDetailsModal').style.display = 'flex';
+        });
+    });
+}
+
+// Update loadAllEvents to cache all events and render all by default
+async function loadAllEvents() {
     try {
-        const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.UPCOMING), {
+        const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.LIST), {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
-
         if (!response.ok) {
             throw new Error('Failed to load events');
         }
-
-        const events = await response.json();
-        const eventsContainer = document.getElementById('upcomingEvents');
-
-        if (events.length === 0) {
-            eventsContainer.innerHTML = '<p>No upcoming events found.</p>';
-            return;
-        }
-
-        eventsContainer.innerHTML = events.slice(0, 3).map(event => `
-            <div class="event-item">
-                <div class="event-icon">
-                    <i class="fas fa-calendar-alt"></i>
-                </div>
-                <div class="event-details">
-                    <h4>${event.title}</h4>
-                    <p>
-                        <i class="fas fa-calendar"></i> ${new Date(event.date).toLocaleDateString()}
-                        <i class="fas fa-map-marker-alt ml-2"></i> ${event.location}
-                    </p>
-                </div>
-                <button onclick="registerForEvent('${event._id}')" class="btn btn-primary">
-                    <i class="fas fa-ticket-alt"></i> Register
-                </button>
-            </div>
-        `).join('');
-
+        allEventsCache = await response.json();
+        renderEvents(allEventsCache);
+        setupSidebarFilters();
+        document.getElementById('allEventsNav').classList.add('active');
+        // Modal close logic
+        document.getElementById('closeModalBtn').onclick = function() {
+            document.getElementById('eventDetailsModal').style.display = 'none';
+        };
+        window.onclick = function(event) {
+            const modal = document.getElementById('eventDetailsModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
     } catch (error) {
         console.error('Error loading events:', error);
-        document.getElementById('upcomingEvents').innerHTML = 
-            '<p class="error">Failed to load events. Please try again later.</p>';
-    }
-}
-
-async function loadUserRegistrations() {
-    try {
-        const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.REGISTERED), {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to load registrations');
-        }
-
-        const registrations = await response.json();
-        const registrationsContainer = document.getElementById('myRegistrations');
-
-        if (registrations.length === 0) {
-            registrationsContainer.innerHTML = '<p>You haven\'t registered for any events yet.</p>';
-            return;
-        }
-
-        registrationsContainer.innerHTML = registrations.slice(0, 3).map(reg => `
-            <div class="event-item">
-                <div class="event-icon">
-                    <i class="fas fa-ticket-alt"></i>
-                </div>
-                <div class="event-details">
-                    <h4>${reg.event.title}</h4>
-                    <p>
-                        <i class="fas fa-calendar"></i> ${new Date(reg.event.date).toLocaleDateString()}
-                        <i class="fas fa-map-marker-alt ml-2"></i> ${reg.event.location}
-                    </p>
-                </div>
-                <span class="event-status status-${reg.status.toLowerCase()}">${reg.status}</span>
-            </div>
-        `).join('');
-
-    } catch (error) {
-        console.error('Error loading registrations:', error);
-        document.getElementById('myRegistrations').innerHTML = 
-            '<p class="error">Failed to load registrations. Please try again later.</p>';
+        document.getElementById('upcomingEvents').innerHTML = '<p class="error">Failed to load events. Please try again later.</p>';
     }
 }
 
@@ -136,8 +163,7 @@ async function registerForEvent(eventId) {
         }
 
         // Reload both sections to show updated data
-        loadUpcomingEvents();
-        loadUserRegistrations();
+        loadAllEvents();
 
         // Show success message
         alert('Successfully registered for the event!');

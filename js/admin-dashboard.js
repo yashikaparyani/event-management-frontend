@@ -323,10 +323,12 @@ async function updateRole(roleId, roleData) {
             throw new Error(errorData.message || 'Failed to update role');
         }
         showSuccess('Role updated successfully.');
-        fetchPermissionsAndMatrix(); // Refresh matrix
+        // No UI refresh here; let the caller handle it
+        return true;
     } catch (error) {
         console.error('Error updating role:', error);
         showError(error.message);
+        throw error;
     }
 }
 
@@ -337,13 +339,21 @@ function renderPermissionsMatrix(roles, permissions) {
         return;
     }
 
-    const allPermissions = permissions.map(p => p.name).sort();
+    // Only show the new simplified permissions in this order
+    const permissionOrder = [
+        { name: 'manage_events', label: 'Manage Events' },
+        { name: 'manage_users', label: 'Manage Users' },
+        { name: 'assign_volunteers', label: 'Assign Volunteers' },
+        { name: 'register_event', label: 'Register Event' },
+        { name: 'view_reports', label: 'View Reports' },
+        { name: 'view_content', label: 'View Content' }
+    ];
     let tableHTML = `
         <table class="permissions-matrix-table">
             <thead>
                 <tr>
                     <th>Role</th>
-                    ${allPermissions.map(pName => `<th>${pName.replace(/_/g, ' ')}</th>`).join('')}
+                    ${permissionOrder.map(p => `<th>${p.label}</th>`).join('')}
                 </tr>
             </thead>
             <tbody>
@@ -351,20 +361,14 @@ function renderPermissionsMatrix(roles, permissions) {
 
     roles.forEach(role => {
         tableHTML += `<tr><td>${role.name}</td>`;
-        allPermissions.forEach(pName => {
-            const hasPermission = role.permissions.some(p => p.name === pName);
-            // Only make the admin role's specific critical permissions (like manage_roles) disabled,
-            // or certain roles completely disabled if they shouldn't be editable at all.
-            // For now, let's make all non-admin role permissions editable.
-            const isDisabled = (role.name === 'admin' && (pName === 'manage_roles' || pName === 'view_roles')); // Example: admin's core management permissions are fixed
-            
+        permissionOrder.forEach(pObj => {
+            const hasPermission = role.permissions.some(p => p.name === pObj.name);
             tableHTML += `
                 <td>
                     <input type="checkbox"
                            data-role-id="${role._id}"
-                           data-permission-name="${pName}"
+                           data-permission-name="${pObj.name}"
                            ${hasPermission ? 'checked' : ''}
-                           ${isDisabled ? 'disabled' : ''}
                            onchange="handlePermissionChange(this)">
                 </td>
             `;
@@ -399,14 +403,21 @@ function handlePermissionChange(checkbox) {
         } else {
             updatedPermissions = updatedPermissions.filter(p => p !== permissionName);
         }
-        
         // Find the full permission objects for the update
         fetch(getApiUrl(config.ENDPOINTS.PERMISSIONS.LIST), { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
             .then(res => res.json())
             .then(allAvailablePermissions => {
                 const fullPermissionsForUpdate = allAvailablePermissions.filter(p => updatedPermissions.includes(p.name));
                 const permissionIdsForUpdate = fullPermissionsForUpdate.map(p => p._id);
-                updateRole(roleId, { permissions: permissionIdsForUpdate });
+                updateRole(roleId, { permissions: permissionIdsForUpdate })
+                    .then(() => {
+                        fetchPermissionsAndMatrix(); // Refresh the table after update
+                    })
+                    .catch(error => {
+                        console.error('Error updating role:', error);
+                        showError('Failed to update permission: Could not update role.');
+                        checkbox.checked = !isChecked; // Revert checkbox state on error
+                    });
             })
             .catch(error => {
                 console.error('Error fetching all permissions:', error);

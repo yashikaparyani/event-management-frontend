@@ -3,140 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Volunteer Dashboard - Event Management System</title>
+    <title>Volunteer Dashboard - Event Management</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <div class="dashboard-container">
         <nav class="sidebar">
             <div class="sidebar-header">
-                <i class="fas fa-calendar-alt"></i>
-                <h2>Event Management</h2>
+                <i class="fas fa-hands-helping"></i>
+                <h2>Volunteer</h2>
             </div>
             <ul class="nav-links">
-                <li class="active">
-                    <a href="#dashboard">
-                        <i class="fas fa-home"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#events">
-                        <i class="fas fa-calendar"></i>
-                        <span>Volunteer Opportunities</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#assignments">
-                        <i class="fas fa-tasks"></i>
-                        <span>My Assignments</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#profile">
-                        <i class="fas fa-user"></i>
-                        <span>Profile</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" id="logoutBtn">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
-                    </a>
-                </li>
+                <li class="active"><a href="#dashboard"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                <li><a href="#tasks"><i class="fas fa-tasks"></i> <span>My Tasks/Events</span></a></li>
+                <li><a href="#attendance"><i class="fas fa-calendar-check"></i> <span>Attendance</span></a></li>
+                <li><a href="#profile"><i class="fas fa-user"></i> <span>Profile</span></a></li>
+                <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
             </ul>
         </nav>
-
         <main class="main-content">
-            <header class="top-bar">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search volunteer opportunities...">
-                </div>
-                <div class="user-info">
-                    <span id="userName">Loading...</span>
-                    <img src="https://via.placeholder.com/40" alt="Profile" class="profile-pic">
-                </div>
-            </header>
-
-            <div class="content-area">
-                <div class="welcome-section">
-                    <h1>Welcome, <span id="welcomeName">Volunteer</span>!</h1>
-                    <p>Help make events successful with your valuable contribution.</p>
-                </div>
-
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="volunteer-section">
+                <h1>Welcome, Volunteer!</h1>
+                <p>Here you can view your assigned tasks, mark attendance, and more.</p>
                 <div class="dashboard-grid">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Volunteer Opportunities</h3>
-                            <a href="#events" class="view-all">View All</a>
-                        </div>
-                        <div class="card-body" id="volunteerOpportunities">
-                            <div class="event-item">
-                                <div class="event-icon">
-                                    <i class="fas fa-hands-helping"></i>
-                                </div>
-                                <div class="event-details">
-                                    <h4>Loading opportunities...</h4>
-                                    <p><i class="fas fa-clock"></i> Please wait</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>My Assignments</h3>
-                            <a href="#assignments" class="view-all">View All</a>
-                        </div>
-                        <div class="card-body" id="myAssignments">
-                            <div class="event-item">
-                                <div class="event-icon">
-                                    <i class="fas fa-tasks"></i>
-                                </div>
-                                <div class="event-details">
-                                    <h4>Loading assignments...</h4>
-                                    <p><i class="fas fa-clock"></i> Please wait</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="card"><h3>Assigned Events</h3><p>0</p></div>
+                    <div class="card"><h3>Tasks Completed</h3><p>0</p></div>
+                    <div class="card"><h3>Upcoming Tasks</h3><p>0</p></div>
                 </div>
-            </div>
+            </section>
+            <!-- My Tasks/Events Section -->
+            <section id="tasks-section" class="volunteer-section" style="display:none;">
+                <h1>My Tasks/Events</h1>
+                <p>List of your assigned tasks and events will appear here.</p>
+                <div class="tasks-list-container">
+                    <p class="no-data">No tasks assigned yet.</p>
+                </div>
+            </section>
+            <!-- Attendance Section -->
+            <section id="attendance-section" class="volunteer-section" style="display:none;">
+                <h1>Attendance</h1>
+                <p>Mark your attendance for events here (future feature).</p>
+                <div class="attendance-list-container">
+                    <p class="no-data">No attendance records yet.</p>
+                </div>
+            </section>
+            <!-- Profile Section -->
+            <section id="profile-section" class="volunteer-section" style="display:none;">
+                <h1>Profile</h1>
+                <p>Your volunteer profile information will appear here.</p>
+                <div class="profile-container">
+                    <p class="no-data">Profile details not available.</p>
+                </div>
+            </section>
         </main>
     </div>
-
     <script src="js/config.js"></script>
+    <!-- <script src="js/volunteer-dashboard.js"></script> (future) -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check if user is logged in
-            const token = localStorage.getItem('token');
-            const user = JSON.parse(localStorage.getItem('user'));
-
-            if (!token || !user) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // Check if user is a volunteer
-            if (user.role.name !== 'volunteer') {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // Update user information in the UI
-            document.getElementById('userName').textContent = user.name;
-            document.getElementById('welcomeName').textContent = user.name;
-
-            // Handle logout
-            document.getElementById('logoutBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                window.location.href = 'login.html';
-            });
+    // Simple navigation logic for demo
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (this.getAttribute('href') === '#') return;
+            e.preventDefault();
+            document.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
+            this.parentElement.classList.add('active');
+            document.querySelectorAll('.volunteer-section').forEach(sec => sec.style.display = 'none');
+            const sectionId = this.getAttribute('href').replace('#', '') + '-section';
+            const section = document.getElementById(sectionId);
+            if (section) section.style.display = 'block';
         });
+    });
     </script>
 </body>
 </html> 

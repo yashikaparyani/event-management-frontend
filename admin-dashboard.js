@@ -93,4 +93,10 @@ async function loadDashboardData() {
         console.error('Error loading dashboard data:', error);
         alert('Error loading dashboard data: ' + error.message);
     }
+}
+
+function renderPermissionsMatrix(roles, permissions) {
+    console.log("DEBUG: roles", roles);
+    console.log("DEBUG: permissions", permissions);
+    // ...rest of your code
 } 

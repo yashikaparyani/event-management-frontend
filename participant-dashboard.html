@@ -3,140 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Participant Dashboard - Event Management System</title>
+    <title>Participant Dashboard - Event Management</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <div class="dashboard-container">
         <nav class="sidebar">
             <div class="sidebar-header">
-                <i class="fas fa-calendar-alt"></i>
-                <h2>Event Management</h2>
+                <i class="fas fa-user"></i>
+                <h2>Participant</h2>
             </div>
             <ul class="nav-links">
-                <li class="active">
-                    <a href="#dashboard">
-                        <i class="fas fa-home"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#events">
-                        <i class="fas fa-calendar"></i>
-                        <span>Available Events</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#registered">
-                        <i class="fas fa-ticket-alt"></i>
-                        <span>My Participations</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#profile">
-                        <i class="fas fa-user"></i>
-                        <span>Profile</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" id="logoutBtn">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
-                    </a>
-                </li>
+                <li class="active"><a href="#dashboard"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                <li><a href="#all-events"><i class="fas fa-calendar"></i> <span>All Events</span></a></li>
+                <li><a href="#my-registrations"><i class="fas fa-ticket-alt"></i> <span>My Events/Registrations</span></a></li>
+                <li><a href="#feedback"><i class="fas fa-comment-dots"></i> <span>Feedback</span></a></li>
+                <li><a href="#profile"><i class="fas fa-user-circle"></i> <span>Profile</span></a></li>
+                <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
             </ul>
         </nav>
-
         <main class="main-content">
-            <header class="top-bar">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search events...">
-                </div>
-                <div class="user-info">
-                    <span id="userName">Loading...</span>
-                    <img src="https://via.placeholder.com/40" alt="Profile" class="profile-pic">
-                </div>
-            </header>
-
-            <div class="content-area">
-                <div class="welcome-section">
-                    <h1>Welcome, <span id="welcomeName">Participant</span>!</h1>
-                    <p>Find and participate in exciting events.</p>
-                </div>
-
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="participant-section">
+                <h1>Welcome, Participant!</h1>
+                <p>Here you can view your registered events, give feedback, and more.</p>
                 <div class="dashboard-grid">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Available Events</h3>
-                            <a href="#events" class="view-all">View All</a>
-                        </div>
-                        <div class="card-body" id="availableEvents">
-                            <div class="event-item">
-                                <div class="event-icon">
-                                    <i class="fas fa-calendar-alt"></i>
-                                </div>
-                                <div class="event-details">
-                                    <h4>Loading events...</h4>
-                                    <p><i class="fas fa-clock"></i> Please wait</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>My Participations</h3>
-                            <a href="#registered" class="view-all">View All</a>
-                        </div>
-                        <div class="card-body" id="myParticipations">
-                            <div class="event-item">
-                                <div class="event-icon">
-                                    <i class="fas fa-ticket-alt"></i>
-                                </div>
-                                <div class="event-details">
-                                    <h4>Loading participations...</h4>
-                                    <p><i class="fas fa-clock"></i> Please wait</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="card"><h3>Events Registered</h3><p>0</p></div>
+                    <div class="card"><h3>Upcoming Events</h3><p>0</p></div>
+                    <div class="card"><h3>Feedback Given</h3><p>0</p></div>
                 </div>
-            </div>
+            </section>
+            <!-- All Events Section -->
+            <section id="all-events-section" class="participant-section" style="display:none;">
+                <h1>All Events</h1>
+                <p>Browse and register for available events below.</p>
+                <div class="events-list-container">
+                    <p class="no-data">No events available yet.</p>
+                </div>
+            </section>
+            <!-- My Events/Registrations Section -->
+            <section id="my-registrations-section" class="participant-section" style="display:none;">
+                <h1>My Events/Registrations</h1>
+                <p>List of events you have registered for will appear here.</p>
+                <div class="events-list-container">
+                    <p class="no-data">You have not registered for any events yet.</p>
+                </div>
+            </section>
+            <!-- Feedback Section -->
+            <section id="feedback-section" class="participant-section" style="display:none;">
+                <h1>Feedback</h1>
+                <p>Give feedback for events here (future feature).</p>
+                <div class="feedback-list-container">
+                    <p class="no-data">No feedback submitted yet.</p>
+                </div>
+            </section>
+            <!-- Profile Section -->
+            <section id="profile-section" class="participant-section" style="display:none;">
+                <h1>Profile</h1>
+                <p>Your participant profile information will appear here.</p>
+                <div class="profile-container">
+                    <p class="no-data">Profile details not available.</p>
+                </div>
+            </section>
         </main>
     </div>
-
     <script src="js/config.js"></script>
+    <script src="js/participant-dashboard.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check if user is logged in
-            const token = localStorage.getItem('token');
-            const user = JSON.parse(localStorage.getItem('user'));
-
-            if (!token || !user) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // Check if user is a participant
-            if (user.role.name !== 'participant') {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // Update user information in the UI
-            document.getElementById('userName').textContent = user.name;
-            document.getElementById('welcomeName').textContent = user.name;
-
-            // Handle logout
-            document.getElementById('logoutBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                window.location.href = 'login.html';
-            });
+    // Simple navigation logic for demo
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (this.getAttribute('href') === '#') return;
+            e.preventDefault();
+            document.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
+            this.parentElement.classList.add('active');
+            document.querySelectorAll('.participant-section').forEach(sec => sec.style.display = 'none');
+            const sectionId = this.getAttribute('href').replace('#', '') + '-section';
+            const section = document.getElementById(sectionId);
+            if (section) section.style.display = 'block';
         });
+    });
     </script>
 </body>
 </html> 

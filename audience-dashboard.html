@@ -15,28 +15,22 @@
                 <h2>Event Management</h2>
             </div>
             <ul class="nav-links">
-                <li class="active">
-                    <a href="#dashboard">
-                        <i class="fas fa-home"></i>
-                        <span>Dashboard</span>
+                <li class="active" id="allEventsNav">
+                    <a href="#all-events">
+                        <i class="fas fa-th-list"></i>
+                        <span>All Events</span>
                     </a>
                 </li>
-                <li>
-                    <a href="#events">
+                <li id="upcomingEventsNav">
+                    <a href="#upcoming-events">
                         <i class="fas fa-calendar"></i>
                         <span>Upcoming Events</span>
                     </a>
                 </li>
-                <li>
-                    <a href="#registered">
-                        <i class="fas fa-ticket-alt"></i>
-                        <span>My Registrations</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#profile">
-                        <i class="fas fa-user"></i>
-                        <span>Profile</span>
+                <li id="currentEventsNav">
+                    <a href="#current-events">
+                        <i class="fas fa-bolt"></i>
+                        <span>Current Events</span>
                     </a>
                 </li>
                 <li>
@@ -66,45 +60,24 @@
                     <p>Discover and register for exciting events.</p>
                 </div>
 
-                <div class="dashboard-grid">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Upcoming Events</h3>
-                            <a href="#events" class="view-all">View All</a>
-                        </div>
-                        <div class="card-body" id="upcomingEvents">
-                            <div class="event-item">
-                                <div class="event-icon">
-                                    <i class="fas fa-calendar-alt"></i>
-                                </div>
-                                <div class="event-details">
-                                    <h4>Loading events...</h4>
-                                    <p><i class="fas fa-clock"></i> Please wait</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>My Registrations</h3>
-                            <a href="#registered" class="view-all">View All</a>
-                        </div>
-                        <div class="card-body" id="myRegistrations">
-                            <div class="event-item">
-                                <div class="event-icon">
-                                    <i class="fas fa-ticket-alt"></i>
-                                </div>
-                                <div class="event-details">
-                                    <h4>Loading registrations...</h4>
-                                    <p><i class="fas fa-clock"></i> Please wait</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="dashboard-grid event-cards-grid-wrapper" style="display: flex; justify-content: center; margin-top: 2rem;">
+                    <div class="event-cards-grid" id="upcomingEvents" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; max-width: 1000px; width: 100%;"></div>
                 </div>
             </div>
         </main>
+    </div>
+
+    <div id="eventDetailsModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" id="closeModalBtn">&times;</span>
+            <img id="modalEventImage" src="" alt="Event Image" class="modal-event-image">
+            <h2 id="modalEventTitle"></h2>
+            <p><strong>Date:</strong> <span id="modalEventDate"></span></p>
+            <p><strong>Time:</strong> <span id="modalEventTime"></span></p>
+            <p><strong>Location:</strong> <span id="modalEventLocation"></span></p>
+            <p><strong>Organizer:</strong> <span id="modalEventOrganizer"></span></p>
+            <p id="modalEventDescription"></p>
+        </div>
     </div>
 
     <script src="js/config.js"></script>
