@@ -1,9 +1,7 @@
 // Configuration for API URLs
 const config = {
     // API Base URL - will be different for development and production
-    API_BASE_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-        ? 'http://localhost:5000' 
-        : 'https://event-management-backend-z0ty.onrender.com', // Your deployed Render backend URL
+    API_BASE_URL: 'https://event-management-backend-z0ty.onrender.com', // Updated backend URL
     
     // API Endpoints
     ENDPOINTS: {
