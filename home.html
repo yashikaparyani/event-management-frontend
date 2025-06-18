@@ -85,65 +85,42 @@
     </div>
 
     <script>
-        // Check if user is logged in
-        const token = localStorage.getItem('token');
-        const user = JSON.parse(localStorage.getItem('user'));
-        
-        if (token && user && user.role && user.role.name) {
-            // User is logged in, show user-specific navigation
-            console.log('User logged in with role:', user.role.name);
-            
-            // Hide guest links and show user links
-            document.getElementById('guestLinks').style.display = 'none';
-            document.getElementById('userLinks').style.display = 'block';
-            
-            // Update user name
-            document.getElementById('userName').textContent = `Welcome, ${user.name}`;
-            
-            // Set dashboard link based on role
-            let dashboardUrl = '';
-            switch(user.role.name) {
-                case 'admin':
-                    dashboardUrl = 'admin-dashboard.html';
-                    break;
-                case 'coordinator':
-                    dashboardUrl = 'coordinator-dashboard.html';
-                    break;
-                case 'participant':
-                    dashboardUrl = 'participant-dashboard.html';
-                    break;
-                case 'volunteer':
-                    dashboardUrl = 'volunteer-dashboard.html';
-                    break;
-                case 'audience':
-                    dashboardUrl = 'audience-dashboard.html';
-                    break;
-                default:
-                    dashboardUrl = 'home.html';
+        // TEMPORARILY DISABLED - Force login every time
+        /*
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user'));
+
+            if (!token || !user) {
+                window.location.replace('login.html');
+                return;
             }
-            
-            document.getElementById('dashboardLink').href = dashboardUrl;
-            
-            // Handle logout
-            document.getElementById('logoutBtn').addEventListener('click', (e) => {
-                e.preventDefault();
+
+            // Verify admin role
+            if (!user.role || user.role.name !== 'admin') {
+                console.log('User is not an admin:', user);
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
-                window.location.reload();
-            });
-            
-        } else {
-            // User is not logged in, show guest navigation
-            document.getElementById('guestLinks').style.display = 'block';
-            document.getElementById('userLinks').style.display = 'none';
-            
-            // Clear any corrupted data
-            if (token || user) {
-                console.warn('Invalid user data, clearing storage');
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
+                window.location.replace('login.html');
+                return;
             }
-        }
+
+            // Set user name in header
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('welcomeName').textContent = user.name;
+
+            // Load initial content (e.g., dashboard)
+            await loadContent('dashboard');
+
+            // Setup event listeners
+            setupEventListeners();
+        });
+        */
+
+        // FORCE LOGIN - Redirect to login page
+        document.addEventListener('DOMContentLoaded', () => {
+            window.location.replace('login.html');
+        });
 
         // Carousel functionality
         let currentImageIndex = 0;
