@@ -4,89 +4,77 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Register - Event Management System</title>
+  <title>Register - Event Management</title>
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-  <div class="form-container">
-    <div class="form-header">
-      <i class="fas fa-user-plus"></i>
-      <h2>Create Account</h2>
+  <nav class="navbar">
+    <div class="logo">Event Management</div>
+    <div class="nav-links">
+      <a href="home.html">Home</a>
+      <a href="login.html">Login</a>
     </div>
-
-    <form id="registerForm">
-      <div class="form-group">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" name="name" required />
+  </nav>
+  <div class="register-container">
+    <div class="register-box">
+      <h2>Create Your Account</h2>
+      <p class="subtitle">Join to start managing your events</p>
+      <!-- Role Selection Toggle -->
+      <div class="role-toggle">
+        <span class="role-label active" id="participantLabel">Participant</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="roleToggle" aria-label="Toggle between Participant and Audience role">
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="role-label" id="audienceLabel">Audience</span>
       </div>
-
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required />
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required />
-      </div>
-
-      <div class="form-group">
-        <label for="role">Role</label>
-        <select id="role" name="role" required>
-          <option value="">Select a role</option>
-          <option value="audience">Audience</option>
-          <option value="participant">Participant</option>
-          <option value="coordinator">Coordinator</option>
-          <option value="volunteer">Volunteer</option>
-        </select>
-      </div>
-
-      <!-- Participant Fields -->
-      <div id="participantFields" class="role-fields">
+      <form id="registerForm" class="register-form">
         <div class="form-group">
-          <label for="eventInterest">Event Interests</label>
-          <textarea id="eventInterest" name="eventInterest" placeholder="What types of events are you interested in?"></textarea>
-        </div>
-      </div>
-
-      <!-- Coordinator Fields -->
-      <div id="coordinatorFields" class="role-fields">
-        <div class="form-group">
-          <label for="coordinationArea">Coordination Area</label>
-          <input type="text" id="coordinationArea" name="coordinationArea" placeholder="e.g., Technical Events, Cultural Events" />
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter your full name" required>
         </div>
         <div class="form-group">
-          <label for="experience">Experience</label>
-          <textarea id="experience" name="experience" placeholder="Describe your event coordination experience"></textarea>
-        </div>
-      </div>
-
-      <!-- Volunteer Fields -->
-      <div id="volunteerFields" class="role-fields">
-        <div class="form-group">
-          <label for="availability">Availability</label>
-          <input type="text" id="availability" name="availability" placeholder="e.g., Weekends, Evenings" />
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email" required>
         </div>
         <div class="form-group">
-          <label for="skills">Skills</label>
-          <textarea id="skills" name="skills" placeholder="List your relevant skills"></textarea>
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required>
         </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <div class="phone-input">
+            <span class="country-code">+91</span>
+            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" pattern="[0-9]{10}" maxlength="10" required>
+          </div>
+        </div>
+        <button type="button" id="sendOtpBtn" class="primary-btn">Send OTP</button>
+        <!-- OTP Verification Block (hidden by default) -->
+        <div id="otpBlock" class="otp-block hidden">
+          <div class="form-group">
+            <label for="otp">Enter OTP</label>
+            <div class="otp-inputs">
+              <input type="text" maxlength="1" pattern="[0-9]" required title="OTP digit 1" placeholder="-">
+              <input type="text" maxlength="1" pattern="[0-9]" required title="OTP digit 2" placeholder="-">
+              <input type="text" maxlength="1" pattern="[0-9]" required title="OTP digit 3" placeholder="-">
+              <input type="text" maxlength="1" pattern="[0-9]" required title="OTP digit 4" placeholder="-">
+              <input type="text" maxlength="1" pattern="[0-9]" required title="OTP digit 5" placeholder="-">
+              <input type="text" maxlength="1" pattern="[0-9]" required title="OTP digit 6" placeholder="-">
+            </div>
+            <p class="timer">OTP expires in: <span id="countdown">05:00</span></p>
+          </div>
+          <button type="button" id="verifyOtpBtn" class="primary-btn">Verify OTP</button>
+          <button type="button" id="resendOtpBtn" class="resend-btn" disabled>Resend OTP</button>
+        </div>
+        <button type="submit" id="registerBtn" class="primary-btn" disabled>Register</button>
+        <div id="errorMsg" class="error-message"></div>
+      </form>
+      <div class="register-footer">
+        <p>Already have an account? <a href="login.html">Login</a></p>
       </div>
-
-      <button type="submit" class="btn btn-primary">
-        <i class="fas fa-user-plus"></i> Register
-      </button>
-
-      <div id="errorMsg" class="error-message"></div>
-    </form>
-
-    <div class="form-footer">
-      Already have an account? <a href="login.html">Login here</a>
     </div>
   </div>
-
-  <script src="js/config.js"></script>
   <script src="js/register.js"></script>
 </body>
 </html>

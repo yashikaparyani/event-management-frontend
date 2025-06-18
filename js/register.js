@@ -1,165 +1,229 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const roleSelect = document.getElementById('role');
-    const participantFields = document.getElementById('participantFields');
-    const coordinatorFields = document.getElementById('coordinatorFields');
-    const volunteerFields = document.getElementById('volunteerFields');
+document.addEventListener('DOMContentLoaded', function() {
+    // Role toggle
+    const roleToggle = document.getElementById('roleToggle');
+    const participantLabel = document.getElementById('participantLabel');
+    const audienceLabel = document.getElementById('audienceLabel');
+    let selectedRole = 'participant';
+
+    function updateRoleLabels() {
+        if (roleToggle.checked) {
+            participantLabel.classList.remove('active');
+            audienceLabel.classList.add('active');
+            selectedRole = 'audience';
+        } else {
+            participantLabel.classList.add('active');
+            audienceLabel.classList.remove('active');
+            selectedRole = 'participant';
+        }
+    }
+    roleToggle.addEventListener('change', updateRoleLabels);
+    updateRoleLabels();
+
+    // Form elements
     const registerForm = document.getElementById('registerForm');
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const otpBlock = document.getElementById('otpBlock');
+    const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+    const resendOtpBtn = document.getElementById('resendOtpBtn');
+    const registerBtn = document.getElementById('registerBtn');
     const errorMsg = document.getElementById('errorMsg');
+    const phoneInput = document.getElementById('phone');
+    const otpInputs = otpBlock.querySelectorAll('.otp-inputs input');
+    let timer;
+    let currentPhone = '';
+    let sessionId = '';
+    let otpVerified = false;
+    const API_KEY = 'ccc3be85-40f7-11f0-a562-0200cd936042';
 
-    // Handle role selection
-    roleSelect.addEventListener('change', () => {
-        // Hide all role-specific fields
-        participantFields.classList.remove('show');
-        coordinatorFields.classList.remove('show');
-        volunteerFields.classList.remove('show');
+    function showError(message) {
+        errorMsg.textContent = message;
+        errorMsg.classList.add('show');
+        setTimeout(() => errorMsg.classList.remove('show'), 5000);
+    }
 
-        // Show fields based on selected role
-        switch (roleSelect.value) {
-            case 'participant':
-                participantFields.classList.add('show');
-                break;
-            case 'coordinator':
-                coordinatorFields.classList.add('show');
-                break;
-            case 'volunteer':
-                volunteerFields.classList.add('show');
-                break;
+    function setLoading(isLoading, button) {
+        button.disabled = isLoading;
+        button.textContent = isLoading ? 'Please wait...' : button.dataset.originalText;
+    }
+
+    // Store original button text
+    sendOtpBtn.dataset.originalText = sendOtpBtn.textContent;
+    verifyOtpBtn.dataset.originalText = verifyOtpBtn.textContent;
+    registerBtn.dataset.originalText = registerBtn.textContent;
+
+    // OTP block hidden by default
+    otpBlock.classList.add('hidden');
+    registerBtn.disabled = true;
+
+    // Send OTP
+    sendOtpBtn.addEventListener('click', async function() {
+        const phone = phoneInput.value.trim();
+        if (!/^[0-9]{10}$/.test(phone)) {
+            showError('Please enter a valid 10-digit phone number');
+            return;
+        }
+        currentPhone = phone;
+        setLoading(true, sendOtpBtn);
+        errorMsg.textContent = '';
+        try {
+            // 2factor.in API: Send OTP
+            const response = await fetch(`https://2factor.in/API/V1/${API_KEY}/SMS/+91${phone}/AUTOGEN`, {
+                method: 'GET'
+            });
+            const data = await response.json();
+            if (data.Status === 'Success') {
+                sessionId = data.Details;
+                otpBlock.classList.remove('hidden');
+                sendOtpBtn.disabled = true;
+                phoneInput.disabled = true;
+                startTimer();
+                otpInputs.forEach(input => input.value = '');
+                otpInputs[0].focus();
+                otpVerified = false;
+                registerBtn.disabled = true;
+            } else {
+                showError(data.Details || 'Failed to send OTP');
+            }
+        } catch (error) {
+            showError('Failed to send OTP. Please try again.');
+        } finally {
+            setLoading(false, sendOtpBtn);
         }
     });
 
-    // Helper function to show messages
-    function showMessage(message, isError = true) {
-        errorMsg.textContent = message;
-        errorMsg.className = isError ? 'error-message show' : 'success-message show';
-        errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+    // OTP input navigation
+    otpInputs.forEach((input, idx) => {
+        input.addEventListener('input', function() {
+            if (this.value.length === 1 && idx < otpInputs.length - 1) {
+                otpInputs[idx + 1].focus();
+            }
+        });
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && !this.value && idx > 0) {
+                otpInputs[idx - 1].focus();
+            }
+        });
+        input.addEventListener('keypress', function(e) {
+            if (!/[0-9]/.test(e.key)) e.preventDefault();
+        });
+    });
 
-    // Helper function to redirect to appropriate dashboard
-    function redirectToDashboard(roleName) {
-        console.log('Redirecting to dashboard for role:', roleName);
-        let redirectUrl = '';
-        
-        switch(roleName) {
-            case 'admin':
-                redirectUrl = 'admin-dashboard.html';
-                break;
-            case 'coordinator':
-                redirectUrl = 'coordinator-dashboard.html';
-                break;
-            case 'participant':
-                redirectUrl = 'participant-dashboard.html';
-                break;
-            case 'volunteer':
-                redirectUrl = 'volunteer-dashboard.html';
-                break;
-            case 'audience':
-                redirectUrl = 'audience-dashboard.html';
-                break;
-            default:
-                redirectUrl = 'home.html';
+    // Verify OTP
+    verifyOtpBtn.addEventListener('click', async function() {
+        const otp = Array.from(otpInputs).map(input => input.value).join('');
+        if (otp.length !== 6) {
+            showError('Please enter the complete 6-digit OTP');
+            return;
         }
-        
-        console.log('Performing redirect to:', redirectUrl);
-        window.location.replace(redirectUrl);
+        setLoading(true, verifyOtpBtn);
+        errorMsg.textContent = '';
+        try {
+            // 2factor.in API: Verify OTP
+            const response = await fetch(`https://2factor.in/API/V1/${API_KEY}/SMS/VERIFY/${sessionId}/${otp}`, {
+                method: 'GET'
+            });
+            const data = await response.json();
+            if (data.Status === 'Success' && data.Details === 'OTP Matched') {
+                otpVerified = true;
+                registerBtn.disabled = false;
+                showError('OTP verified! You can now register.');
+            } else {
+                otpVerified = false;
+                registerBtn.disabled = true;
+                showError(data.Details || 'Invalid OTP');
+                otpInputs.forEach(input => input.value = '');
+                otpInputs[0].focus();
+            }
+        } catch (error) {
+            showError('Failed to verify OTP. Please try again.');
+        } finally {
+            setLoading(false, verifyOtpBtn);
+        }
+    });
+
+    // Resend OTP
+    resendOtpBtn.addEventListener('click', async function() {
+        if (!currentPhone) return;
+        setLoading(true, resendOtpBtn);
+        errorMsg.textContent = '';
+        try {
+            const response = await fetch(`https://2factor.in/API/V1/${API_KEY}/SMS/+91${currentPhone}/AUTOGEN`, {
+                method: 'GET'
+            });
+            const data = await response.json();
+            if (data.Status === 'Success') {
+                sessionId = data.Details;
+                startTimer();
+                otpInputs.forEach(input => input.value = '');
+                otpInputs[0].focus();
+            } else {
+                showError(data.Details || 'Failed to resend OTP');
+            }
+        } catch (error) {
+            showError('Failed to resend OTP. Please try again.');
+        } finally {
+            setLoading(false, resendOtpBtn);
+        }
+    });
+
+    // Timer for OTP
+    function startTimer() {
+        let timeLeft = 300; // 5 minutes
+        const countdownDisplay = document.getElementById('countdown');
+        resendOtpBtn.disabled = true;
+        if (timer) clearInterval(timer);
+        timer = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            countdownDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                resendOtpBtn.disabled = false;
+                countdownDisplay.textContent = '00:00';
+            }
+            timeLeft--;
+        }, 1000);
     }
 
-    // Handle form submission
-    registerForm.addEventListener('submit', async (e) => {
+    // Registration submit
+    registerForm.addEventListener('submit', async function(e) {
         e.preventDefault();
+        if (!otpVerified) {
+            showError('Please verify OTP before registering.');
+            return;
+        }
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const phone = phoneInput.value.trim();
+        if (!name || !email || !password || !phone) {
+            showError('Please fill all fields.');
+            return;
+        }
+        setLoading(true, registerBtn);
         errorMsg.textContent = '';
-        errorMsg.className = 'error-message';
-
-        const submitButton = registerForm.querySelector('button[type="submit"]');
-        const originalButtonText = submitButton.innerHTML;
-        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registering...';
-        submitButton.disabled = true;
-
         try {
-            // Get form data
-            const formData = {
-                name: document.getElementById('name').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                password: document.getElementById('password').value,
-                role: roleSelect.value
-            };
-
-            // Validate email format
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(formData.email)) {
-                showMessage('Please enter a valid email address');
-                return;
-            }
-
-            // Validate password
-            if (formData.password.length < 6) {
-                showMessage('Password must be at least 6 characters long');
-                return;
-            }
-
-            // Add role-specific data
-            switch (formData.role) {
-                case 'participant':
-                    formData.eventInterest = document.getElementById('eventInterest').value.trim();
-                    break;
-                case 'coordinator':
-                    formData.coordinationArea = document.getElementById('coordinationArea').value.trim();
-                    formData.experience = document.getElementById('experience').value.trim();
-                    break;
-                case 'volunteer':
-                    formData.availability = document.getElementById('availability').value.trim();
-                    formData.skills = document.getElementById('skills').value.trim();
-                    break;
-            }
-
-            console.log('Sending registration data:', formData);
-
-            const response = await fetch(getApiUrl(config.ENDPOINTS.AUTH.REGISTER), {
+            const response = await fetch('/api/auth/register', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(formData)
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    password,
+                    phone,
+                    role: selectedRole
+                })
             });
-
-            console.log('Registration response status:', response.status);
-            const result = await response.json();
-            console.log('Registration response:', result);
-
-            if (!response.ok) {
-                // Handle specific error cases
-                switch (response.status) {
-                    case 409:
-                        throw new Error('An account with this email already exists. Please login or use a different email.');
-                    case 400:
-                        throw new Error(result.message || 'Invalid registration data. Please check your inputs.');
-                    case 500:
-                        throw new Error('Server error. Please try again later.');
-                    default:
-                        throw new Error(result.message || 'Registration failed');
-                }
-            }
-
-            // Handle successful registration - redirect all users to login page
-            showMessage('Registration successful! Please login to continue.', false);
-            
-            // Clear any potential login state and redirect to login
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            
-            setTimeout(() => {
+            const data = await response.json();
+            if (response.ok) {
                 window.location.replace('login.html');
-            }, 2000);
-
+            } else {
+                showError(data.message || 'Registration failed');
+            }
         } catch (error) {
-            console.error('Registration error:', error);
-            showMessage(error.message || 'Registration failed. Please try again.');
+            showError('Registration failed. Please try again.');
         } finally {
-            submitButton.innerHTML = originalButtonText;
-            submitButton.disabled = false;
-            // Also ensure any messages are hidden in finally block after processing
-            errorMsg.classList.remove('show');
-            errorMsg.textContent = '';
+            setLoading(false, registerBtn);
         }
     });
 }); 
