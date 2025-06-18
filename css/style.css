@@ -2647,3 +2647,22 @@ input:checked + .toggle-slider:before {
     max-width: 98vw;
   }
 }
+
+/* Verified label for phone number */
+.verified-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #2ecc71;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  background: #eafaf1;
+  border-radius: 12px;
+  padding: 0.1rem 0.7rem 0.1rem 0.5rem;
+  box-shadow: 0 1px 4px rgba(46,204,113,0.07);
+}
+.verified-label .fa-check-circle {
+  color: #27ae60;
+  font-size: 1.1em;
+}

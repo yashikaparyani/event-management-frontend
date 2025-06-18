@@ -127,15 +127,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 otpVerified = true;
                 registerBtn.disabled = false;
                 showError('OTP verified! You can now register.');
+                verifyOtpBtn.classList.add('hidden');
+                document.getElementById('phoneVerifiedLabel').classList.remove('hidden');
             } else {
                 otpVerified = false;
                 registerBtn.disabled = true;
                 showError(data.Details || 'Invalid OTP');
                 otpInputs.forEach(input => input.value = '');
                 otpInputs[0].focus();
+                verifyOtpBtn.classList.remove('hidden');
+                document.getElementById('phoneVerifiedLabel').classList.add('hidden');
             }
         } catch (error) {
             showError('Failed to verify OTP. Please try again.');
+            verifyOtpBtn.classList.remove('hidden');
+            document.getElementById('phoneVerifiedLabel').classList.add('hidden');
         } finally {
             setLoading(false, verifyOtpBtn);
         }
@@ -218,10 +224,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (response.ok) {
                 window.location.replace('login.html');
             } else {
-                showError(data.message || 'Registration failed');
+                showError((data && data.message) ? data.message : 'Registration failed');
+                console.error('Registration error:', data);
             }
         } catch (error) {
             showError('Registration failed. Please try again.');
+            console.error('Registration error:', error);
         } finally {
             setLoading(false, registerBtn);
         }
