@@ -7,28 +7,6 @@
   <title>Register - Event Management System</title>
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <style>
-    .error-message {
-      display: none;
-      color: #dc3545;
-      padding: 8px 0;
-      text-align: center;
-      font-size: 14px;
-    }
-    .error-message.show {
-      display: block;
-    }
-    .success-message {
-      display: none;
-      color: #28a745;
-      padding: 8px 0;
-      text-align: center;
-      font-size: 14px;
-    }
-    .success-message.show {
-      display: block;
-    }
-  </style>
 </head>
 <body>
   <div class="form-container">
@@ -65,7 +43,7 @@
       </div>
 
       <!-- Participant Fields -->
-      <div id="participantFields" class="role-fields" style="display: none;">
+      <div id="participantFields" class="role-fields">
         <div class="form-group">
           <label for="eventInterest">Event Interests</label>
           <textarea id="eventInterest" name="eventInterest" placeholder="What types of events are you interested in?"></textarea>
@@ -73,7 +51,7 @@
       </div>
 
       <!-- Coordinator Fields -->
-      <div id="coordinatorFields" class="role-fields" style="display: none;">
+      <div id="coordinatorFields" class="role-fields">
         <div class="form-group">
           <label for="coordinationArea">Coordination Area</label>
           <input type="text" id="coordinationArea" name="coordinationArea" placeholder="e.g., Technical Events, Cultural Events" />
@@ -85,7 +63,7 @@
       </div>
 
       <!-- Volunteer Fields -->
-      <div id="volunteerFields" class="role-fields" style="display: none;">
+      <div id="volunteerFields" class="role-fields">
         <div class="form-group">
           <label for="availability">Availability</label>
           <input type="text" id="availability" name="availability" placeholder="e.g., Weekends, Evenings" />

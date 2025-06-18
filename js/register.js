@@ -9,20 +9,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle role selection
     roleSelect.addEventListener('change', () => {
         // Hide all role-specific fields
-        participantFields.style.display = 'none';
-        coordinatorFields.style.display = 'none';
-        volunteerFields.style.display = 'none';
+        participantFields.classList.remove('show');
+        coordinatorFields.classList.remove('show');
+        volunteerFields.classList.remove('show');
 
         // Show fields based on selected role
         switch (roleSelect.value) {
             case 'participant':
-                participantFields.style.display = 'block';
+                participantFields.classList.add('show');
                 break;
             case 'coordinator':
-                coordinatorFields.style.display = 'block';
+                coordinatorFields.classList.add('show');
                 break;
             case 'volunteer':
-                volunteerFields.style.display = 'block';
+                volunteerFields.classList.add('show');
                 break;
         }
     });
@@ -140,59 +140,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Handle successful registration based on role
-            if (['audience', 'participant', 'volunteer'].includes(formData.role)) {
-                // For audience, participant, and volunteer users, automatically log them in and redirect to dashboard
-                showMessage('Registration successful! Logging you in...', false);
-                
-                // Auto-login for auto-approved users
-                try {
-                    const loginResponse = await fetch(getApiUrl(config.ENDPOINTS.AUTH.LOGIN), {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            email: formData.email,
-                            password: formData.password
-                        })
-                    });
-
-                    if (loginResponse.ok) {
-                        const loginData = await loginResponse.json();
-                        
-                        // Store token and user data
-                        localStorage.setItem('token', loginData.token);
-                        localStorage.setItem('user', JSON.stringify(loginData.user));
-                        
-                        // Redirect to appropriate dashboard
-                        setTimeout(() => {
-                            redirectToDashboard(formData.role);
-                        }, 1500);
-                    } else {
-                        // If auto-login fails, redirect to login page
-                        showMessage('Registration successful! Please login to continue.', false);
-                        setTimeout(() => {
-                            window.location.replace('login.html');
-                        }, 2000);
-                    }
-                } catch (loginError) {
-                    console.error('Auto-login error:', loginError);
-                    showMessage('Registration successful! Please login to continue.', false);
-                    setTimeout(() => {
-                        window.location.replace('login.html');
-                    }, 2000);
-                }
-            } else {
-                // For coordinator role, show approval message and redirect to login
-                showMessage('Registration successful! Your account is pending approval. You will be notified once approved.', false);
-                // Clear any potential partial login state before redirecting to login
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                setTimeout(() => {
-                    window.location.replace('login.html');
-                }, 3000);
-            }
+            // Handle successful registration - redirect all users to login page
+            showMessage('Registration successful! Please login to continue.', false);
+            
+            // Clear any potential login state and redirect to login
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            
+            setTimeout(() => {
+                window.location.replace('login.html');
+            }, 2000);
 
         } catch (error) {
             console.error('Registration error:', error);

@@ -42,13 +42,13 @@ function updateSidebarActive(targetId) {
 function showContentSection(sectionId) {
     // Hide all sections first
     document.querySelectorAll('.admin-content-section').forEach(section => {
-        section.style.display = 'none';
+        section.classList.remove('active');
     });
     
     // Show the selected section
     const activeSection = document.getElementById(sectionId + '-content');
     if (activeSection) {
-        activeSection.style.display = 'block';
+        activeSection.classList.add('active');
     }
 }
 

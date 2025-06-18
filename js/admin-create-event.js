@@ -1,4 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Authentication check - ensure user is logged in and is admin
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    if (!token || !user) {
+        window.location.replace('login.html');
+        return;
+    }
+
+    // Check if user is an admin
+    if (user.role.name !== 'admin') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.replace('login.html');
+        return;
+    }
+
     const createEventForm = document.getElementById('createEventForm');
     const messageElem = document.getElementById('message');
     const errorMsgElem = document.getElementById('errorMsg');
@@ -6,8 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (createEventForm) {
         createEventForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            messageElem.style.display = 'none';
-            errorMsgElem.style.display = 'none';
+            messageElem.classList.remove('show');
+            errorMsgElem.classList.remove('show');
             messageElem.textContent = '';
             errorMsgElem.textContent = '';
 
@@ -20,14 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             // Combine date and time for a single datetime field if needed, or send separately
             // For now, sending separately. Backend will need to handle.
-
-            const token = localStorage.getItem('token');
-
-            if (!token) {
-                errorMsgElem.textContent = 'You must be logged in to create an event.';
-                errorMsgElem.style.display = 'block';
-                return;
-            }
 
             try {
                 const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.CREATE), {
@@ -43,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (response.ok) {
                     messageElem.textContent = result.message || 'Event created successfully!';
-                    messageElem.style.display = 'block';
+                    messageElem.classList.add('show');
                     createEventForm.reset(); // Clear the form
                     // Optionally redirect or show success state
                     setTimeout(() => {
@@ -51,12 +60,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 2000);
                 } else {
                     errorMsgElem.textContent = result.message || 'Failed to create event.';
-                    errorMsgElem.style.display = 'block';
+                    errorMsgElem.classList.add('show');
                 }
             } catch (error) {
                 console.error('Error creating event:', error);
                 errorMsgElem.textContent = 'An unexpected error occurred. Please try again.';
-                errorMsgElem.style.display = 'block';
+                errorMsgElem.classList.add('show');
             }
         });
     }

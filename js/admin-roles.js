@@ -193,11 +193,11 @@ async function deleteRole(roleId) {
 
 // Modal functions
 function openModal() {
-    roleModal.style.display = 'block';
+    roleModal.classList.add('show');
 }
 
 function closeModal() {
-    roleModal.style.display = 'none';
+    roleModal.classList.remove('show');
     roleForm.reset();
     currentRoleId = null;
     modalTitle.textContent = 'Add New Role';

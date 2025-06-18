@@ -2,19 +2,15 @@
 
 // Check if already logged in on page load
 document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user'));
+    // Clear any existing tokens to force fresh login
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
 
     // Always clear error message on page load
     const errorMsg = document.getElementById('errorMsg');
     if (errorMsg) {
         errorMsg.textContent = '';
         errorMsg.classList.remove('show');
-    }
-
-    if (token && user) {
-        console.log('Already logged in as:', user.role.name);
-        redirectToDashboard(user.role.name);
     }
 });
 

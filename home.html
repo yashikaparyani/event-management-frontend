@@ -6,46 +6,6 @@
     <title>Event Management System</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .user-info span {
-            color: #333;
-            font-weight: 500;
-        }
-        .logout-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .logout-btn:hover {
-            background: #c82333;
-        }
-        .dashboard-link {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            text-decoration: none;
-            display: inline-block;
-            margin-right: 10px;
-        }
-        .dashboard-link:hover {
-            background: #0056b3;
-        }
-    </style>
 </head>
 <body>
     <div class="landing-container">
@@ -58,7 +18,7 @@
                     <a href="login.html">Login</a>
                     <a href="register.html" class="btn-primary">Register</a>
                 </div>
-                <div id="userLinks" style="display: none;">
+                <div id="userLinks" class="hidden">
                     <div class="user-info">
                         <span id="userName">Welcome</span>
                         <a href="#" id="dashboardLink" class="dashboard-link">Go to Dashboard</a>
@@ -85,39 +45,7 @@
     </div>
 
     <script>
-        // TEMPORARILY DISABLED - Force login every time
-        /*
-        document.addEventListener('DOMContentLoaded', async () => {
-            const token = localStorage.getItem('token');
-            const user = JSON.parse(localStorage.getItem('user'));
-
-            if (!token || !user) {
-                window.location.replace('login.html');
-                return;
-            }
-
-            // Verify admin role
-            if (!user.role || user.role.name !== 'admin') {
-                console.log('User is not an admin:', user);
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                window.location.replace('login.html');
-                return;
-            }
-
-            // Set user name in header
-            document.getElementById('userName').textContent = user.name;
-            document.getElementById('welcomeName').textContent = user.name;
-
-            // Load initial content (e.g., dashboard)
-            await loadContent('dashboard');
-
-            // Setup event listeners
-            setupEventListeners();
-        });
-        */
-
-        // FORCE LOGIN - Redirect to login page
+        // Force login every time - redirect to login page
         document.addEventListener('DOMContentLoaded', () => {
             window.location.replace('login.html');
         });

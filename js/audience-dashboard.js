@@ -111,7 +111,7 @@ function renderEvents(events) {
             document.getElementById('modalEventLocation').textContent = event.location;
             document.getElementById('modalEventOrganizer').textContent = event.organizer || '';
             document.getElementById('modalEventDescription').textContent = event.description || '';
-            document.getElementById('eventDetailsModal').style.display = 'flex';
+            document.getElementById('eventDetailsModal').classList.add('show');
         });
     });
 }
@@ -133,12 +133,12 @@ async function loadAllEvents() {
         document.getElementById('allEventsNav').classList.add('active');
         // Modal close logic
         document.getElementById('closeModalBtn').onclick = function() {
-            document.getElementById('eventDetailsModal').style.display = 'none';
+            document.getElementById('eventDetailsModal').classList.remove('show');
         };
         window.onclick = function(event) {
             const modal = document.getElementById('eventDetailsModal');
             if (event.target === modal) {
-                modal.style.display = 'none';
+                modal.classList.remove('show');
             }
         };
     } catch (error) {

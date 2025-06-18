@@ -188,12 +188,12 @@ a {
 .user-info {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 10px;
 }
 
 .user-info span {
-    font-weight: 600;
-    color: var(--text-color);
+    color: #333;
+    font-weight: 500;
 }
 
 .profile-pic {
@@ -1708,31 +1708,6 @@ a {
     background-color: #c82333;
 }
 
-/* Error and Success Messages */
-.error-message {
-    color: var(--danger-color);
-    background-color: #f8d7da;
-    border: 1px solid var(--danger-color);
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 10px;
-    text-align: center;
-    font-weight: bold;
-    display: block;
-}
-
-.success-message {
-    color: var(--success-color);
-    background-color: #d4edda;
-    border: 1px solid var(--success-color);
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 10px;
-    text-align: center;
-    font-weight: bold;
-    display: block;
-}
-
 /* Toast Messages */
 .toast {
     visibility: hidden;
@@ -2153,130 +2128,296 @@ a {
 
 /* --- Event Details Modal Styles --- */
 .modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: auto;
-  background: rgba(0,0,0,0.4);
-  justify-content: center;
-  align-items: center;
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
 }
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .modal-content {
-  background: #fff;
-  margin: 5% auto;
-  padding: 2rem 2.5rem;
-  border-radius: 12px;
-  max-width: 420px;
-  width: 90%;
-  position: relative;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    background: #fff;
+    margin: 5% auto;
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    max-width: 420px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
 .close {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  font-size: 1.3rem;
-  color:black;
-  background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  padding: 0.1em 0.35em 0.1em 0.35em;
-  cursor: pointer;
-  font-weight: bold;
-  transition: color 0.2s, background 0.2s;
-  z-index: 10;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 1.3rem;
+    color:black;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    padding: 0.1em 0.35em 0.1em 0.35em;
+    cursor: pointer;
+    font-weight: bold;
+    transition: color 0.2s, background 0.2s;
+    z-index: 10;
 }
+
 .close:hover {
-  color: var(--primary-color);
-  background: #f5f6fa;
+    color: var(--primary-color);
+    background: #f5f6fa;
 }
+
 .modal-event-image {
-  width: 100%;
-  max-width: 350px;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 1.2rem;
+    width: 100%;
+    max-width: 350px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1.2rem;
 }
+
 #modalEventTitle {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--primary-color);
-  margin-bottom: 0.7rem;
-  text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.7rem;
+    text-align: center;
 }
+
 #modalEventDescription {
-  margin-top: 1rem;
-  color: #444;
-  font-size: 1.05rem;
-  text-align: left;
+    margin-top: 1rem;
+    color: #444;
+    font-size: 1.05rem;
+    text-align: left;
 }
 
 /* --- View Details Button Style --- */
 .view-details-btn {
-  background: #f5f6fa;
-  color: #2c3e50;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.95em;
-  font-weight: 600;
-  padding: 0.4em 1.1em;
-  margin-top: 0.7em;
-  margin-bottom: 0.2em;
-  box-shadow: none;
-  transition: background 0.2s, color 0.2s;
-  cursor: pointer;
-  outline: none;
-  letter-spacing: 0.01em;
+    background: #f5f6fa;
+    color: #2c3e50;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95em;
+    font-weight: 600;
+    padding: 0.4em 1.1em;
+    margin-top: 0.7em;
+    margin-bottom: 0.2em;
+    box-shadow: none;
+    transition: background 0.2s, color 0.2s;
+    cursor: pointer;
+    outline: none;
+    letter-spacing: 0.01em;
 }
+
 .view-details-btn:hover {
-  background: #e0e4eb;
-  color: var(--primary-color);
+    background: #e0e4eb;
+    color: var(--primary-color);
 }
 
 /* --- Permissions Matrix Table Styles --- */
 .permissions-matrix-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 2rem 0 1rem 0;
-  background: #fff;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0 1rem 0;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
 }
+
 .permissions-matrix-table th, .permissions-matrix-table td {
-  padding: 0.7em 1.1em;
-  text-align: center;
-  border-bottom: 1px solid #eaeaea;
+    padding: 0.7em 1.1em;
+    text-align: center;
+    border-bottom: 1px solid #eaeaea;
 }
+
 .permissions-matrix-table th {
-  background: #f5f6fa;
-  color: #2c3e50;
-  font-size: 1.05em;
-  font-weight: 700;
-  letter-spacing: 0.01em;
+    background: #f5f6fa;
+    color: #2c3e50;
+    font-size: 1.05em;
+    font-weight: 700;
+    letter-spacing: 0.01em;
 }
+
 .permissions-matrix-table tbody tr:nth-child(even) {
-  background: #f8f9fb;
+    background: #f8f9fb;
 }
+
 .permissions-matrix-table tbody tr:hover {
-  background: #eaf1fb;
+    background: #eaf1fb;
 }
+
 .permissions-matrix-table td:first-child {
-  font-weight: 600;
-  color: var(--primary-color);
-  text-align: left;
+    font-weight: 600;
+    color: var(--primary-color);
+    text-align: left;
 }
+
 .permissions-matrix-table input[type="checkbox"] {
-  width: 1.1em;
-  height: 1.1em;
-  accent-color: var(--primary-color);
-  cursor: pointer;
+    width: 1.1em;
+    height: 1.1em;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+}
+
+/* Additional classes for inline styles */
+
+/* Home page styles */
+.logout-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.logout-btn:hover {
+    background: #c82333;
+}
+
+.dashboard-link {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.dashboard-link:hover {
+    background: #0056b3;
+}
+
+/* Hidden elements */
+.hidden {
+    display: none !important;
+}
+
+/* Role fields */
+.role-fields {
+    display: none;
+}
+
+.role-fields.show {
+    display: block;
+}
+
+/* Dashboard sections */
+.dashboard-section {
+    display: none;
+}
+
+.dashboard-section.active {
+    display: block;
+}
+
+/* Participant sections */
+.participant-section {
+    display: none;
+}
+
+.participant-section.active {
+    display: block;
+}
+
+/* Show first section by default */
+.participant-section:first-of-type {
+    display: block;
+}
+
+/* Volunteer sections */
+.volunteer-section {
+    display: none;
+}
+
+.volunteer-section.active {
+    display: block;
+}
+
+/* Show first section by default */
+.volunteer-section:first-of-type {
+    display: block;
+}
+
+/* Coordinator sections */
+.coordinator-section {
+    display: none;
+}
+
+.coordinator-section.active {
+    display: block;
+}
+
+/* Show first section by default */
+.coordinator-section:first-of-type {
+    display: block;
+}
+
+/* Audience dashboard specific styles */
+.event-cards-grid-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.event-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    max-width: 1000px;
+    width: 100%;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+}
+
+.modal.show {
+    display: block;
+}
+
+/* Message styles */
+.error-message {
+    display: none;
+    color: #dc3545;
+    padding: 8px 0;
+    text-align: center;
+    font-size: 14px;
+}
+
+.error-message.show {
+    display: block;
+}
+
+.success-message {
+    display: none;
+    color: #28a745;
+    padding: 8px 0;
+    text-align: center;
+    font-size: 14px;
+}
+
+.success-message.show {
+    display: block;
 }
