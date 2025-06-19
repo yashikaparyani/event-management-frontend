@@ -489,9 +489,86 @@ function renderEventsList(events) {
 }
 
 function editEvent(eventId) {
-    showError('Edit event functionality not yet implemented.');
-    // In a real application, this would open a modal or navigate to an edit page
+    // Find the event from the currently loaded events
+    const eventsListContainer = document.getElementById('eventsListContainer');
+    const eventCard = eventsListContainer.querySelector(`[onclick*="editEvent('${eventId}')"]`).closest('.event-card');
+    // Use the eventId to fetch the event details from the backend
+    fetch(getApiUrl(config.ENDPOINTS.EVENTS.UPDATE(eventId)), {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    })
+    .then(res => res.json())
+    .then(event => {
+        document.getElementById('editEventId').value = event._id;
+        document.getElementById('editTitle').value = event.title || '';
+        document.getElementById('editDescription').value = event.description || '';
+        document.getElementById('editDate').value = event.date ? event.date.substr(0, 10) : '';
+        document.getElementById('editTime').value = event.time || '';
+        document.getElementById('editLocation').value = event.location || '';
+        document.getElementById('editCapacity').value = event.capacity || 0;
+        document.getElementById('editOrganizer').value = event.organizer || '';
+        document.getElementById('editPrice').value = event.price || 0;
+        document.getElementById('editImageUrl').value = event.imageUrl || '';
+        document.getElementById('editEventModal').style.display = 'block';
+    })
+    .catch(() => {
+        showError('Failed to load event details for editing.');
+    });
 }
+
+// Handle closing the modal
+if (document.getElementById('closeEditModalBtn')) {
+    document.getElementById('closeEditModalBtn').onclick = function() {
+        document.getElementById('editEventModal').style.display = 'none';
+    };
+}
+window.onclick = function(event) {
+    const modal = document.getElementById('editEventModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+};
+
+// Handle form submission for editing event
+document.addEventListener('DOMContentLoaded', function() {
+    const editEventForm = document.getElementById('editEventForm');
+    if (editEventForm) {
+        editEventForm.onsubmit = async function(e) {
+            e.preventDefault();
+            const eventId = document.getElementById('editEventId').value;
+            const updatedEvent = {
+                title: document.getElementById('editTitle').value,
+                description: document.getElementById('editDescription').value,
+                date: document.getElementById('editDate').value,
+                time: document.getElementById('editTime').value,
+                location: document.getElementById('editLocation').value,
+                capacity: document.getElementById('editCapacity').value,
+                organizer: document.getElementById('editOrganizer').value,
+                price: document.getElementById('editPrice').value,
+                imageUrl: document.getElementById('editImageUrl').value
+            };
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.UPDATE(eventId)), {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updatedEvent)
+                });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to update event');
+                }
+                showSuccess('Event updated successfully.');
+                document.getElementById('editEventModal').style.display = 'none';
+                loadEventsContent();
+            } catch (error) {
+                showError(error.message || 'Failed to update event.');
+            }
+        };
+    }
+});
 
 async function deleteEvent(eventId) {
     if (!confirm('Are you sure you want to delete this event?')) {

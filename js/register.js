@@ -223,6 +223,27 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             const data = await response.json();
             if (response.ok) {
+                // Check for eventId in URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const eventId = urlParams.get('eventId');
+                if (eventId) {
+                    // Register user for the event
+                    try {
+                        const eventResponse = await fetch(`/api/events/${eventId}/register`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email })
+                        });
+                        const eventData = await eventResponse.json();
+                        if (eventResponse.ok) {
+                            alert('Registration successful and you have been registered for the event!');
+                        } else {
+                            alert('Registration successful, but failed to register for the event: ' + (eventData.message || 'Unknown error'));
+                        }
+                    } catch (eventError) {
+                        alert('Registration successful, but failed to register for the event.');
+                    }
+                }
                 window.location.replace('login.html');
             } else {
                 showError((data && data.message) ? data.message : 'Registration failed');
