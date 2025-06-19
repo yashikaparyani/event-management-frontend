@@ -209,7 +209,8 @@ document.addEventListener('DOMContentLoaded', function() {
         setLoading(true, registerBtn);
         errorMsg.textContent = '';
         try {
-            const response = await fetch('/api/auth/register', {
+            // Use the correct backend URL for registration
+            const response = await fetch(getApiUrl(config.ENDPOINTS.AUTH.REGISTER), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
