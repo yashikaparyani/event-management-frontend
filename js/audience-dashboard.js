@@ -95,6 +95,7 @@ function renderEvents(events) {
                     <div class="event-description">
                         ${preview}
                     </div>
+                    ${event.qrCode ? `<div class='event-qr'><img src='${event.qrCode}' alt='QR Code for registration' style='width:120px;height:120px;margin-top:10px;'/></div>` : ''}
                     <button class="btn btn-secondary view-details-btn" data-event-idx="${idx}">View Details</button>
                 </div>
             </div>

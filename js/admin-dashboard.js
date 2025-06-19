@@ -478,6 +478,7 @@ function renderEventsList(events) {
                 <div class="event-description">
                     <p>${event.description}</p>
                 </div>
+                ${event.qrCode ? `<div class="event-qr"><img src="${event.qrCode}" alt="QR Code for registration" style="width:120px;height:120px;margin-top:10px;"/></div>` : ''}
                 <div class="event-footer">
                     <button onclick="editEvent('${event._id}')" class="btn btn-info btn-sm">Edit</button>
                     <button onclick="deleteEvent('${event._id}')" class="btn btn-danger btn-sm">Delete</button>
