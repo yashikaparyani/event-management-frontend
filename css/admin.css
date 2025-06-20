@@ -21,16 +21,17 @@
     background: #f8f9fa;
 }
 
-.user-info {
+/* Admin-specific user-info override */
+.admin-container .user-info {
     flex: 1;
 }
 
-.user-info h3 {
+.admin-container .user-info h3 {
     margin: 0 0 10px 0;
     color: #2c3e50;
 }
 
-.user-info p {
+.admin-container .user-info p {
     margin: 5px 0;
     color: #666;
 }
@@ -67,34 +68,4 @@
 
 .btn-reject:hover {
     background-color: #c82333;
-}
-
-.loading, .no-pending {
-    text-align: center;
-    padding: 20px;
-    color: #666;
-}
-
-/* Toast Notifications */
-.toast {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 15px 25px;
-    border-radius: 4px;
-    color: white;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.toast.success {
-    background-color: #28a745;
-}
-
-.toast.error {
-    background-color: #dc3545;
-}
-
-.toast.show {
-    opacity: 1;
 }
