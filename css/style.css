@@ -662,6 +662,30 @@ a {
     .carousel-image {
         height: 120px;
     }
+    .hero-section {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1.5rem 0.5rem;
+    }
+    .hero-content {
+        max-width: 100%;
+        text-align: center;
+        order: 1;
+    }
+    .carousel-container {
+        width: 100%;
+        height: 180px;
+        margin-top: 1.2rem;
+        order: 2;
+    }
+    .hero-content h1 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+    .hero-content p {
+        font-size: 1.1rem;
+        margin-bottom: 1.2rem;
+    }
 }
 
 @media (max-width: 400px) {
