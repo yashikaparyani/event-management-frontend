@@ -18,7 +18,8 @@ const config = {
             LIST: '/api/users',
             APPROVE: (userId) => `/api/approve-user/${userId}`,
             STATUS: (userId) => `/api/users/${userId}/status`,
-            DELETE: (userId) => `/api/users/${userId}`
+            DELETE: (userId) => `/api/users/${userId}`,
+            UPDATE: (userId) => `/api/users/${userId}`
         },
         ROLES: {
             LIST: '/api/roles',

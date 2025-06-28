@@ -54,10 +54,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <label for="coordinationArea">Coordination Area</label>
                         <input type="text" id="coordinationArea" name="coordinationArea" placeholder="e.g., Venue Management, Volunteer Lead">
                     </div>
-                    <div class="form-group">
-                        <label for="experience">Experience (Years)</label>
-                        <input type="number" id="experience" name="experience" min="0" placeholder="e.g., 2">
-                    </div>
                 `;
                 break;
             case 'volunteer':
@@ -93,6 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
         const role = roleSelect.value;
@@ -119,6 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const formData = {
             name,
             email,
+            phone,
             password,
             role,
         };
@@ -128,7 +126,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             formData.eventInterest = document.getElementById('eventInterest').value;
         } else if (role === 'coordinator') {
             formData.coordinationArea = document.getElementById('coordinationArea').value;
-            formData.experience = document.getElementById('experience').value;
         } else if (role === 'volunteer') {
             formData.availability = document.getElementById('availability').value;
             formData.skills = document.getElementById('skills').value;

@@ -152,12 +152,27 @@ async function handleUserApproval(userId, status) {
     }
 }
 
-function displayPendingUsers(users) {
+async function displayPendingUsers(users) {
     const pendingUsersList = document.getElementById('pendingUsersList');
-    
     if (!users || users.length === 0) {
         pendingUsersList.innerHTML = '<p class="no-pending">No pending approvals</p>';
         return;
+    }
+
+    // Fetch event names for users with eventId
+    const eventIdToName = {};
+    const eventIds = users.filter(u => u.eventId).map(u => u.eventId);
+    if (eventIds.length > 0) {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(getApiUrl(`/events?ids=${eventIds.join(',')}`), {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (response.ok) {
+                const events = await response.json();
+                events.forEach(ev => { eventIdToName[ev._id] = ev.title; });
+            }
+        } catch (e) { /* ignore errors, fallback to ID */ }
     }
 
     const usersHTML = users.map(user => `
@@ -166,6 +181,7 @@ function displayPendingUsers(users) {
                 <h3>${user.name}</h3>
                 <p>Role: ${user.role ? user.role.name : 'N/A'}</p>
                 <p>Email: ${user.email}</p>
+                ${user.eventId ? `<p>Event: ${eventIdToName[user.eventId] || user.eventId}</p>` : ''}
                 ${user.coordinationArea ? `<p>Coordination Area: ${user.coordinationArea}</p>` : ''}
                 ${user.experience ? `<p>Experience: ${user.experience}</p>` : ''}
                 ${user.availability ? `<p>Availability: ${user.availability}</p>` : ''}
@@ -275,9 +291,82 @@ async function deleteUser(userId) {
     }
 }
 
-function editUser(userId) {
-    showError('Edit user functionality not yet implemented.');
-    // In a real application, this would open a modal or navigate to an edit page
+async function editUser(userId) {
+    const userRow = document.querySelector(`button[onclick="editUser('${userId}')"]`).closest('tr');
+    const name = userRow.cells[0].textContent;
+    const email = userRow.cells[1].textContent;
+    const currentRole = userRow.cells[2].textContent;
+
+    // Show the modal
+    const modal = document.getElementById('editUserModal');
+    modal.classList.add('show');
+    document.body.classList.add('modal-open');
+
+    // Populate the form fields
+    modal.querySelector('#editUserId').value = userId;
+    modal.querySelector('#editUserName').value = name;
+    modal.querySelector('#editUserEmail').value = email;
+    
+    // Fetch and populate roles
+    const roleSelect = modal.querySelector('#editUserRole');
+    roleSelect.innerHTML = '<option>Loading roles...</option>';
+
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(getApiUrl(config.ENDPOINTS.ROLES.LIST), {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error('Failed to fetch roles');
+        
+        const roles = await response.json();
+        roleSelect.innerHTML = ''; // Clear loading message
+        
+        roles.forEach(role => {
+            const option = document.createElement('option');
+            option.value = role.name;
+            option.textContent = role.name;
+            if (role.name === currentRole) {
+                option.selected = true;
+            }
+            roleSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error fetching roles:', error);
+        roleSelect.innerHTML = `<option value="${currentRole}" selected>Failed to load roles</option>`;
+        showError('Could not load roles for the dropdown.');
+    }
+}
+
+async function updateUser(userId, userData) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(getApiUrl(config.ENDPOINTS.USERS.UPDATE(userId)), {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to update user');
+        }
+
+        showSuccess('User updated successfully.');
+        closeUserModal();
+        loadUsersContent(); // Refresh user list
+    } catch (error) {
+        console.error('Error updating user:', error);
+        showError(error.message);
+    }
+}
+
+function closeUserModal() {
+    const modal = document.getElementById('editUserModal');
+    modal.classList.remove('show');
+    document.body.classList.remove('modal-open');
 }
 
 // Role and Permission Management Functions
@@ -483,14 +572,132 @@ function renderEventsList(events) {
                     <button onclick="editEvent('${event._id}')" class="btn btn-info btn-sm">Edit</button>
                     <button onclick="deleteEvent('${event._id}')" class="btn btn-danger btn-sm">Delete</button>
                 </div>
+                <div class="event-applications-toggles">
+                    <label style="margin-right: 16px;">
+                        <input type="checkbox" data-event-id="${event._id}" data-role="coordinator" class="toggle-applications" ${event.applicationsOpen && event.applicationsOpen.coordinator ? 'checked' : ''}>
+                        Accepting Coordinator Applications
+                    </label>
+                    <label>
+                        <input type="checkbox" data-event-id="${event._id}" data-role="volunteer" class="toggle-applications" ${event.applicationsOpen && event.applicationsOpen.volunteer ? 'checked' : ''}>
+                        Accepting Volunteer Applications
+                    </label>
+                </div>
             </div>
         </div>
     `).join('');
+
+    // Add event listeners for toggles
+    document.querySelectorAll('.toggle-applications').forEach(toggle => {
+        toggle.addEventListener('change', async function() {
+            const eventId = this.getAttribute('data-event-id');
+            const role = this.getAttribute('data-role');
+            const open = this.checked;
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(getApiUrl(`/events/${eventId}/applications-open`), {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ role, open })
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to update application status');
+                }
+                showSuccess(data.message || 'Application status updated');
+            } catch (error) {
+                showError(error.message || 'Failed to update application status');
+                // Revert toggle state on error
+                this.checked = !this.checked;
+            }
+        });
+    });
 }
 
 function editEvent(eventId) {
-    showError('Edit event functionality not yet implemented.');
-    // In a real application, this would open a modal or navigate to an edit page
+    // Fetch event data and open modal
+    fetchEventData(eventId);
+}
+
+async function fetchEventData(eventId) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.UPDATE(eventId)), {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch event data');
+        }
+        
+        const event = await response.json();
+        openEditModal(event);
+    } catch (error) {
+        console.error('Error fetching event data:', error);
+        showError('Failed to load event data for editing');
+    }
+}
+
+function openEditModal(event) {
+    document.body.classList.add('modal-open');
+    // Populate form fields with existing event data
+    document.getElementById('editTitle').value = event.title || '';
+    document.getElementById('editDescription').value = event.description || '';
+    
+    // Format date for input field (YYYY-MM-DD)
+    const eventDate = new Date(event.date);
+    const formattedDate = eventDate.toISOString().split('T')[0];
+    document.getElementById('editDate').value = formattedDate;
+    
+    document.getElementById('editTime').value = event.time || '';
+    document.getElementById('editLocation').value = event.location || '';
+    document.getElementById('editCapacity').value = event.capacity || '';
+    document.getElementById('editOrganizer').value = event.organizer || '';
+    document.getElementById('editPrice').value = event.price || 0;
+    document.getElementById('editImageUrl').value = event.imageUrl || '';
+    
+    // Store event ID for form submission
+    document.getElementById('editEventForm').dataset.eventId = event._id;
+    
+    // Show modal
+    document.getElementById('editEventModal').classList.add('show');
+}
+
+function closeEditModal() {
+    document.body.classList.remove('modal-open');
+    document.getElementById('editEventModal').classList.remove('show');
+    document.getElementById('editEventForm').reset();
+    delete document.getElementById('editEventForm').dataset.eventId;
+}
+
+async function updateEvent(eventId, eventData) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.UPDATE(eventId)), {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(eventData)
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to update event');
+        }
+        
+        showSuccess('Event updated successfully.');
+        closeEditModal();
+        loadEventsContent(); // Refresh event list
+    } catch (error) {
+        console.error('Error updating event:', error);
+        showError(error.message);
+    }
 }
 
 async function deleteEvent(eventId) {
@@ -570,4 +777,80 @@ function setupEventListeners() {
             loadContent(targetId); // Use loadContent to handle everything
         });
     });
+
+    // Edit Event Modal Event Listeners
+    const editEventForm = document.getElementById('editEventForm');
+    const closeEditModalBtn = document.getElementById('closeEditModal');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+    if (editEventForm) {
+        editEventForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const eventId = editEventForm.dataset.eventId;
+            if (!eventId) {
+                showError('Event ID not found');
+                return;
+            }
+
+            const formData = new FormData(editEventForm);
+            const eventData = Object.fromEntries(formData.entries());
+
+            // Format date for backend
+            if (eventData.date) {
+                eventData.date = new Date(eventData.date).toISOString();
+            }
+
+            // Convert numeric fields
+            if (eventData.capacity) {
+                eventData.capacity = parseInt(eventData.capacity);
+            }
+            if (eventData.price) {
+                eventData.price = parseFloat(eventData.price);
+            }
+
+            await updateEvent(eventId, eventData);
+        });
+    }
+
+    if (closeEditModalBtn) {
+        closeEditModalBtn.addEventListener('click', closeEditModal);
+    }
+
+    if (cancelEditBtn) {
+        cancelEditBtn.addEventListener('click', closeEditModal);
+    }
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+        const modal = document.getElementById('editEventModal');
+        if (e.target === modal) {
+            closeEditModal();
+        }
+    });
+
+    // Edit User Modal Event Listeners
+    const editUserForm = document.getElementById('editUserForm');
+    if (editUserForm) {
+        editUserForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const userId = document.getElementById('editUserId').value;
+            const userData = {
+                name: document.getElementById('editUserName').value,
+                email: document.getElementById('editUserEmail').value,
+                role: document.getElementById('editUserRole').value,
+            };
+            updateUser(userId, userData);
+        });
+    }
+
+    const closeUserModalBtn = document.getElementById('closeUserModal');
+    if (closeUserModalBtn) {
+        closeUserModalBtn.addEventListener('click', closeUserModal);
+    }
+
+    const cancelUserEditBtn = document.getElementById('cancelUserEditBtn');
+    if (cancelUserEditBtn) {
+        cancelUserEditBtn.addEventListener('click', closeUserModal);
+    }
 }
