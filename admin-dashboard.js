@@ -49,10 +49,10 @@ async function handleApiResponse(response) {
 async function loadDashboardData() {
     try {
         const [statsResponse, pendingResponse] = await Promise.all([
-            fetch('http://localhost:5000/api/dashboard/stats', {
+            fetch('https://event-management-backend-z0ty.onrender.com/api/dashboard/stats', {
                 headers: getAuthHeaders()
             }),
-            fetch('http://localhost:5000/api/pending-users', {
+            fetch('https://event-management-backend-z0ty.onrender.com/api/pending-users', {
                 headers: getAuthHeaders()
             })
         ]);
