@@ -160,10 +160,115 @@
                 <div class="dashboard-header">
                     <h1>Settings</h1>
                 </div>
+                <div class="settings-section">
+                    <h2>Public Registration Roles</h2>
+                    <form id="publicRolesForm">
+                        <label><input type="checkbox" name="publicRole" value="participant" checked> Participant</label><br>
+                        <label><input type="checkbox" name="publicRole" value="audience" checked> Audience</label><br>
+                        <label><input type="checkbox" name="publicRole" value="coordinator"> Coordinator</label><br>
+                        <label><input type="checkbox" name="publicRole" value="volunteer"> Volunteer</label><br>
+                        <button type="submit" class="btn-primary" style="margin-top: 10px;">Save</button>
+                        <span id="publicRolesSaveMsg" style="margin-left: 10px;"></span>
+                    </form>
+                </div>
                 <p>Content for Settings will go here.</p>
             </div>
 
+            <!-- Edit User Modal -->
+            <div id="editUserModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Edit User</h2>
+                        <span class="close" id="closeUserModal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editUserForm">
+                            <input type="hidden" id="editUserId" name="userId">
+                            <div class="form-group">
+                                <label for="editUserName">Name</label>
+                                <input type="text" id="editUserName" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editUserEmail">Email</label>
+                                <input type="email" id="editUserEmail" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editUserRole">Role</label>
+                                <select id="editUserRole" name="role" required></select>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">Save Changes</button>
+                                <button type="button" class="btn-secondary" id="cancelUserEditBtn">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </main>
+    </div>
+
+    <!-- Edit Event Modal -->
+    <div id="editEventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="editModalTitle">Edit Event</h2>
+                <span class="close" id="closeEditModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editEventForm">
+                    <div class="form-group">
+                        <label for="editTitle">Event Title</label>
+                        <input type="text" id="editTitle" name="title" required placeholder="e.g., Annual Tech Conference">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editDescription">Description</label>
+                        <textarea id="editDescription" name="description" rows="5" placeholder="A brief description of the event..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editDate">Date</label>
+                        <input type="date" id="editDate" name="date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editTime">Time</label>
+                        <input type="time" id="editTime" name="time">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editLocation">Location</label>
+                        <input type="text" id="editLocation" name="location" required placeholder="e.g., Virtual (Zoom), City Convention Center">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editCapacity">Capacity</label>
+                        <input type="number" id="editCapacity" name="capacity" min="1" placeholder="e.g., 100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editOrganizer">Organizer</label>
+                        <input type="text" id="editOrganizer" name="organizer" placeholder="e.g., Tech Innovations Inc.">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editPrice">Ticket Price (USD)</label>
+                        <input type="number" id="editPrice" name="price" step="0.01" min="0" value="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editImageUrl">Image URL</label>
+                        <input type="url" id="editImageUrl" name="imageUrl" placeholder="Optional: URL for event image">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Update Event</button>
+                        <button type="button" class="btn-secondary" id="cancelEditBtn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <script src="js/config.js"></script>

@@ -22,6 +22,13 @@
         </label>
         <span class="role-label" id="audienceLabel">Audience</span>
       </div>
+      <!-- Role Selection Dropdown -->
+      <div class="form-group" id="roleDropdownGroup" style="display:none;">
+        <label for="roleDropdown">Select Role</label>
+        <select id="roleDropdown" name="roleDropdown" required></select>
+      </div>
+      <!-- Conditional fields for different roles -->
+      <div id="conditionalFields"></div>
       <form id="registerForm" class="register-form">
         <div class="form-group">
           <label for="name">Full Name</label>
@@ -71,5 +78,11 @@
   </div>
   <script src="js/config.js"></script>
   <script src="js/register.js"></script>
+  <script>
+    // Remove the toggle and labels for participant/audience
+    document.getElementById('roleToggle').style.display = 'none';
+    document.getElementById('participantLabel').style.display = 'none';
+    document.getElementById('audienceLabel').style.display = 'none';
+  </script>
 </body>
 </html>

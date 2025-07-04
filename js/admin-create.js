@@ -54,10 +54,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <label for="coordinationArea">Coordination Area</label>
                         <input type="text" id="coordinationArea" name="coordinationArea" placeholder="e.g., Venue Management, Volunteer Lead">
                     </div>
-                    <div class="form-group">
-                        <label for="experience">Experience (Years)</label>
-                        <input type="number" id="experience" name="experience" min="0" placeholder="e.g., 2">
-                    </div>
                 `;
                 break;
             case 'volunteer':
@@ -120,7 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             name,
             email,
             password,
-            role,
+            role
         };
 
         // Add conditional fields data
@@ -128,23 +124,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             formData.eventInterest = document.getElementById('eventInterest').value;
         } else if (role === 'coordinator') {
             formData.coordinationArea = document.getElementById('coordinationArea').value;
-            formData.experience = document.getElementById('experience').value;
         } else if (role === 'volunteer') {
             formData.availability = document.getElementById('availability').value;
             formData.skills = document.getElementById('skills').value;
         }
 
         try {
-            const response = await fetch(getApiUrl(config.ENDPOINTS.AUTH.REGISTER), {
+            const response = await fetch(getApiUrl(config.ENDPOINTS.USERS.LIST), {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` // Admin creating user
-                },
+                headers: getAuthHeaders(),
                 body: JSON.stringify(formData)
             });
 
             const data = await response.json();
+
+            if (response.status === 401) {
+                // Token expired or invalid
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.replace('login.html');
+                return;
+            }
 
             if (!response.ok) {
                 throw new Error(data.message || 'Failed to create user');
