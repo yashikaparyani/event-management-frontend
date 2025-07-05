@@ -91,7 +91,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     const roleToggle = document.getElementById('roleToggle');
     const participantLabel = document.getElementById('participantLabel');
     const audienceLabel = document.getElementById('audienceLabel');
-    let selectedRole = 'participant';
+    // Default role for public registration (since UI is hidden)
+    let selectedRole = 'audience';
 
     function updateRoleLabels() {
         if (roleToggle && participantLabel && audienceLabel) {
@@ -294,14 +295,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
         const phone = phoneInput.value.trim();
-        let selectedRole = 'audience'; // Default role for public registration
-        const roleDropdown = document.getElementById('roleDropdown');
-        const roleToggle = document.getElementById('roleToggle');
-        if (roleDropdown && roleDropdown.style.display !== 'none') {
-            selectedRole = roleDropdown.value;
-        } else if (roleToggle && roleToggle.style.display !== 'none') {
-            selectedRole = roleToggle.checked ? 'audience' : 'participant';
-        }
+        // Use the global selectedRole variable (already set to 'audience' by default)
         if (!name || !email || !password || !phone) {
             showError('Please fill all fields.');
             return;
