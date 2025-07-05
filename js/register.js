@@ -294,7 +294,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
         const phone = phoneInput.value.trim();
-        let selectedRole = '';
+        let selectedRole = 'audience'; // Default role for public registration
         const roleDropdown = document.getElementById('roleDropdown');
         const roleToggle = document.getElementById('roleToggle');
         if (roleDropdown && roleDropdown.style.display !== 'none') {
