@@ -67,6 +67,7 @@ async function loadAllEvents() {
 
 async function registerForEvent(eventId) {
     const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user'));
     try {
         const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.REGISTER(eventId)), {
             method: 'POST',
@@ -74,7 +75,7 @@ async function registerForEvent(eventId) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({})
+            body: JSON.stringify({ email: user.email }) // Send email as required by backend
         });
         const result = await response.json();
         if (response.ok) {
