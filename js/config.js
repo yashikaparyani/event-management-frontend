@@ -3,6 +3,8 @@ const config = {
     // API Base URL - will be different for development and production
     API_BASE_URL: 'https://event-management-backend-z0ty.onrender.com',
     
+    // Socket.IO URL
+    SOCKET_URL: 'https://event-management-backend-z0ty.onrender.com',
     
     // API Endpoints
     ENDPOINTS: {
@@ -37,6 +39,13 @@ const config = {
             UPCOMING: '/api/events/upcoming',
             REGISTERED: '/api/events/registered',
             REGISTER: (eventId) => `/api/events/${eventId}/register`
+        },
+        QUIZZES: {
+            CREATE: '/api/quizzes',
+            GET: (quizId) => `/api/quizzes/${quizId}`,
+            UPDATE: (quizId) => `/api/quizzes/${quizId}`,
+            BY_EVENT: (eventId) => `/api/quizzes/event/${eventId}`,
+            BY_COORDINATOR: '/api/quizzes/coordinator/quizzes'
         }
     }
 };

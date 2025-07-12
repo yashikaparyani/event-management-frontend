@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Participant</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .quiz-container { max-width: 600px; margin: 0 auto; padding: 30px; }
+        .waiting-room { text-align: center; padding: 40px 0; }
+        .question-block { background: #f9f9f9; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .option-btn { display: block; width: 100%; margin: 10px 0; padding: 12px; border-radius: 5px; border: 1px solid #ddd; background: #fff; cursor: pointer; font-size: 16px; transition: background 0.2s; }
+        .option-btn.selected { background: #007bff; color: #fff; border-color: #007bff; }
+        .option-btn.correct { background: #28a745; color: #fff; border-color: #28a745; }
+        .option-btn.incorrect { background: #dc3545; color: #fff; border-color: #dc3545; }
+        .timer { font-size: 18px; font-weight: bold; color: #007bff; margin-bottom: 15px; }
+        .leaderboard { margin-top: 30px; }
+        .leaderboard table { width: 100%; border-collapse: collapse; }
+        .leaderboard th, .leaderboard td { padding: 10px; border: 1px solid #ddd; text-align: center; }
+        .leaderboard th { background: #f1f1f1; }
+        .success-message, .error-message { margin: 15px 0; padding: 10px; border-radius: 5px; }
+        .success-message { background: #d4edda; color: #155724; }
+        .error-message { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-user"></i>
+                <h2>Participant</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="participant-dashboard.html"><i class="fas fa-arrow-left"></i> <span>Back to Dashboard</span></a></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <div class="quiz-container">
+                <div id="waitingRoom" class="waiting-room">
+                    <h2>Welcome to the Quiz!</h2>
+                    <p>Waiting for the coordinator to start the quiz...</p>
+                    <div class="spinner"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+                </div>
+                <div id="quizBlock" style="display:none;">
+                    <div class="timer" id="timerDisplay">Time Left: <span id="timer">0</span>s</div>
+                    <div class="question-block">
+                        <h3 id="questionText">Question</h3>
+                        <div id="optionsList"></div>
+                    </div>
+                    <button id="submitAnswerBtn" class="btn btn-primary" disabled>Submit Answer</button>
+                    <div id="answerFeedback"></div>
+                </div>
+                <div id="leaderboardBlock" class="leaderboard" style="display:none;">
+                    <h2>Leaderboard</h2>
+                    <table>
+                        <thead>
+                            <tr><th>Rank</th><th>Name</th><th>Correct</th><th>Answered</th><th>Accuracy (%)</th><th>Time (s)</th></tr>
+                        </thead>
+                        <tbody id="leaderboardBody"></tbody>
+                    </table>
+                </div>
+                <div id="successMessage" class="success-message" style="display:none;"></div>
+                <div id="errorMessage" class="error-message" style="display:none;"></div>
+            </div>
+        </main>
+    </div>
+    <script src="js/config.js"></script>
+    <script src="js/participant-quiz.js"></script>
+</body>
+</html> 

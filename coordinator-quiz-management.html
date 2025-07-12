@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Management - Event Management</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .quiz-management {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .quiz-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .quiz-controls {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .btn-control {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .btn-start {
+            background: #28a745;
+            color: white;
+        }
+        .btn-next {
+            background: #007bff;
+            color: white;
+        }
+        .btn-leaderboard {
+            background: #ffc107;
+            color: #212529;
+        }
+        .btn-control:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .btn-control:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .question-preview {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: white;
+        }
+        .question-number {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        .option {
+            margin: 5px 0;
+            padding: 5px;
+        }
+        .correct-option {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        .timer-info {
+            color: #6c757d;
+            font-style: italic;
+        }
+        .status-indicator {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .status-waiting {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status-finished {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .error-message {
+            color: #dc3545;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8d7da;
+            border-radius: 5px;
+        }
+        .success-message {
+            color: #155724;
+            margin: 10px 0;
+            padding: 10px;
+            background: #d4edda;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-user-tie"></i>
+                <h2>Coordinator</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="coordinator-dashboard.html"><i class="fas fa-arrow-left"></i> <span>Back to Dashboard</span></a></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <div class="quiz-management">
+                <div class="quiz-header">
+                    <h1 id="quizTitle">Loading Quiz...</h1>
+                    <p id="quizDescription"></p>
+                    <p><strong>Quiz ID:</strong> <span id="quizId">Loading...</span></p>
+                    <p><strong>Event:</strong> <span id="eventTitle">Loading...</span></p>
+                </div>
+                
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+                <div id="successMessage" class="success-message" style="display: none;"></div>
+                
+                <div id="statusIndicator" class="status-indicator status-waiting">
+                    <i class="fas fa-clock"></i> Quiz Status: Waiting to Start
+                </div>
+                
+                <div class="quiz-controls">
+                    <button id="startQuizBtn" class="btn-control btn-start" onclick="startQuiz()">
+                        <i class="fas fa-play"></i> Start Quiz
+                    </button>
+                    <button id="nextQuestionBtn" class="btn-control btn-next" onclick="nextQuestion()" disabled>
+                        <i class="fas fa-forward"></i> Next Question
+                    </button>
+                    <button id="showLeaderboardBtn" class="btn-control btn-leaderboard" onclick="showLeaderboard()" disabled>
+                        <i class="fas fa-trophy"></i> Show Leaderboard
+                    </button>
+                </div>
+                
+                <div id="quizProgress">
+                    <h3>Quiz Progress</h3>
+                    <p>Current Question: <span id="currentQuestion">-</span> of <span id="totalQuestions">-</span></p>
+                </div>
+                
+                <div id="questionsPreview">
+                    <h3>Questions Preview</h3>
+                    <div id="questionsList">
+                        <!-- Questions will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/config.js"></script>
+    <script src="js/coordinator-quiz-management.js"></script>
+</body>
+</html> 

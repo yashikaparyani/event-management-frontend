@@ -34,6 +34,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <p>${event.description || ''}</p>
                         <p><strong>Date:</strong> ${event.date ? new Date(event.date).toLocaleDateString() : 'N/A'}</p>
                         <p><strong>Location:</strong> ${event.location || 'N/A'}</p>
+                        <div class="event-actions">
+                            <button class="btn btn-primary" onclick="createOrEditQuiz('${event._id}', '${event.title}')">
+                                <i class="fas fa-edit"></i> Create/Edit Quiz
+                            </button>
+                        </div>
                     </div>
                 `).join('');
             }
@@ -48,4 +53,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             eventsManagedCard.textContent = '0';
         }
     }
-}); 
+});
+
+// Function to create or edit quiz for an event
+async function createOrEditQuiz(eventId, eventTitle) {
+    // Store event info for quiz creation
+    localStorage.setItem('currentEventId', eventId);
+    localStorage.setItem('currentEventTitle', eventTitle);
+    
+    // Redirect to quiz creation page
+    window.location.href = 'coordinator-quiz-creation.html';
+} 

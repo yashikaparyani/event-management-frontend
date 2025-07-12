@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Creation - Event Management</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .quiz-form {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question-container {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .option-group {
+            margin: 10px 0;
+        }
+        .option-group label {
+            display: block;
+            margin: 5px 0;
+        }
+        .option-group input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 2px 0;
+        }
+        .option-group input[type="radio"] {
+            margin-right: 10px;
+        }
+        .btn-remove-question {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .btn-add-question {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .btn-save-quiz {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .error-message {
+            color: #dc3545;
+            margin: 10px 0;
+        }
+        .success-message {
+            color: #28a745;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-user-tie"></i>
+                <h2>Coordinator</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="coordinator-dashboard.html"><i class="fas fa-arrow-left"></i> <span>Back to Dashboard</span></a></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <div class="quiz-form">
+                <h1>Create/Edit Quiz</h1>
+                <p id="eventInfo">Event: <span id="eventTitle">Loading...</span></p>
+                
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+                <div id="successMessage" class="success-message" style="display: none;"></div>
+                
+                <form id="quizForm">
+                    <div class="form-group">
+                        <label for="quizTitle">Quiz Title</label>
+                        <input type="text" id="quizTitle" name="quizTitle" required placeholder="Enter quiz title">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quizDescription">Quiz Description</label>
+                        <textarea id="quizDescription" name="quizDescription" rows="3" placeholder="Enter quiz description"></textarea>
+                    </div>
+                    
+                    <div id="questionsContainer">
+                        <!-- Questions will be added here dynamically -->
+                    </div>
+                    
+                    <button type="button" class="btn-add-question" onclick="addQuestion()">
+                        <i class="fas fa-plus"></i> Add Question
+                    </button>
+                    
+                    <button type="submit" class="btn-save-quiz">
+                        <i class="fas fa-save"></i> Create Quiz
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/config.js"></script>
+    <script src="js/coordinator-quiz-creation.js"></script>
+</body>
+</html> 
