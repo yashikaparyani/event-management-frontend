@@ -592,22 +592,50 @@ function openEditModal(event) {
     // Populate form fields with existing event data
     document.getElementById('editTitle').value = event.title || '';
     document.getElementById('editDescription').value = event.description || '';
-    
     // Format date for input field (YYYY-MM-DD)
     const eventDate = new Date(event.date);
     const formattedDate = eventDate.toISOString().split('T')[0];
     document.getElementById('editDate').value = formattedDate;
-    
     document.getElementById('editTime').value = event.time || '';
     document.getElementById('editLocation').value = event.location || '';
     document.getElementById('editCapacity').value = event.capacity || '';
     document.getElementById('editOrganizer').value = event.organizer || '';
     document.getElementById('editPrice').value = event.price || 0;
     document.getElementById('editImageUrl').value = event.imageUrl || '';
-    
+    // Populate coordinator dropdown
+    const coordinatorSelect = document.getElementById('editCoordinator');
+    if (coordinatorSelect) {
+        coordinatorSelect.innerHTML = '<option value="">Unassigned</option>';
+        // Fetch coordinators
+        fetch(getApiUrl(config.ENDPOINTS.USERS.LIST), {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        })
+        .then(res => res.json())
+        .then(users => {
+            const coordinators = users.filter(u => u.role && (u.role.name === 'coordinator'));
+            if (coordinators.length === 0) {
+                coordinatorSelect.innerHTML = '<option value="">No coordinators available</option>';
+                coordinatorSelect.disabled = true;
+            } else {
+                coordinators.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user._id || user.id;
+                    option.textContent = user.name + ' (' + user.email + ')';
+                    if ((event.coordinator && (user._id === event.coordinator || user.id === event.coordinator)) || (event.coordinator && event.coordinator._id && user._id === event.coordinator._id)) {
+                        option.selected = true;
+                    }
+                    coordinatorSelect.appendChild(option);
+                });
+                coordinatorSelect.disabled = false;
+            }
+        })
+        .catch(() => {
+            coordinatorSelect.innerHTML = '<option value="">Failed to load coordinators</option>';
+            coordinatorSelect.disabled = true;
+        });
+    }
     // Store event ID for form submission
     document.getElementById('editEventForm').dataset.eventId = event._id;
-    
     // Show modal
     document.getElementById('editEventModal').classList.add('show');
 }
@@ -731,21 +759,17 @@ function setupEventListeners() {
     if (editEventForm) {
         editEventForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const eventId = editEventForm.dataset.eventId;
             if (!eventId) {
                 showError('Event ID not found');
                 return;
             }
-
             const formData = new FormData(editEventForm);
             const eventData = Object.fromEntries(formData.entries());
-
             // Format date for backend
             if (eventData.date) {
                 eventData.date = new Date(eventData.date).toISOString();
             }
-
             // Convert numeric fields
             if (eventData.capacity) {
                 eventData.capacity = parseInt(eventData.capacity);
@@ -753,7 +777,10 @@ function setupEventListeners() {
             if (eventData.price) {
                 eventData.price = parseFloat(eventData.price);
             }
-
+            // Add coordinator field
+            if (eventData.coordinator === '') {
+                eventData.coordinator = null;
+            }
             await updateEvent(eventId, eventData);
         });
     }

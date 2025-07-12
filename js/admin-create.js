@@ -54,7 +54,39 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <label for="coordinationArea">Coordination Area</label>
                         <input type="text" id="coordinationArea" name="coordinationArea" placeholder="e.g., Venue Management, Volunteer Lead">
                     </div>
+                    <div class="form-group" id="eventDropdownGroup">
+                        <label for="assignedEventId">Assign Event</label>
+                        <select id="assignedEventId" name="assignedEventId">
+                            <option value="">Loading events...</option>
+                        </select>
+                    </div>
                 `;
+                // Fetch events and populate dropdown
+                fetch(getApiUrl(config.ENDPOINTS.EVENTS.LIST), {
+                    headers: getAuthHeaders()
+                })
+                .then(response => response.json())
+                .then(events => {
+                    const eventDropdown = document.getElementById('assignedEventId');
+                    if (!Array.isArray(events) || events.length === 0) {
+                        eventDropdown.innerHTML = '<option value="">No events available</option>';
+                        eventDropdown.disabled = true;
+                    } else {
+                        eventDropdown.innerHTML = '<option value="">Select an event</option>';
+                        events.forEach(event => {
+                            const option = document.createElement('option');
+                            option.value = event._id;
+                            option.textContent = event.title;
+                            eventDropdown.appendChild(option);
+                        });
+                        eventDropdown.disabled = false;
+                    }
+                })
+                .catch(err => {
+                    const eventDropdown = document.getElementById('assignedEventId');
+                    eventDropdown.innerHTML = '<option value="">Failed to load events</option>';
+                    eventDropdown.disabled = true;
+                });
                 break;
             case 'volunteer':
                 conditionalFieldsDiv.innerHTML = `
@@ -124,6 +156,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             formData.eventInterest = document.getElementById('eventInterest').value;
         } else if (role === 'coordinator') {
             formData.coordinationArea = document.getElementById('coordinationArea').value;
+            const assignedEventIdElem = document.getElementById('assignedEventId');
+            if (assignedEventIdElem && assignedEventIdElem.value) {
+                formData.assignedEventId = assignedEventIdElem.value;
+            }
         } else if (role === 'volunteer') {
             formData.availability = document.getElementById('availability').value;
             formData.skills = document.getElementById('skills').value;
