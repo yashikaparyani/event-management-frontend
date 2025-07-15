@@ -174,19 +174,35 @@ async function startQuiz() {
     
     try {
         const user = JSON.parse(localStorage.getItem('user'));
-        
-        // Emit socket event to start quiz
-        socket.emit('start-quiz', {
+        // Ensure eventId is available
+        const eventId = currentQuiz.event && currentQuiz.event._id ? currentQuiz.event._id : (currentQuiz.event || null);
+        if (!eventId) {
+            showError('Event ID not found for this quiz.');
+            return;
+        }
+        // First, join the quiz as coordinator
+        socket.emit('join-quiz', {
             quizId: currentQuiz._id,
-            userId: user.id
+            userId: user.id,
+            eventId: eventId
         });
-        
-        // Update local state
-        updateQuizState('active');
-        currentQuestionIndex = 0;
-        updateQuizProgress();
-        showSuccess('Quiz started! Participants can now begin.');
-        
+        // Wait for join-quiz acknowledgment before starting
+        socket.once('quiz-joined', function() {
+            // Now emit socket event to start quiz
+            socket.emit('start-quiz', {
+                quizId: currentQuiz._id,
+                userId: user.id
+            });
+            // Update local state
+            updateQuizState('active');
+            currentQuestionIndex = 0;
+            updateQuizProgress();
+            showSuccess('Quiz started! Participants can now begin.');
+        });
+        // Listen for join-quiz error
+        socket.once('error', function(data) {
+            showError(data.message || 'Failed to join quiz as coordinator.');
+        });
     } catch (error) {
         console.error('Error starting quiz:', error);
         showError('Failed to start quiz.');
