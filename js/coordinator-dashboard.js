@@ -38,6 +38,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <button class="btn btn-primary" onclick="createOrEditQuiz('${event._id}', '${event.title}')">
                                 <i class="fas fa-edit"></i> Create/Edit Quiz
                             </button>
+                            ${event.title === 'Debate' ? `
+                                <button class="btn btn-success" onclick="startDebate('${event._id}', '${event.title}')">
+                                    <i class="fas fa-play-circle"></i> Start Debate
+                                </button>
+                            ` : ''}
                         </div>
                     </div>
                 `).join('');
@@ -63,4 +68,13 @@ async function createOrEditQuiz(eventId, eventTitle) {
     
     // Redirect to quiz creation page
     window.location.href = 'coordinator-quiz-creation.html';
+} 
+
+// Add logic to show 'Start Debate' button for Debate events and handle navigation
+function startDebate(eventId, eventTitle) {
+    // Optionally trigger backend to activate debate via socket or REST
+    localStorage.setItem('currentEventId', eventId);
+    localStorage.setItem('currentEventTitle', eventTitle);
+    localStorage.setItem('currentEventRole', 'coordinator');
+    window.location.href = 'coordinator-debate.html';
 } 
