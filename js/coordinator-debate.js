@@ -1,5 +1,5 @@
 // Debate page logic for all roles
-const socket = io();
+const socket = io(config.SOCKET_URL);
 const eventId = localStorage.getItem('currentEventId');
 const eventTitle = localStorage.getItem('currentEventTitle');
 const role = localStorage.getItem('currentEventRole');
