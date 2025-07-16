@@ -72,9 +72,25 @@ async function createOrEditQuiz(eventId, eventTitle) {
 
 // Add logic to show 'Start Debate' button for Debate events and handle navigation
 function startDebate(eventId, eventTitle) {
-    // Optionally trigger backend to activate debate via socket or REST
     localStorage.setItem('currentEventId', eventId);
     localStorage.setItem('currentEventTitle', eventTitle);
     localStorage.setItem('currentEventRole', 'coordinator');
-    window.location.href = 'coordinator-debate.html';
+
+    // Start debate via socket before navigating
+    const script = document.createElement('script');
+    script.src = 'https://cdn.socket.io/4.7.2/socket.io.min.js';
+    script.onload = () => {
+        const socket = io(config.SOCKET_URL);
+        const userId = localStorage.getItem('userId');
+        socket.emit('start-debate', { eventId, userId });
+        socket.on('debate-state-update', (data) => {
+            if (data.status === 'active') {
+                window.location.href = 'coordinator-debate.html';
+            }
+        });
+        socket.on('error', (err) => {
+            alert('Failed to start debate: ' + (err.message || JSON.stringify(err)));
+        });
+    };
+    document.head.appendChild(script);
 } 
