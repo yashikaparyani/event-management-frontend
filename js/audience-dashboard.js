@@ -117,14 +117,6 @@ function renderEvents(events) {
     });
 }
 
-// Add logic to show 'Join Debate' button for Debate event when active
-function joinDebate(eventId, eventTitle) {
-    localStorage.setItem('currentEventId', eventId);
-    localStorage.setItem('currentEventTitle', eventTitle);
-    localStorage.setItem('currentEventRole', 'audience');
-    window.location.href = 'coordinator-debate.html';
-}
-
 // Update loadAllEvents to cache all events and render all by default
 async function loadAllEvents() {
     try {

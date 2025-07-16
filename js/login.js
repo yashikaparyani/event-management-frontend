@@ -95,12 +95,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         // Store token and user data in local storage
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        // Store userId for socket and debate modules
-        localStorage.setItem('userId', data.user.id || data.user._id);
-        // Optionally, ensure role is stored in lowercase if used elsewhere
-        if (data.user.role && data.user.role.name) {
-            localStorage.setItem('role', data.user.role.name.toLowerCase());
-        }
+
         console.log('Login successful. Initiating redirection...');
         redirectToDashboard(data.user.role.name);
 

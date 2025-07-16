@@ -38,11 +38,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <button class="btn btn-primary" onclick="createOrEditQuiz('${event._id}', '${event.title}')">
                                 <i class="fas fa-edit"></i> Create/Edit Quiz
                             </button>
-                            ${event.title === 'Debate' ? `
-                                <button class="btn btn-success" onclick="startDebate('${event._id}', '${event.title}')">
-                                    <i class="fas fa-play-circle"></i> Start Debate
-                                </button>
-                            ` : ''}
                         </div>
                     </div>
                 `).join('');
@@ -68,29 +63,4 @@ async function createOrEditQuiz(eventId, eventTitle) {
     
     // Redirect to quiz creation page
     window.location.href = 'coordinator-quiz-creation.html';
-} 
-
-// Add logic to show 'Start Debate' button for Debate events and handle navigation
-function startDebate(eventId, eventTitle) {
-    localStorage.setItem('currentEventId', eventId);
-    localStorage.setItem('currentEventTitle', eventTitle);
-    localStorage.setItem('currentEventRole', 'coordinator');
-
-    // Start debate via socket before navigating
-    const script = document.createElement('script');
-    script.src = 'https://cdn.socket.io/4.7.2/socket.io.min.js';
-    script.onload = () => {
-        const socket = io(config.SOCKET_URL);
-        const userId = localStorage.getItem('userId');
-        socket.emit('start-debate', { eventId, userId });
-        socket.on('debate-state-update', (data) => {
-            if (data.status === 'active') {
-                window.location.href = 'coordinator-debate.html';
-            }
-        });
-        socket.on('error', (err) => {
-            alert('Failed to start debate: ' + (err.message || JSON.stringify(err)));
-        });
-    };
-    document.head.appendChild(script);
 } 
