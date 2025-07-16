@@ -108,25 +108,25 @@ async function loadRegisteredEvents() {
         }
         eventsContainer.innerHTML = events.map(event => {
             let eventCardHtml = `
-                <div class="event-card">
-                    <img src="${event.imageUrl || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="Event Image" class="event-card-image">
-                    <div class="event-card-content">
-                        <div class="event-header">
-                            <h3>${event.title}</h3>
-                            <span class="event-badge">${event.organizer || ''}</span>
-                        </div>
-                        <div class="event-details">
-                            <p><i class="fas fa-calendar"></i> ${new Date(event.date).toLocaleDateString()} ${event.time ? ('| ' + event.time) : ''}</p>
-                            <p><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
-                        </div>
-                        <div class="event-description">
-                            ${(event.description || '').split(' ').slice(0, 20).join(' ')}${(event.description && event.description.split(' ').length > 20) ? '...' : ''}
-                        </div>
-                        <div class="event-actions">
-                            <button class="btn btn-success" onclick="startEvent('${event._id}', '${event.title}')">Start Event</button>
-                        </div>
+            <div class="event-card">
+                <img src="${event.imageUrl || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="Event Image" class="event-card-image">
+                <div class="event-card-content">
+                    <div class="event-header">
+                        <h3>${event.title}</h3>
+                        <span class="event-badge">${event.organizer || ''}</span>
+                    </div>
+                    <div class="event-details">
+                        <p><i class="fas fa-calendar"></i> ${new Date(event.date).toLocaleDateString()} ${event.time ? ('| ' + event.time) : ''}</p>
+                        <p><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
+                    </div>
+                    <div class="event-description">
+                        ${(event.description || '').split(' ').slice(0, 20).join(' ')}${(event.description && event.description.split(' ').length > 20) ? '...' : ''}
+                    </div>
+                    <div class="event-actions">
+                        <button class="btn btn-success" onclick="startEvent('${event._id}', '${event.title}')">Start Event</button>
                     </div>
                 </div>
+            </div>
             `;
 
             // Add logic to show 'Join Debate' button for Debate event when active
