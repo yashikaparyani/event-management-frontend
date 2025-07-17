@@ -2746,3 +2746,154 @@ input:checked + .toggle-slider:before {
 body.modal-open {
     overflow: hidden; /* Prevent background scrolling */
 }
+
+/* --- Poetry Event Unique Styles --- */
+
+.poetry-header, .poetry-header h1 {
+    font-family: 'Playfair Display', serif;
+    color: #a9746e;
+    text-align: center;
+    margin-bottom: 0.2rem;
+    letter-spacing: 2px;
+}
+
+.poetry-subtitle {
+    font-size: 1.2rem;
+    color: #7b5e57;
+    font-style: italic;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+#poetry-submission-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    background: #f7f1ed;
+    padding: 1.2rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(169, 116, 110, 0.07);
+    margin-bottom: 2rem;
+}
+
+#poetry-submission-form label {
+    font-weight: 600;
+    color: #7b5e57;
+}
+
+#poetry-submission-form input[type="text"],
+#poetry-submission-form textarea {
+    border: 1px solid #e7cfc7;
+    border-radius: 6px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #fff;
+}
+
+#poetry-submission-form input[type="file"] {
+    margin-top: 0.3rem;
+}
+
+#poetry-submission-form button {
+    background: linear-gradient(90deg, #a9746e 0%, #e7cfc7 100%);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.7rem 1.2rem;
+    font-size: 1.1rem;
+    font-family: 'Playfair Display', serif;
+    cursor: pointer;
+    margin-top: 0.7rem;
+    transition: background 0.2s;
+}
+
+#poetry-submission-form button:hover {
+    background: linear-gradient(90deg, #e7cfc7 0%, #a9746e 100%);
+}
+
+#participants-list {
+    list-style: none;
+    padding: 0;
+}
+
+#participants-list li {
+    background: #f7f1ed;
+    margin-bottom: 1.2rem;
+    padding: 1rem 1.2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(169, 116, 110, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#participants-list .poem-title {
+    font-weight: bold;
+    color: #a9746e;
+    font-size: 1.1rem;
+}
+
+#participants-list .poet-name {
+    font-style: italic;
+    color: #7b5e57;
+    font-size: 0.98rem;
+}
+
+#participants-list .poem-content {
+    margin-top: 0.5rem;
+    color: #3a2c2a;
+    font-size: 1.05rem;
+    white-space: pre-line;
+}
+
+#rules-list {
+    padding-left: 1.2rem;
+    color: #7b5e57;
+}
+
+#registration-form {
+    background: #f7f1ed;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(169, 116, 110, 0.05);
+}
+
+.judge-score, .judge-feedback {
+    font-size: 1rem;
+    color: #a9746e;
+    margin: 0.3rem 0;
+}
+
+.like-btn {
+    margin-right: 0.7rem;
+    cursor: pointer;
+    font-size: 1.05rem;
+    background: none;
+    border: none;
+    color: #a9746e;
+    transition: color 0.2s;
+}
+
+.like-btn:disabled {
+    color: #e57373;
+}
+
+.comments-section {
+    margin-top: 1rem;
+}
+
+.comments-list {
+    list-style: none;
+    padding: 0;
+}
+
+.comment-form {
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 800px) {
+    #poetry-submission-form {
+        padding: 1rem 0.5rem;
+    }
+}

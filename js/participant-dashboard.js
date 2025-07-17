@@ -123,7 +123,7 @@ async function loadRegisteredEvents() {
                             ${(event.description || '').split(' ').slice(0, 20).join(' ')}${(event.description && event.description.split(' ').length > 20) ? '...' : ''}
                         </div>
                         <div class="event-actions">
-                            <button class="btn btn-success" onclick="startEvent('${event._id}', '${event.title}')">Start Event</button>
+                            <button class="btn btn-success" onclick="startEvent('${event._id}', '${event.title}', '${event.type}')">Start Event</button>
                         </div>
                     </div>
                 </div>
@@ -145,11 +145,18 @@ async function loadRegisteredEvents() {
     }
 }
 
-function startEvent(eventId, eventTitle) {
-    // Store event info and redirect to waiting room/quiz page
+function startEvent(eventId, eventTitle, eventType) {
     localStorage.setItem('currentEventId', eventId);
     localStorage.setItem('currentEventTitle', eventTitle);
-    window.location.href = 'participant-quiz.html';
+    if (eventType === 'Quiz') {
+        window.location.href = 'participant-quiz.html';
+    } else if (eventType === 'Debate') {
+        window.location.href = 'participant-debate.html';
+    } else if (eventType === 'Poetry') {
+        window.location.href = '../poetry/index.html';
+    } else {
+        alert('Unknown event type!');
+    }
 }
 
 function joinDebate(eventId, eventTitle) {
