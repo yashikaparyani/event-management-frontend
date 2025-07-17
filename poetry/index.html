@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poetry Event Module</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Poetry Event</h1>
+        <p class="subtitle">Where words paint pictures and emotions flow</p>
+        <!-- Removed role-switcher dropdown for real user-based access -->
+    </header>
+    <div id="countdown-timer" style="text-align:center; font-size:1.3rem; margin:1.2rem 0; color:#a9746e; font-family:'Playfair Display',serif;"></div>
+    <main>
+        <section id="event-details">
+            <h2>Event Details</h2>
+            <div id="details-content">
+                <p>Date: <span id="event-date">April 30, 2024</span></p>
+                <p>Time: <span id="event-time">6:00 PM</span></p>
+                <p>Venue: <span id="event-venue">Virtual</span></p>
+                <p>Description: <span id="event-description">An evening of poetic brilliance. Submit your original poems and let your words shine!</span></p>
+            </div>
+        </section>
+        <section id="poetry-submission-section">
+            <h2>Submit Your Poetry</h2>
+            <form id="poetry-submission-form">
+                <label for="poet-name">Your Name:</label>
+                <input type="text" id="poet-name" name="poet-name" required>
+                <label for="poem-title">Poem Title:</label>
+                <input type="text" id="poem-title" name="poem-title" required>
+                <label for="poem-text">Poem (Text):</label>
+                <textarea id="poem-text" name="poem-text" rows="6" placeholder="Type your poem here..."></textarea>
+                <label for="poem-file">Or upload as image/file:</label>
+                <input type="file" id="poem-file" name="poem-file" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
+                <button type="submit">Submit Poem</button>
+            </form>
+            <div id="submission-success" style="display:none;">Thank you for submitting your poem!</div>
+        </section>
+        <section id="participants-section">
+            <h2>Submitted Poems</h2>
+            <div id="sorting-controls">
+                <label for="sort-poems">Sort by: </label>
+                <select id="sort-poems">
+                    <option value="most-liked">Most Liked</option>
+                    <option value="most-recent">Most Recent</option>
+                    <option value="poet-name">Poet Name</option>
+                </select>
+            </div>
+            <ul id="participants-list">
+                <!-- Poems will be listed here -->
+            </ul>
+        </section>
+        <section id="rules-section">
+            <h2>Rules & Guidelines</h2>
+            <ul id="rules-list">
+                <li>Original works only. Plagiarism will result in disqualification.</li>
+                <li>One submission per participant.</li>
+                <li>Poems can be in English or Hindi.</li>
+                <li>Maximum length: 40 lines or 2 pages.</li>
+                <li>Respectful and inclusive content only.</li>
+            </ul>
+        </section>
+        <section id="registration-section">
+            <h2>Register for Event</h2>
+            <div id="registration-form">
+                <!-- Registration form or info here -->
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html> 
