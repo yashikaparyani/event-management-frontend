@@ -154,6 +154,8 @@ function startEvent(eventId, eventTitle, eventType) {
         window.location.href = 'participant-debate.html';
     } else if (eventType === 'Poetry') {
         window.location.href = 'poetry/index.html';
+    } else if (eventType === 'Remix') {
+        window.location.href = 'remix.html'; // Update this to your Remix event page/component
     } else {
         alert('Unknown event type!');
     }

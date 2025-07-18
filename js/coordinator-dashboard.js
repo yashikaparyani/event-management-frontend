@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!response.ok) throw new Error('Failed to fetch events');
         const events = await response.json();
         // Filter events managed by this coordinator
-        const managedEvents = events.filter(event => event.coordinator === user.id || event.coordinator === user._id);
+        const managedEvents = events.filter(event => event.coordinator === user.id || event.coordinator === user._id || (event.assignedCoordinators && event.assignedCoordinators.includes(user.id)));
 
         // Update Events Managed card
         const eventsManagedCard = document.querySelector('.dashboard-grid .card:nth-child(1) p');
@@ -35,9 +35,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <p><strong>Date:</strong> ${event.date ? new Date(event.date).toLocaleDateString() : 'N/A'}</p>
                         <p><strong>Location:</strong> ${event.location || 'N/A'}</p>
                         <div class="event-actions">
-                            <button class="btn btn-primary" onclick="createOrEditQuiz('${event._id}', '${event.title}')">
-                                <i class="fas fa-edit"></i> Create/Edit Quiz
-                            </button>
+                            ${event.type === 'Remix' ?
+                                `<button class="btn btn-success" onclick="openRemix('${event._id}', '${event.title}')">
+                                    <i class="fas fa-music"></i> Open Remix
+                                </button>` :
+                                `<button class="btn btn-primary" onclick="createOrEditQuiz('${event._id}', '${event.title}')">
+                                    <i class="fas fa-edit"></i> Create/Edit Quiz
+                                </button>`
+                            }
                         </div>
                     </div>
                 `).join('');
@@ -63,4 +68,11 @@ async function createOrEditQuiz(eventId, eventTitle) {
     
     // Redirect to quiz creation page
     window.location.href = 'coordinator-quiz-creation.html';
+} 
+
+// Add the openRemix function
+function openRemix(eventId, eventTitle) {
+    localStorage.setItem('currentEventId', eventId);
+    localStorage.setItem('currentEventTitle', eventTitle);
+    window.location.href = 'remix.html'; // Update this to your Remix event page/component
 } 
