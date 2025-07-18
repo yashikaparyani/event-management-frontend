@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Fetch and render poems ---
     async function fetchAndRenderPoems() {
         try {
-            const res = await fetch(getApiUrl('/api/poetry/' + eventId + '/submissions'));
+            const res = await fetch(`/api/poetry/${eventId}/submissions`);
             if (!res.ok) throw new Error('Failed to fetch poems');
             const { submissions } = await res.json();
             renderPoems(submissions);
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const poemId = btn.getAttribute('data-id');
                     if (confirm('Are you sure you want to delete this poem?')) {
                         try {
-                            const res = await fetch(getApiUrl('/api/poetry/' + poemId), {
+                            const res = await fetch(`/api/poetry/${poemId}`, {
                                 method: 'DELETE',
                                 headers: { 'Authorization': `Bearer ${token}` }
                             });
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // File upload not implemented; just send text for now
             const payload = { eventId, poetName, title: poemTitle, text: poemText };
             try {
-                const res = await fetch(getApiUrl('/api/poetry/submit'), {
+                const res = await fetch('/api/poetry/submit', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -87,10 +87,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify(payload)
                 });
                 if (res.ok) {
-                    successMsg.style.display = '';
+                    successMsg.textContent = 'Poem submitted successfully!';
+                    successMsg.style.display = 'block';
                     form.reset();
-                    await fetchAndRenderPoems();
-                    setTimeout(() => { successMsg.style.display = 'none'; }, 2500);
+                    await fetchAndRenderPoems(); // Refresh poems after submission
                 } else {
                     const err = await res.json();
                     alert('Submission failed: ' + (err.message || 'Unknown error'));
@@ -101,6 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- Initial load ---
+    // Initial fetch of poems
     fetchAndRenderPoems();
-}); 
+});

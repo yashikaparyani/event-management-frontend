@@ -42,14 +42,26 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <p><strong>Date:</strong> ${event.date ? new Date(event.date).toLocaleDateString() : 'N/A'}</p>
                         <p><strong>Location:</strong> ${event.location || 'N/A'}</p>
                         <div class="event-actions">
-                            ${event.type === 'Remix' ?
-                                `<button class="btn btn-success" onclick="openRemix('${event._id}', '${event.title}')">
-                                    <i class="fas fa-music"></i> Open Remix
-                                </button>` :
-                                `<button class="btn btn-primary" onclick="createOrEditQuiz('${event._id}', '${event.title}')">
+                            ${event.type === 'Quiz' ? `
+                                <button class="btn btn-primary" onclick="createOrEditQuiz('${event._id}', '${event.title}')">
                                     <i class="fas fa-edit"></i> Create/Edit Quiz
-                                </button>`
-                            }
+                                </button>
+                            ` : ''}
+                            ${event.type === 'Poetry' ? `
+                                <button class="btn btn-info" onclick="managePoetry('${event._id}', '${event.title}')">
+                                    <i class="fas fa-feather-alt"></i> Manage Poetry
+                                </button>
+                            ` : ''}
+                            ${event.type === 'Debate' ? `
+                                <button class="btn btn-success" onclick="startDebate('${event._id}', '${event.title}')">
+                                    <i class="fas fa-play-circle"></i> Start Debate
+                                </button>
+                            ` : ''}
+                            ${event.type === 'Remix' ? `
+                                <button class="btn btn-success" onclick="openRemix('${event._id}', '${event.title}')">
+                                    <i class="fas fa-music"></i> Open Remix
+                                </button>
+                            ` : ''}
                         </div>
                     </div>
                 `).join('');
@@ -82,4 +94,10 @@ function openRemix(eventId, eventTitle) {
     localStorage.setItem('currentEventId', eventId);
     localStorage.setItem('currentEventTitle', eventTitle);
     window.location.href = 'remix.html'; // Update this to your Remix event page/component
+} 
+
+function managePoetry(eventId, eventTitle) {
+    localStorage.setItem('currentEventId', eventId);
+    localStorage.setItem('currentEventTitle', eventTitle);
+    window.location.href = '../poetry/index.html';
 } 

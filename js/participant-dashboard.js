@@ -141,9 +141,18 @@ function startEvent(eventId, eventTitle, eventType) {
     localStorage.setItem('currentEventTitle', eventTitle);
     if (eventType === 'Quiz') {
         window.location.href = 'participant-quiz.html';
+    } else if (eventType === 'Debate') {
+        window.location.href = 'participant-debate.html';
     } else if (eventType === 'Poetry') {
-        window.location.href = '../poetry/index.html';
+        window.location.href = 'poetry/index.html';
     } else {
         alert('Unknown event type!');
     }
+}
+
+function joinDebate(eventId, eventTitle) {
+    localStorage.setItem('currentEventId', eventId);
+    localStorage.setItem('currentEventTitle', eventTitle);
+    localStorage.setItem('currentEventRole', 'participant'); // Assuming participant role for now
+    window.location.href = 'coordinator-debate.html';
 } 
