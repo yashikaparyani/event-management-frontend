@@ -13,11 +13,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         if (!response.ok) throw new Error('Failed to fetch events');
         const events = await response.json();
-        const userId = user.id || user._id;
+        // Filter events managed by this coordinator
         const managedEvents = events.filter(event =>
-          event.coordinator === userId ||
-          event.coordinator === user._id ||
-          (event.assignedCoordinators && event.assignedCoordinators.some(id => id == userId))
+            event.coordinator === user.id ||
+            event.coordinator === user._id ||
+            (event.assignedCoordinators && (
+                event.assignedCoordinators.map(String).includes(String(user.id)) ||
+                event.assignedCoordinators.map(String).includes(String(user._id))
+            ))
         );
 
         // Update Events Managed card
