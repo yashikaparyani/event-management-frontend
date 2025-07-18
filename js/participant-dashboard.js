@@ -128,15 +128,6 @@ async function loadRegisteredEvents() {
                     </div>
                 </div>
             `;
-
-            // Add logic to show 'Join Debate' button for Debate event when active
-            if (event.type === 'Debate' && event.status === 'active') {
-                eventCardHtml += `
-                    <div class="event-actions">
-                        <button class="btn btn-info" onclick="joinDebate('${event._id}', '${event.title}')">Join Debate</button>
-                    </div>
-                `;
-            }
             return eventCardHtml;
         }).join('');
     } catch (error) {
@@ -150,20 +141,9 @@ function startEvent(eventId, eventTitle, eventType) {
     localStorage.setItem('currentEventTitle', eventTitle);
     if (eventType === 'Quiz') {
         window.location.href = 'participant-quiz.html';
-    } else if (eventType === 'Debate') {
-        window.location.href = 'participant-debate.html';
     } else if (eventType === 'Poetry') {
-        window.location.href = 'poetry/index.html';
-    } else if (eventType === 'Remix') {
-        window.location.href = 'remix.html'; // Update this to your Remix event page/component
+        window.location.href = '../poetry/index.html';
     } else {
         alert('Unknown event type!');
     }
-}
-
-function joinDebate(eventId, eventTitle) {
-    localStorage.setItem('currentEventId', eventId);
-    localStorage.setItem('currentEventTitle', eventTitle);
-    localStorage.setItem('currentEventRole', 'participant'); // Assuming participant role for now
-    window.location.href = 'coordinator-debate.html';
 } 
