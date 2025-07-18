@@ -70,7 +70,7 @@ const SignUp = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://localhost:3000/api/auth/signup', userData);
+      const response = await axios.post('https://event-management-backend-z0ty.onrender.com/api/auth/signup', userData);
       
       alert(response.data.message); // data is an object property. 
       window.location.href = '/login'; // Redirect to login page

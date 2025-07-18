@@ -1,0 +1,262 @@
+/* .parent{
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+
+} */
+
+.child{
+    height: auto;
+    width: auto;
+    padding: 3%;
+    display: flex;
+   flex-flow: column;
+
+}  
+
+#userManagementSection{
+    padding-top: 1.2rem;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+h1,
+h2 {
+    color: #333;
+    text-align: center;
+}
+
+.user-profile {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* padding: 20px; */
+    /* margin-bottom: 30px; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 5rem;
+    padding: 1rem;
+}
+
+.user-profile-details {
+    display: flex;
+    gap: 30px;
+}
+
+.user-info {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.user-info strong {
+    color: #007bff;
+}
+
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+
+}
+
+.action-button-container{
+    display: flex;
+}
+
+th {
+    background-color: #f0f0f0;
+    color: #333;
+    font-weight: 600;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f0f8ff;
+}
+
+.action-btn {
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    margin: 4px;
+    transition: background-color 0.2s;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.danger-btn {
+    background-color: #dc3545;
+    width: 5rem;
+}
+
+.danger-del-btn {
+    background-color: #dc3545;
+    /* width: 2.5rem; */
+}
+
+.danger-btn:hover {
+    background-color: #c82333;
+}
+
+.danger-del-btn:hover {
+    background-color: #c82333;
+}
+
+.success-btn {
+    background-color: #28a745;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 8rem;
+    padding: 1rem;
+flex-direction: row;
+}
+
+.success-btn:hover {
+    background-color: #218838;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+#userModal,
+#editUserModal,
+#createUserModal {
+    border-radius: 8px;
+    position: fixed;
+    /* Use fixed positioning to center relative to the viewport */
+    top: 50%;
+    /* Vertically center */
+    left: 50%;
+    /* Horizontally center */
+    transform: translate(-50%, -50%);
+    /* Precise centering */
+    background: #fff;
+    padding: 20px;
+    border: 2px solid #333;
+    z-index: 1000;
+    width: 400px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    display: none;
+    /* Initially hidden */
+}
+
+.modal-title {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.modal-content {
+    margin-bottom: 15px;
+}
+
+.modal-actions {
+    text-align: right;
+    margin-top: 15px;
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+}
+
+.permission-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.checkbox-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.alert {
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+#alertContainer {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+    max-width: 300px;
+}
