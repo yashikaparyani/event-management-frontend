@@ -53,11 +53,21 @@ document.addEventListener('DOMContentLoaded', function() {
                                 method: 'DELETE',
                                 headers: { 'Authorization': `Bearer ${token}` }
                             });
+                            let result;
+                            try {
+                                const contentType = res.headers.get('content-type');
+                                if (contentType && contentType.includes('application/json')) {
+                                    result = await res.json();
+                                } else {
+                                    result = null;
+                                }
+                            } catch (e) {
+                                result = null;
+                            }
                             if (res.ok) {
                                 await fetchAndRenderPoems();
                             } else {
-                                const err = await res.json();
-                                alert('Delete failed: ' + (err.message || 'Unknown error'));
+                                alert('Delete failed: ' + (result && result.message ? result.message : 'Unknown error'));
                             }
                         } catch (err) {
                             alert('Delete failed: ' + err.message);
@@ -86,14 +96,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     body: JSON.stringify(payload)
                 });
+                let result;
+                try {
+                    const contentType = res.headers.get('content-type');
+                    if (contentType && contentType.includes('application/json')) {
+                        result = await res.json();
+                    } else {
+                        result = null;
+                    }
+                } catch (e) {
+                    result = null;
+                }
                 if (res.ok) {
-                    successMsg.textContent = 'Poem submitted successfully!';
-                    successMsg.style.display = 'block';
+                    successMsg.style.display = '';
                     form.reset();
-                    await fetchAndRenderPoems(); // Refresh poems after submission
+                    await fetchAndRenderPoems();
+                    setTimeout(() => { successMsg.style.display = 'none'; }, 2500);
                 } else {
-                    const err = await res.json();
-                    alert('Submission failed: ' + (err.message || 'Unknown error'));
+                    alert('Submission failed: ' + (result && result.message ? result.message : 'Unknown error'));
                 }
             } catch (err) {
                 alert('Submission failed: ' + err.message);
