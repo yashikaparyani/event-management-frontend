@@ -26,14 +26,12 @@
         <section id="poetry-submission-section">
             <h2>Submit Your Poetry</h2>
             <form id="poetry-submission-form">
-                <label for="poet-name">Your Name:</label>
-                <input type="text" id="poet-name" name="poet-name" required>
                 <label for="poem-title">Poem Title:</label>
                 <input type="text" id="poem-title" name="poem-title" required>
                 <label for="poem-text">Poem (Text):</label>
                 <textarea id="poem-text" name="poem-text" rows="6" placeholder="Type your poem here..."></textarea>
                 <label for="poem-file">Or upload as image/file:</label>
-                <input type="file" id="poem-file" name="poem-file" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
+                <input type="file" id="poem-file" name="poemFile" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
                 <button type="submit">Submit Poem</button>
             </form>
             <div id="submission-success" style="display:none;">Thank you for submitting your poem!</div>
@@ -69,6 +67,17 @@
             </div>
         </section>
     </main>
+    <div id="poem-modal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <span class="close" id="close-poem-modal">&times;</span>
+        <h2 id="modal-poem-title"></h2>
+        <p><strong>By:</strong> <span id="modal-poet-name"></span></p>
+        <p><strong>Submitted:</strong> <span id="modal-poem-date"></span></p>
+        <div id="modal-poem-text"></div>
+        <div id="modal-poem-file-block" style="margin-top:1em;"></div>
+        <div id="modal-like-block" style="margin-top:1em;"></div>
+      </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html> 

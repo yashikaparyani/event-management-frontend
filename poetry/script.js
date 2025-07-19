@@ -12,10 +12,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('poetry-submission-form');
     const successMsg = document.getElementById('submission-success');
 
+    const userName = user.name || '';
+    const roleName = user.role && user.role.name ? user.role.name : userRole;
+
+    // Hide submit form for non-participants
+    if (roleName !== 'participant') {
+        if (submissionSection) submissionSection.style.display = 'none';
+    } else {
+        if (submissionSection) submissionSection.style.display = '';
+    }
+
     // --- Fetch and render poems ---
     async function fetchAndRenderPoems() {
         try {
-            const res = await fetch(`/api/poetry/${eventId}/submissions`);
+            const res = await fetch(getApiUrl('/api/poetry/' + eventId + '/submissions'), {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             if (!res.ok) throw new Error('Failed to fetch poems');
             const { submissions } = await res.json();
             renderPoems(submissions);
@@ -32,24 +44,56 @@ document.addEventListener('DOMContentLoaded', function() {
         let html = '<ul id="participants-list">';
         poems.forEach(poem => {
             html += `<li data-poem-id="${poem._id}">
-                <span class="poem-title">${poem.title}</span> <span class="poet-name">by ${poem.poetName}</span>
-                <div class="poem-content">${poem.text ? poem.text : '[No poem submitted]'}</div>`;
-            // Show delete button for admin/coordinator
-            if (userRole === 'admin' || userRole === 'coordinator') {
-                html += `<button class='delete-poem-btn' data-id='${poem._id}' style='margin-left:1rem;color:#fff;background:#e57373;border:none;border-radius:4px;padding:0.2rem 0.7rem;cursor:pointer;'>Delete</button>`;
+                <span class="poem-title">${poem.title}</span> <span class="poet-name">by ${poem.user && poem.user.name ? poem.user.name : poem.poetName || ''}</span>
+                <span class="poem-date"> | ${new Date(poem.createdAt).toLocaleString()}</span>
+                <span class="like-count" style="margin-left:1em;">&#x1F44D; ${poem.likeCount}</span>
+                <button class='view-poem-btn' data-id='${poem._id}' style='margin-left:1em;'>View</button>`;
+            // Like button for audience only
+            if (roleName === 'audience') {
+                html += `<button class='like-poem-btn' data-id='${poem._id}' style='margin-left:0.5em;' ${poem.likedByCurrentUser ? 'disabled' : ''}>&#x1F44D; Like</button>`;
+            }
+            // Delete button for coordinator/volunteer
+            if (roleName === 'coordinator' || roleName === 'volunteer') {
+                html += `<button class='delete-poem-btn' data-id='${poem._id}' style='margin-left:1em;color:#fff;background:#e57373;border:none;border-radius:4px;padding:0.2rem 0.7rem;cursor:pointer;'>Delete</button>`;
             }
             html += `</li>`;
         });
         html += '</ul>';
         participantsSection.innerHTML = html;
-        // Add delete button listeners
-        if (userRole === 'admin' || userRole === 'coordinator') {
+
+        // Add view button listeners
+        document.querySelectorAll('.view-poem-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const poemId = btn.getAttribute('data-id');
+                const poem = poems.find(p => p._id === poemId);
+                showPoemModal(poem);
+            });
+        });
+        // Add like button listeners (audience)
+        if (roleName === 'audience') {
+            document.querySelectorAll('.like-poem-btn').forEach(btn => {
+                btn.addEventListener('click', async function() {
+                    const poemId = btn.getAttribute('data-id');
+                    try {
+                        const res = await fetch(getApiUrl('/api/poetry/' + poemId + '/like'), {
+                            method: 'POST',
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        await fetchAndRenderPoems();
+                    } catch (err) {
+                        alert('Like failed: ' + err.message);
+                    }
+                });
+            });
+        }
+        // Add delete button listeners (coordinator/volunteer)
+        if (roleName === 'coordinator' || roleName === 'volunteer') {
             document.querySelectorAll('.delete-poem-btn').forEach(btn => {
                 btn.addEventListener('click', async function() {
                     const poemId = btn.getAttribute('data-id');
                     if (confirm('Are you sure you want to delete this poem?')) {
                         try {
-                            const res = await fetch(`/api/poetry/${poemId}`, {
+                            const res = await fetch(getApiUrl('/api/poetry/' + poemId), {
                                 method: 'DELETE',
                                 headers: { 'Authorization': `Bearer ${token}` }
                             });
@@ -78,23 +122,57 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // --- Modal logic ---
+    function showPoemModal(poem) {
+        const modal = document.getElementById('poem-modal');
+        document.getElementById('modal-poem-title').textContent = poem.title;
+        document.getElementById('modal-poet-name').textContent = poem.user && poem.user.name ? poem.user.name : poem.poetName || '';
+        document.getElementById('modal-poem-date').textContent = new Date(poem.createdAt).toLocaleString();
+        document.getElementById('modal-poem-text').textContent = poem.text || '[No poem submitted]';
+        // File block
+        const fileBlock = document.getElementById('modal-poem-file-block');
+        if (poem.fileUrl) {
+            fileBlock.innerHTML = `<a href="${getApiUrl(poem.fileUrl)}" target="_blank">View/Download File</a>`;
+        } else {
+            fileBlock.innerHTML = '';
+        }
+        // Like block
+        const likeBlock = document.getElementById('modal-like-block');
+        likeBlock.innerHTML = `<span>&#x1F44D; ${poem.likeCount} Likes</span>`;
+        modal.style.display = 'block';
+        document.getElementById('close-poem-modal').onclick = function() {
+            modal.style.display = 'none';
+        };
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    }
+
     // --- Handle poem submission ---
     if (form) {
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
-            const poetName = document.getElementById('poet-name').value.trim();
             const poemTitle = document.getElementById('poem-title').value.trim();
             const poemText = document.getElementById('poem-text').value.trim();
-            // File upload not implemented; just send text for now
-            const payload = { eventId, poetName, title: poemTitle, text: poemText };
+            const poemFileInput = document.getElementById('poem-file');
+            const formData = new FormData();
+            formData.append('eventId', eventId);
+            formData.append('title', poemTitle);
+            formData.append('text', poemText);
+            // Use account name for participant
+            formData.append('poetName', userName);
+            if (poemFileInput && poemFileInput.files.length > 0) {
+                formData.append('poemFile', poemFileInput.files[0]);
+            }
             try {
-                const res = await fetch('/api/poetry/submit', {
+                const res = await fetch(getApiUrl('/api/poetry/submit'), {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify(payload)
+                    body: formData
                 });
                 let result;
                 try {
