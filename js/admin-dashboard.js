@@ -781,6 +781,13 @@ function setupEventListeners() {
             if (eventData.coordinator === '') {
                 eventData.coordinator = null;
             }
+            // If event type is Remix and a coordinator is selected, set assignedCoordinators
+            const eventTypeElem = document.getElementById('editType');
+            if (eventTypeElem && eventTypeElem.value === 'Remix' && eventData.coordinator) {
+                eventData.assignedCoordinators = [eventData.coordinator];
+            } else {
+                eventData.assignedCoordinators = [];
+            }
             await updateEvent(eventId, eventData);
         });
     }

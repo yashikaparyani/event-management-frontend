@@ -201,4 +201,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initial fetch of poems
     fetchAndRenderPoems();
-});
+}); 
