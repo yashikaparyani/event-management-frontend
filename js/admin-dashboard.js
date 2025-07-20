@@ -602,6 +602,8 @@ function openEditModal(event) {
     document.getElementById('editOrganizer').value = event.organizer || '';
     document.getElementById('editPrice').value = event.price || 0;
     document.getElementById('editImageUrl').value = event.imageUrl || '';
+    // Set event type in the edit modal
+    document.getElementById('editType').value = event.type || '';
     // Populate coordinator dropdown
     const coordinatorSelect = document.getElementById('editCoordinator');
     if (coordinatorSelect) {
