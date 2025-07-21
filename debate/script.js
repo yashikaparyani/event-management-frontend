@@ -74,14 +74,6 @@ async function showCreateDebateForm() {
             document.getElementById('createDebateError').textContent = err.message;
         }
     };
-    // Hide all other sections before debate creation
-    document.getElementById('topics-section')?.remove();
-    document.getElementById('rules-section')?.remove();
-    document.getElementById('judges-section')?.remove();
-    document.getElementById('participants-section')?.remove();
-    document.getElementById('registration-section')?.remove();
-    document.getElementById('session-state')?.remove();
-    document.getElementById('coordinator-hosting-window').style.display = 'none';
 }
 
 // Update fetchDebate error handler to show create form for coordinator
@@ -457,4 +449,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Optionally, poll for updates if needed
     setInterval(fetchDebate, 15000);
     setInterval(fetchSession, 5000);
+    document.getElementById('topics-section')?.remove();
+    document.getElementById('rules-section')?.remove();
+    document.getElementById('judges-section')?.remove();
+    document.getElementById('participants-section')?.remove();
+    document.getElementById('registration-section')?.remove();
+    document.getElementById('session-state')?.remove();
+    document.getElementById('coordinator-hosting-window').style.display = 'none';
 }); 
