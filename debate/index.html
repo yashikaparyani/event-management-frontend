@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debate Event Module</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Debate Event</h1>
+        <div id="role-switcher">
+            <label for="role">View as: </label>
+            <select id="role">
+                <option value="admin">Admin</option>
+                <option value="participant">Participant</option>
+                <option value="audience">Audience</option>
+            </select>
+        </div>
+    </header>
+    <main>
+        <section id="event-details">
+            <h2>Event Details</h2>
+            <div id="details-content"></div>
+        </section>
+        <section id="topics-section">
+            <h2>Debate Topics</h2>
+            <ul id="topics-list"></ul>
+            <div id="topics-admin-controls"></div>
+        </section>
+        <section id="rules-section">
+            <h2>Rules</h2>
+            <ul id="rules-list"></ul>
+            <div id="rules-admin-controls"></div>
+        </section>
+        <section id="judges-section">
+            <h2>Judges</h2>
+            <ul id="judges-list"></ul>
+            <div id="judges-admin-controls"></div>
+        </section>
+        <section id="participants-section">
+            <h2>Participants / Teams</h2>
+            <ul id="participants-list"></ul>
+        </section>
+        <section id="registration-section">
+            <h2>Register for Event</h2>
+            <div id="registration-form"></div>
+        </section>
+        <div id="session-state"></div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html> 
