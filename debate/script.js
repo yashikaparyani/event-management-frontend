@@ -70,6 +70,9 @@ async function showCreateDebateForm() {
                 })
             });
             if (!res.ok) throw new Error('Failed to create debate');
+            const data = await res.json();
+            // Use the debateId returned from the backend
+            debateId = data.debate._id;
             // After creation, fetch debate, initialize socket, and show hosting window
             const debateRes = await fetch(getApiUrl(config.ENDPOINTS.DEBATES.GET(debateId)), {
                 headers: getAuthHeaders()
