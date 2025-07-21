@@ -226,27 +226,9 @@ window.registerAudience = async function(event) {
     }
 };
 
-// Render registration form
-function renderRegistrationForm() {
-    if (userRole === 'participant') {
-        registrationForm.innerHTML = `
-            <form onsubmit="registerParticipant(event)">
-                <input id="team-name" placeholder="Team Name" required><br>
-                <input id="member-names" placeholder="Member Names (comma separated)" required><br>
-                <input type="submit" value="Register">
-            </form>
-        `;
-    } else if (userRole === 'audience') {
-        registrationForm.innerHTML = `
-            <form onsubmit="registerAudience(event)">
-                <input id="audience-name" placeholder="Your Name" required><br>
-                <input type="submit" value="Register as Audience">
-            </form>
-        `;
-    } else {
-        registrationForm.innerHTML = '<em>Registration forms are only visible to participants and audience.</em>';
-    }
-}
+// Remove or comment out renderRegistrationForm and its calls
+// function renderRegistrationForm() { ... }
+// Remove all calls to renderRegistrationForm();
 
 // --- Real-time (Socket.IO) ---
 function initializeSocket() {
