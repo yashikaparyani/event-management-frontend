@@ -34,7 +34,44 @@ function getUserAndRole() {
     };
 }
 
-// Fetch debate details from backend
+// Add after fetchDebate() error handling
+async function showCreateDebateForm() {
+    detailsContent.innerHTML = `
+        <h3>Create Debate</h3>
+        <form id="createDebateForm">
+            <label>Topics (comma separated):<br>
+                <input id="debateTopics" required>
+            </label><br>
+            <label>Rules (comma separated):<br>
+                <input id="debateRules" required>
+            </label><br>
+            <button type="submit">Create Debate</button>
+        </form>
+        <div id="createDebateError" style="color:red"></div>
+    `;
+    document.getElementById('createDebateForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const topics = document.getElementById('debateTopics').value.split(',').map(t => t.trim()).filter(Boolean);
+        const rules = document.getElementById('debateRules').value.split(',').map(r => r.trim()).filter(Boolean);
+        try {
+            const res = await fetch(getApiUrl(config.ENDPOINTS.DEBATES.CREATE), {
+                method: 'POST',
+                headers: getAuthHeaders(),
+                body: JSON.stringify({
+                    eventId: debateId,
+                    topics,
+                    rules
+                })
+            });
+            if (!res.ok) throw new Error('Failed to create debate');
+            await fetchDebate(); // Reload debate details
+        } catch (err) {
+            document.getElementById('createDebateError').textContent = err.message;
+        }
+    };
+}
+
+// Update fetchDebate error handler to show create form for coordinator
 async function fetchDebate() {
     try {
         const res = await fetch(getApiUrl(config.ENDPOINTS.DEBATES.GET(debateId)), {
@@ -47,7 +84,11 @@ async function fetchDebate() {
         renderRules();
         renderParticipants();
     } catch (e) {
-        detailsContent.innerHTML = '<span style="color:red">Failed to load debate details.</span>';
+        if (userRole === 'coordinator') {
+            showCreateDebateForm();
+        } else {
+            detailsContent.innerHTML = '<span style="color:red">Failed to load debate details.</span>';
+        }
     }
 }
 
