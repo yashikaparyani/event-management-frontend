@@ -427,7 +427,7 @@ window.redirectToDashboard = function() {
 // --- Main Init ---
 // --- Coordinator Debate Flow Refactor ---
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
     debateId = getDebateId();
     if (!debateId) {
         alert('No debateId found.');
@@ -436,28 +436,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { user: u, role } = getUserAndRole();
     user = u;
     userRole = role;
-    // On page load, do NOT call fetchDebate or initializeSocket yet
-    // Instead, try to fetch the debate to check if it exists
-    let debateExists = false;
-    try {
-        const res = await fetch(getApiUrl(config.ENDPOINTS.DEBATES.GET(debateId)), {
-            headers: getAuthHeaders()
-        });
-        if (res.ok) {
-            debate = await res.json();
-            debateExists = true;
-        }
-    } catch (e) {
-        debateExists = false;
-    }
-    if (!debateExists && userRole === 'coordinator') {
+    // Only show create form, do NOT fetch debate or session on page load
+    if (userRole === 'coordinator') {
         showCreateDebateForm();
-        return;
-    }
-    if (debateExists) {
-        // Now safe to fetch session, initialize socket, and show hosting window
-        await fetchSession();
-        initializeSocket();
-        maybeShowHostingWindow();
     }
 }); 
