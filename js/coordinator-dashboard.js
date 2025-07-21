@@ -57,11 +57,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     <i class="fas fa-play-circle"></i> Start Debate
                                 </button>
                             ` : ''}
-                            ${event.type === 'Remix' ? `
-                                <button class="btn btn-success" onclick="openRemix('${event._id}', '${event.title}')">
-                                    <i class="fas fa-music"></i> Open Remix
-                                </button>
-                            ` : ''}
                         </div>
                     </div>
                 `).join('');
@@ -87,13 +82,6 @@ async function createOrEditQuiz(eventId, eventTitle) {
     
     // Redirect to quiz creation page
     window.location.href = 'coordinator-quiz-creation.html';
-} 
-
-// Add the openRemix function
-function openRemix(eventId, eventTitle) {
-    localStorage.setItem('currentEventId', eventId);
-    localStorage.setItem('currentEventTitle', eventTitle);
-    window.location.href = 'remix.html'; // Update this to your Remix event page/component
 } 
 
 function managePoetry(eventId, eventTitle) {
