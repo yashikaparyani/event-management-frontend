@@ -34,19 +34,20 @@ function getUserAndRole() {
     };
 }
 
-// Update showCreateDebateForm to only show the form, use textarea, and add timer field
+// Update showCreateDebateForm to use #create-debate-form and add timer field
 async function showCreateDebateForm() {
-    detailsContent.innerHTML = `
-        <h3>Create Debate</h3>
+    const formDiv = document.getElementById('create-debate-form');
+    if (!formDiv) return;
+    formDiv.innerHTML = `
         <form id="createDebateForm">
             <label>Topics (comma separated):<br>
-                <textarea id="debateTopics" required rows="2" style="width:100%"></textarea>
+                <input id="debateTopics" required autocomplete="off">
             </label><br>
             <label>Rules (comma separated):<br>
-                <textarea id="debateRules" required rows="2" style="width:100%"></textarea>
+                <input id="debateRules" required autocomplete="off">
             </label><br>
             <label>Timer per participant (seconds):<br>
-                <input id="debateTimer" type="number" min="10" max="900" value="120" required style="width:100%">
+                <input id="debateTimer" type="number" min="30" max="600" value="120" required autocomplete="off">
             </label><br>
             <button type="submit">Create Debate</button>
         </form>
@@ -56,7 +57,7 @@ async function showCreateDebateForm() {
         e.preventDefault();
         const topics = document.getElementById('debateTopics').value.split(',').map(t => t.trim()).filter(Boolean);
         const rules = document.getElementById('debateRules').value.split(',').map(r => r.trim()).filter(Boolean);
-        const timerPerParticipant = parseInt(document.getElementById('debateTimer').value, 10);
+        const timer = parseInt(document.getElementById('debateTimer').value, 10);
         try {
             const res = await fetch(getApiUrl(config.ENDPOINTS.DEBATES.CREATE), {
                 method: 'POST',
@@ -65,7 +66,7 @@ async function showCreateDebateForm() {
                     eventId: debateId,
                     topics,
                     rules,
-                    timerPerParticipant
+                    timerPerParticipant: timer
                 })
             });
             if (!res.ok) throw new Error('Failed to create debate');
@@ -449,11 +450,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Optionally, poll for updates if needed
     setInterval(fetchDebate, 15000);
     setInterval(fetchSession, 5000);
-    document.getElementById('topics-section')?.remove();
-    document.getElementById('rules-section')?.remove();
-    document.getElementById('judges-section')?.remove();
-    document.getElementById('participants-section')?.remove();
-    document.getElementById('registration-section')?.remove();
-    document.getElementById('session-state')?.remove();
-    document.getElementById('coordinator-hosting-window').style.display = 'none';
 }); 
