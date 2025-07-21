@@ -89,3 +89,10 @@ function managePoetry(eventId, eventTitle) {
     localStorage.setItem('currentEventTitle', eventTitle);
     window.location.href = '../poetry/index.html';
 } 
+
+function startDebate(eventId, eventTitle) {
+    localStorage.setItem('currentDebateId', eventId);
+    localStorage.setItem('currentEventTitle', eventTitle);
+    // Redirect to the debate management page
+    window.location.href = 'debate/index.html?debateId=' + eventId;
+} 
