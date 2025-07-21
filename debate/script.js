@@ -34,16 +34,19 @@ function getUserAndRole() {
     };
 }
 
-// Add after fetchDebate() error handling
+// Update showCreateDebateForm to only show the form, use textarea, and add timer field
 async function showCreateDebateForm() {
     detailsContent.innerHTML = `
         <h3>Create Debate</h3>
         <form id="createDebateForm">
             <label>Topics (comma separated):<br>
-                <input id="debateTopics" required>
+                <textarea id="debateTopics" required rows="2" style="width:100%"></textarea>
             </label><br>
             <label>Rules (comma separated):<br>
-                <input id="debateRules" required>
+                <textarea id="debateRules" required rows="2" style="width:100%"></textarea>
+            </label><br>
+            <label>Timer per participant (seconds):<br>
+                <input id="debateTimer" type="number" min="10" max="900" value="120" required style="width:100%">
             </label><br>
             <button type="submit">Create Debate</button>
         </form>
@@ -53,6 +56,7 @@ async function showCreateDebateForm() {
         e.preventDefault();
         const topics = document.getElementById('debateTopics').value.split(',').map(t => t.trim()).filter(Boolean);
         const rules = document.getElementById('debateRules').value.split(',').map(r => r.trim()).filter(Boolean);
+        const timerPerParticipant = parseInt(document.getElementById('debateTimer').value, 10);
         try {
             const res = await fetch(getApiUrl(config.ENDPOINTS.DEBATES.CREATE), {
                 method: 'POST',
@@ -60,7 +64,8 @@ async function showCreateDebateForm() {
                 body: JSON.stringify({
                     eventId: debateId,
                     topics,
-                    rules
+                    rules,
+                    timerPerParticipant
                 })
             });
             if (!res.ok) throw new Error('Failed to create debate');
@@ -69,6 +74,14 @@ async function showCreateDebateForm() {
             document.getElementById('createDebateError').textContent = err.message;
         }
     };
+    // Hide all other sections before debate creation
+    document.getElementById('topics-section')?.remove();
+    document.getElementById('rules-section')?.remove();
+    document.getElementById('judges-section')?.remove();
+    document.getElementById('participants-section')?.remove();
+    document.getElementById('registration-section')?.remove();
+    document.getElementById('session-state')?.remove();
+    document.getElementById('coordinator-hosting-window').style.display = 'none';
 }
 
 // Update fetchDebate error handler to show create form for coordinator
