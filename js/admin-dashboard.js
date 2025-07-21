@@ -602,8 +602,6 @@ function openEditModal(event) {
     document.getElementById('editOrganizer').value = event.organizer || '';
     document.getElementById('editPrice').value = event.price || 0;
     document.getElementById('editImageUrl').value = event.imageUrl || '';
-    // Set event type in the edit modal
-    document.getElementById('editType').value = event.type || '';
     // Populate coordinator dropdown
     const coordinatorSelect = document.getElementById('editCoordinator');
     if (coordinatorSelect) {
@@ -782,13 +780,6 @@ function setupEventListeners() {
             // Add coordinator field
             if (eventData.coordinator === '') {
                 eventData.coordinator = null;
-            }
-            // If event type is Remix and a coordinator is selected, set assignedCoordinators
-            const eventTypeElem = document.getElementById('editType');
-            if (eventTypeElem && eventTypeElem.value === 'Remix' && eventData.coordinator) {
-                eventData.assignedCoordinators = [eventData.coordinator];
-            } else {
-                eventData.assignedCoordinators = [];
             }
             await updateEvent(eventId, eventData);
         });
