@@ -81,7 +81,9 @@ async function showCreateDebateForm() {
             debate = await debateRes.json();
             await fetchSession();
             initializeSocket();
-            maybeShowHostingWindow();
+            // In showCreateDebateForm, after successful creation and fetching debate, show a success message
+            formDiv.innerHTML = '<div style="color:green; font-weight:bold;">Debate created successfully!</div>';
+            renderCoordinatorSessionControls();
         } catch (err) {
             document.getElementById('createDebateError').textContent = err.message;
         }
@@ -102,7 +104,6 @@ async function fetchDebate() {
         renderParticipants();
         // Only initialize socket after debate exists
         initializeSocket();
-        maybeShowHostingWindow();
         renderCoordinatorSessionControls(); // Add this line
     } catch (e) {
         if (userRole === 'coordinator') {
