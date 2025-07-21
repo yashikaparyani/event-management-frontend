@@ -70,7 +70,15 @@ async function showCreateDebateForm() {
                 })
             });
             if (!res.ok) throw new Error('Failed to create debate');
-            await fetchDebate(); // Reload debate details
+            // After creation, fetch debate, initialize socket, and show hosting window
+            const debateRes = await fetch(getApiUrl(config.ENDPOINTS.DEBATES.GET(debateId)), {
+                headers: getAuthHeaders()
+            });
+            if (!debateRes.ok) throw new Error('Failed to fetch debate after creation');
+            debate = await debateRes.json();
+            await fetchSession();
+            initializeSocket();
+            maybeShowHostingWindow();
         } catch (err) {
             document.getElementById('createDebateError').textContent = err.message;
         }
@@ -435,6 +443,8 @@ window.redirectToDashboard = function() {
 };
 
 // --- Main Init ---
+// --- Coordinator Debate Flow Refactor ---
+
 document.addEventListener('DOMContentLoaded', async () => {
     debateId = getDebateId();
     if (!debateId) {
@@ -444,10 +454,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { user: u, role } = getUserAndRole();
     user = u;
     userRole = role;
-    await fetchDebate();
-    await fetchSession();
-    renderRegistrationForm();
-    // Optionally, poll for updates if needed
-    setInterval(fetchDebate, 15000);
-    setInterval(fetchSession, 5000);
+    // On page load, do NOT call fetchDebate or initializeSocket yet
+    // Instead, try to fetch the debate to check if it exists
+    let debateExists = false;
+    try {
+        const res = await fetch(getApiUrl(config.ENDPOINTS.DEBATES.GET(debateId)), {
+            headers: getAuthHeaders()
+        });
+        if (res.ok) {
+            debate = await res.json();
+            debateExists = true;
+        }
+    } catch (e) {
+        debateExists = false;
+    }
+    if (!debateExists && userRole === 'coordinator') {
+        showCreateDebateForm();
+        return;
+    }
+    if (debateExists) {
+        // Now safe to fetch session, initialize socket, and show hosting window
+        await fetchSession();
+        initializeSocket();
+        maybeShowHostingWindow();
+    }
 }); 
