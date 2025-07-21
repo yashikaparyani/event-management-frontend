@@ -25,12 +25,17 @@ async function fetchDebate() {
         renderDebateDetails();
         showHostingWindow();
     } catch (e) {
-        document.getElementById('debate-details').innerHTML = '<span style="color:red">Failed to load debate details.</span>';
+        const detailsDiv = document.getElementById('debate-details');
+        if (detailsDiv) {
+            detailsDiv.innerHTML = '<span style="color:red">Failed to load debate details.</span>';
+        }
     }
 }
 
 function renderDebateDetails() {
     if (!debate) return;
+    const detailsDiv = document.getElementById('debate-details');
+    if (!detailsDiv) return;
     let html = '';
     html += `<div><strong>Name:</strong> ${debate.event.title}</div>`;
     html += `<div><strong>Date:</strong> ${new Date(debate.event.date).toLocaleDateString()}</div>`;
@@ -38,11 +43,12 @@ function renderDebateDetails() {
     html += `<div><strong>Location:</strong> ${debate.event.location}</div>`;
     html += `<div><strong>Description:</strong> ${debate.event.description}</div>`;
     html += `<div><strong>Timer per participant:</strong> ${debate.timerPerParticipant || 120} seconds</div>`;
-    document.getElementById('debate-details').innerHTML = html;
+    detailsDiv.innerHTML = html;
 }
 
 function showHostingWindow() {
     const hostDiv = document.getElementById('hosting-window');
+    if (!hostDiv) return;
     hostDiv.style.display = '';
     // Mock: assign half to 'for', half to 'against'
     const allMembers = (debate.teams || []).flatMap(team => (team.members || []).map(m => ({...m, team: team.name, _id: m._id || m.id || m.name})));
@@ -68,12 +74,14 @@ window.selectSpeaker = function(participantId, side) {
 
 function startTimer() {
     const timerBlock = document.getElementById('timer-block');
+    if (!timerBlock) return;
     hostingState.timer = debate.timerPerParticipant || 120; // default 2 min
     timerBlock.innerHTML = `<h4>Timer: <span id='timer-count'>${hostingState.timer}</span> seconds</h4><button onclick='stopChance()'>Stop Chance</button>`;
     if (hostingState.timerInterval) clearInterval(hostingState.timerInterval);
     hostingState.timerInterval = setInterval(() => {
         hostingState.timer--;
-        document.getElementById('timer-count').textContent = hostingState.timer;
+        const timerCount = document.getElementById('timer-count');
+        if (timerCount) timerCount.textContent = hostingState.timer;
         if (hostingState.timer <= 0) stopChance();
     }, 1000);
 }
@@ -81,12 +89,16 @@ function startTimer() {
 window.stopChance = function() {
     if (hostingState.timerInterval) clearInterval(hostingState.timerInterval);
     if (hostingState.currentSpeaker) {
-        document.getElementById(`tick-for-${hostingState.currentSpeaker}`)?.replaceWith('✔️');
-        document.getElementById(`tick-against-${hostingState.currentSpeaker}`)?.replaceWith('✔️');
+        const tickFor = document.getElementById(`tick-for-${hostingState.currentSpeaker}`);
+        if (tickFor) tickFor.replaceWith('✔️');
+        const tickAgainst = document.getElementById(`tick-against-${hostingState.currentSpeaker}`);
+        if (tickAgainst) tickAgainst.replaceWith('✔️');
     }
     hostingState.currentSpeaker = null;
-    document.getElementById('timer-block').innerHTML = '';
-    document.getElementById('scoring-modal')?.remove();
+    const timerBlock = document.getElementById('timer-block');
+    if (timerBlock) timerBlock.innerHTML = '';
+    const scoringModal = document.getElementById('scoring-modal');
+    if (scoringModal) scoringModal.remove();
 };
 
 function showScoringModal(participantId, side) {
