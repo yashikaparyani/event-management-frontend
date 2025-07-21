@@ -103,6 +103,7 @@ async function fetchDebate() {
         // Only initialize socket after debate exists
         initializeSocket();
         maybeShowHostingWindow();
+        renderCoordinatorSessionControls(); // Add this line
     } catch (e) {
         if (userRole === 'coordinator') {
             showCreateDebateForm();
@@ -298,6 +299,42 @@ function renderCoordinatorControls() {
             socket.emit('assign-score', { debateId, userId: user.id, teamId, points });
     }
 };
+}
+
+// Add coordinator session controls (Start/End Debate)
+function renderCoordinatorSessionControls() {
+    if (userRole !== 'coordinator' || !debate) return;
+    const controlsDiv = document.getElementById('coordinator-session-controls');
+    if (!controlsDiv) return;
+    let html = '';
+    html += `<button id="startDebateSessionBtn">Start Debate</button> `;
+    html += `<button id="endDebateSessionBtn">End Debate</button>`;
+    controlsDiv.innerHTML = html;
+    document.getElementById('startDebateSessionBtn').onclick = async () => {
+        try {
+            const res = await fetch(getApiUrl(config.ENDPOINTS.DEBATES.START_SESSION(debateId)), {
+                method: 'POST',
+                headers: getAuthHeaders()
+            });
+            if (!res.ok) throw new Error('Failed to start debate session');
+            // Redirect to hosting window page
+            window.location.href = `hosting.html?debateId=${debateId}`;
+        } catch (e) {
+            alert('Failed to start debate session');
+        }
+    };
+    document.getElementById('endDebateSessionBtn').onclick = async () => {
+        try {
+            const res = await fetch(getApiUrl(config.ENDPOINTS.DEBATES.END_SESSION(debateId)), {
+                method: 'POST',
+                headers: getAuthHeaders()
+            });
+            if (!res.ok) throw new Error('Failed to end debate session');
+            alert('Debate session ended');
+        } catch (e) {
+            alert('Failed to end debate session');
+        }
+    };
 }
 
 // --- Enhanced Coordinator Hosting Window ---
