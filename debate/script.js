@@ -83,6 +83,9 @@ async function fetchDebate() {
         renderTopics();
         renderRules();
         renderParticipants();
+        // Only initialize socket after debate exists
+        initializeSocket();
+        maybeShowHostingWindow();
     } catch (e) {
         if (userRole === 'coordinator') {
             showCreateDebateForm();
@@ -438,10 +441,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await fetchDebate();
     await fetchSession();
     renderRegistrationForm();
-    initializeSocket();
-    if (userRole === 'coordinator') renderCoordinatorControls();
     // Optionally, poll for updates if needed
     setInterval(fetchDebate, 15000);
     setInterval(fetchSession, 5000);
-    maybeShowHostingWindow(); // Show hosting window after debate is fetched
 }); 
