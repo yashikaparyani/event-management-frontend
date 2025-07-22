@@ -142,7 +142,7 @@ function startEvent(eventId, eventTitle, eventType) {
     if (eventType === 'Quiz') {
         window.location.href = 'participant-quiz.html';
     } else if (eventType === 'Debate') {
-        window.location.href = 'participant-debate.html';
+        window.location.href = 'debate/participant-debate.html?debateId=' + eventId;
     } else if (eventType === 'Poetry') {
         window.location.href = 'poetry/index.html';
     } else {
