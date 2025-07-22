@@ -193,7 +193,7 @@ function renderSessionState() {
         }
     }
     sessionBlock.innerHTML = html;
-}
+    }
 
 // Register team (participant)
 window.registerParticipant = async function(event) {
