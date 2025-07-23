@@ -80,7 +80,20 @@ async function registerForEvent(eventId) {
         const result = await response.json();
         if (response.ok) {
             alert('Registered successfully!');
-            loadRegisteredEvents();
+            // Get event details to check event type
+            const eventResponse = await fetch(getApiUrl(`/api/events/${eventId}`), {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const eventDetails = await eventResponse.json();
+            
+            // Redirect based on event type
+            if (eventDetails.type === 'Poetry') {
+                window.location.href = `poetry/index.html?eventId=${eventId}`;
+            } else {
+                loadRegisteredEvents();
+            }
         } else {
             alert(result.message || 'Failed to register for event.');
         }
@@ -98,6 +111,39 @@ async function loadRegisteredEvents() {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
+
+        if (!response.ok) throw new Error('Failed to load registered events');
+        
+        const events = await response.json();
+        if (!events.length) {
+            eventsContainer.innerHTML = '<p class="no-data">You haven\'t registered for any events yet.</p>';
+            return;
+        }
+
+        eventsContainer.innerHTML = events.map(event => `
+            <div class="event-card">
+                <img src="${event.imageUrl || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="Event Image" class="event-card-image">
+                <div class="event-card-content">
+                    <div class="event-header">
+                        <h3>${event.title}</h3>
+                        <span class="event-badge">${event.type}</span>
+                    </div>
+                    <div class="event-details">
+                        <p><i class="fas fa-calendar"></i> ${new Date(event.date).toLocaleDateString()} ${event.time ? ('| ' + event.time) : ''}</p>
+                        <p><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
+                    </div>
+                    <div class="event-description">
+                        ${(event.description || '').split(' ').slice(0, 20).join(' ')}${(event.description && event.description.split(' ').length > 20) ? '...' : ''}
+                    </div>
+                    <div class="event-actions">
+                        <button class="btn btn-primary" onclick="startEvent('${event._id}', '${event.type}')">
+                            <i class="fas fa-play-circle"></i> Start Event
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
         if (!response.ok) {
             throw new Error('Failed to load registered events');
         }
@@ -136,17 +182,25 @@ async function loadRegisteredEvents() {
     }
 }
 
-function startEvent(eventId, eventTitle, eventType) {
-    localStorage.setItem('currentEventId', eventId);
-    localStorage.setItem('currentEventTitle', eventTitle);
-    if (eventType === 'Quiz') {
-        window.location.href = 'participant-quiz.html';
-    } else if (eventType === 'Debate') {
-        window.location.href = 'debate/participant-debate.html?debateId=' + eventId;
-    } else if (eventType === 'Poetry') {
-        window.location.href = 'poetry/index.html';
-    } else {
-        alert('Unknown event type!');
+function startEvent(eventId, eventType) {
+    // Clear any old event data from localStorage
+    if (eventType === 'Poetry') {
+        localStorage.removeItem('poetryEventData');
+        localStorage.removeItem('poetrySubmission');
+    }
+
+    switch(eventType) {
+        case 'Quiz':
+            window.location.href = `quiz/index.html?eventId=${eventId}`;
+            break;
+        case 'Debate':
+            window.location.href = `debate/index.html?eventId=${eventId}`;
+            break;
+        case 'Poetry':
+            window.location.href = `poetry/index.html?eventId=${eventId}`;
+            break;
+        default:
+            alert('Event type not supported');
     }
 }
 
@@ -155,4 +209,4 @@ function joinDebate(eventId, eventTitle) {
     localStorage.setItem('currentEventTitle', eventTitle);
     localStorage.setItem('currentEventRole', 'participant'); // Assuming participant role for now
     window.location.href = 'coordinator-debate.html';
-} 
+}

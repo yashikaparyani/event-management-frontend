@@ -3,82 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poetry Event Module</title>
+    <title>Poetry Dashboard - Event Management</title>
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <header>
-        <h1>Poetry Event</h1>
-        <p class="subtitle">Where words paint pictures and emotions flow</p>
-        <!-- Removed role-switcher dropdown for real user-based access -->
-    </header>
-    <div id="countdown-timer" style="text-align:center; font-size:1.3rem; margin:1.2rem 0; color:#a9746e; font-family:'Playfair Display',serif;"></div>
-    <main>
-        <section id="event-details">
-            <h2>Event Details</h2>
-            <div id="details-content">
-                <p>Date: <span id="event-date">April 30, 2024</span></p>
-                <p>Time: <span id="event-time">6:00 PM</span></p>
-                <p>Venue: <span id="event-venue">Virtual</span></p>
-                <p>Description: <span id="event-description">An evening of poetic brilliance. Submit your original poems and let your words shine!</span></p>
+    <div class="poetry-dashboard">
+        <header class="poetry-header">
+            <h1><i class="fas fa-feather-alt"></i> Poetry Event Dashboard</h1>
+            <p class="poetry-subtitle">Express your creativity through words</p>
+        </header>
+
+        <div class="poetry-content">
+            <div class="event-details" id="eventDetails">
+                <h2>Event Information</h2>
+                <div id="eventInfo" class="info-container">
+                    <!-- Event details will be populated here -->
+                </div>
             </div>
-        </section>
-        <section id="poetry-submission-section">
-            <h2>Submit Your Poetry</h2>
-            <form id="poetry-submission-form">
-                <label for="poem-title">Poem Title:</label>
-                <input type="text" id="poem-title" name="poem-title" required>
-                <label for="poem-text">Poem (Text):</label>
-                <textarea id="poem-text" name="poem-text" rows="6" placeholder="Type your poem here..."></textarea>
-                <label for="poem-file">Or upload as image/file:</label>
-                <input type="file" id="poem-file" name="poemFile" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
-                <button type="submit">Submit Poem</button>
-            </form>
-            <div id="submission-success" style="display:none;">Thank you for submitting your poem!</div>
-        </section>
-        <section id="participants-section">
-            <h2>Submitted Poems</h2>
-            <div id="sorting-controls">
-                <label for="sort-poems">Sort by: </label>
-                <select id="sort-poems">
-                    <option value="most-liked">Most Liked</option>
-                    <option value="most-recent">Most Recent</option>
-                    <option value="poet-name">Poet Name</option>
-                </select>
+
+            <div class="submission-section">
+                <h2>Submit Your Poetry</h2>
+                <form id="poetrySubmissionForm" class="poetry-form">
+                    <div class="form-group">
+                        <label for="title">Title of Your Poem</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="content">Your Poem</label>
+                        <textarea id="content" name="content" rows="10" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pdfSubmission">Upload PDF (Optional)</label>
+                        <input type="file" id="pdfSubmission" name="pdfSubmission" accept=".pdf">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="audioSubmission">Upload Audio (Optional)</label>
+                        <input type="file" id="audioSubmission" name="audioSubmission" accept="audio/*">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Submit Poetry
+                    </button>
+                </form>
             </div>
-            <ul id="participants-list">
-                <!-- Poems will be listed here -->
-            </ul>
-        </section>
-        <section id="rules-section">
-            <h2>Rules & Guidelines</h2>
-            <ul id="rules-list">
-                <li>Original works only. Plagiarism will result in disqualification.</li>
-                <li>One submission per participant.</li>
-                <li>Poems can be in English or Hindi.</li>
-                <li>Maximum length: 40 lines or 2 pages.</li>
-                <li>Respectful and inclusive content only.</li>
-            </ul>
-        </section>
-        <section id="registration-section">
-            <h2>Register for Event</h2>
-            <div id="registration-form">
-                <!-- Registration form or info here -->
-            </div>
-        </section>
-    </main>
-    <div id="poem-modal" class="modal" style="display:none;">
-      <div class="modal-content">
-        <span class="close" id="close-poem-modal">&times;</span>
-        <h2 id="modal-poem-title"></h2>
-        <p><strong>By:</strong> <span id="modal-poet-name"></span></p>
-        <p><strong>Submitted:</strong> <span id="modal-poem-date"></span></p>
-        <div id="modal-poem-text"></div>
-        <div id="modal-poem-file-block" style="margin-top:1em;"></div>
-        <div id="modal-like-block" style="margin-top:1em;"></div>
-      </div>
+        </div>
     </div>
+
     <script src="../js/config.js"></script>
     <script src="script.js"></script>
 </body>
-</html> 
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Poetry Event - Event Management</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="poetry-dashboard coordinator-view">
+        <header class="poetry-header">
+            <h1><i class="fas fa-feather-alt"></i> Poetry Event Management</h1>
+            <p class="poetry-subtitle" id="eventTitle">Loading event details...</p>
+        </header>
+
+        <div class="poetry-content">
+            <div class="event-details" id="eventDetails">
+                <h2>Event Information</h2>
+                <div id="eventInfo" class="info-container">
+                    <!-- Event details will be populated here -->
+                </div>
+            </div>
+
+            <div class="topic-management-section">
+                <h2>Manage Topics</h2>
+                <form id="topicForm" class="poetry-form">
+                    <div class="form-group">
+                        <label for="topic">Add New Topic</label>
+                        <input type="text" id="topic" name="topic" required placeholder="Enter a new poetry topic...">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Topic Description</label>
+                        <textarea id="description" name="description" rows="3" placeholder="Provide additional details or guidelines for the topic..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Topic
+                    </button>
+                </form>
+
+                <div class="topics-list">
+                    <h3>Current Topics</h3>
+                    <div id="topicsList" class="topics-container">
+                        <!-- Topics will be listed here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="submissions-section">
+                <h2>Submissions</h2>
+                <div id="submissionsList" class="submissions-container">
+                    <!-- Submissions will be listed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="manage.js"></script>
+</body>
+</html>

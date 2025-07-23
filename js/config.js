@@ -47,6 +47,12 @@ const config = {
             BY_EVENT: (eventId) => `/api/quizzes/event/${eventId}`,
             BY_COORDINATOR: '/api/quizzes/coordinator/quizzes'
         },
+        POETRY: {
+            TOPICS: (eventId) => `/api/poetry/${eventId}/topics`,
+            DELETE_TOPIC: (eventId, topicId) => `/api/poetry/${eventId}/topics/${topicId}`,
+            SUBMISSIONS: (eventId) => `/api/poetry/${eventId}/submissions`,
+            SUBMIT: (eventId) => `/api/poetry/${eventId}/submit`
+        },
         DEBATES: {
             CREATE: '/api/debates',
             GET: (debateId) => `/api/debates/${debateId}`,
@@ -73,4 +79,4 @@ function getAuthHeaders() {
         'Content-Type': 'application/json',
         'Authorization': token ? `Bearer ${token}` : ''
     };
-} 
+}

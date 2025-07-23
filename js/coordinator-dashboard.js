@@ -47,14 +47,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     <i class="fas fa-edit"></i> Create/Edit Quiz
                                 </button>
                             ` : ''}
-                            ${event.type === 'Poetry' ? `
-                                <button class="btn btn-info" onclick="managePoetry('${event._id}', '${event.title}')">
-                                    <i class="fas fa-feather-alt"></i> Manage Poetry
-                                </button>
-                            ` : ''}
+
                             ${event.type === 'Debate' ? `
                                 <button class="btn btn-success" onclick="startDebate('${event._id}', '${event.title}')">
                                     <i class="fas fa-play-circle"></i> Start Debate
+                                </button>
+                            ` : ''}
+
+                            ${event.type === 'Poetry' ? `
+                                <button class="btn btn-primary" onclick="managePoetry('${event._id}', '${event.title}')">
+                                    <i class="fas fa-feather-alt"></i> Manage Poetry Event
                                 </button>
                             ` : ''}
                         </div>
@@ -84,15 +86,23 @@ async function createOrEditQuiz(eventId, eventTitle) {
     window.location.href = 'coordinator-quiz-creation.html';
 } 
 
-function managePoetry(eventId, eventTitle) {
-    localStorage.setItem('currentEventId', eventId);
-    localStorage.setItem('currentEventTitle', eventTitle);
-    window.location.href = '../poetry/index.html';
-} 
 
 function startDebate(eventId, eventTitle) {
     localStorage.setItem('currentDebateId', eventId);
     localStorage.setItem('currentEventTitle', eventTitle);
     // Redirect to the debate management page
     window.location.href = 'debate/index.html?debateId=' + eventId;
-} 
+}
+
+function managePoetry(eventId, eventTitle) {
+    // Clear any existing poetry management data
+    localStorage.removeItem('poetryEventData');
+    localStorage.removeItem('poetryTopics');
+    
+    // Set current event information
+    localStorage.setItem('currentPoetryId', eventId);
+    localStorage.setItem('currentEventTitle', eventTitle);
+    
+    // Redirect to the poetry management page
+    window.location.href = 'poetry/manage.html?eventId=' + eventId;
+}

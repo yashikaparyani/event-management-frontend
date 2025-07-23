@@ -1,154 +1,123 @@
-body {
-    font-family: 'Georgia', 'Times New Roman', serif;
-    background: linear-gradient(135deg, #f8fafc 0%, #f3e7e9 100%);
-    color: #3a2c2a;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
+.poetry-dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-header {
+.poetry-header {
     text-align: center;
-    padding: 2rem 1rem 1rem 1rem;
-    background: rgba(255, 255, 255, 0.7);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    margin-bottom: 40px;
+    color: #2c3e50;
+    padding: 20px;
+    border-bottom: 2px solid #eee;
 }
 
-header h1 {
-    font-size: 2.8rem;
-    margin-bottom: 0.2rem;
-    letter-spacing: 2px;
-    font-family: 'Playfair Display', serif;
+.poetry-header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
 }
 
-header .subtitle {
-    font-size: 1.2rem;
-    color: #7b5e57;
-    font-style: italic;
-    margin-bottom: 1rem;
+.poetry-header .fa-feather-alt {
+    color: #3498db;
 }
 
-#role-switcher {
-    margin-top: 1rem;
+.poetry-subtitle {
+    font-size: 1.2em;
+    color: #7f8c8d;
 }
 
-main {
-    max-width: 700px;
-    margin: 2rem auto;
-    background: rgba(255,255,255,0.9);
-    border-radius: 18px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-    padding: 2rem 2.5rem;
+.poetry-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
 }
 
-section {
-    margin-bottom: 2.5rem;
+.event-details {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-h2 {
-    font-family: 'Playfair Display', serif;
-    color: #a9746e;
-    margin-bottom: 0.7rem;
-    font-size: 1.5rem;
-    border-bottom: 1px solid #e7cfc7;
-    padding-bottom: 0.3rem;
+.info-container {
+    margin-top: 15px;
 }
 
-#poetry-submission-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    background: #f7f1ed;
-    padding: 1.2rem 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(169, 116, 110, 0.07);
+.submission-section {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-#poetry-submission-form label {
-    font-weight: 600;
-    color: #7b5e57;
+.poetry-form .form-group {
+    margin-bottom: 20px;
 }
 
-#poetry-submission-form input[type="text"],
-#poetry-submission-form textarea {
-    border: 1px solid #e7cfc7;
-    border-radius: 6px;
-    padding: 0.5rem;
-    font-size: 1rem;
-    font-family: inherit;
-    background: #fff;
+.poetry-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 500;
 }
 
-#poetry-submission-form input[type="file"] {
-    margin-top: 0.3rem;
+.poetry-form input[type="text"],
+.poetry-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s;
 }
 
-#poetry-submission-form button {
-    background: linear-gradient(90deg, #a9746e 0%, #e7cfc7 100%);
-    color: #fff;
+.poetry-form textarea {
+    resize: vertical;
+    min-height: 200px;
+}
+
+.poetry-form input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+
+.poetry-form input:focus,
+.poetry-form textarea:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 24px;
     border: none;
-    border-radius: 6px;
-    padding: 0.7rem 1.2rem;
-    font-size: 1.1rem;
-    font-family: 'Playfair Display', serif;
+    border-radius: 4px;
     cursor: pointer;
-    margin-top: 0.7rem;
-    transition: background 0.2s;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s;
 }
 
-#poetry-submission-form button:hover {
-    background: linear-gradient(90deg, #e7cfc7 0%, #a9746e 100%);
+.btn-primary:hover {
+    background-color: #2980b9;
 }
 
-#participants-list {
-    list-style: none;
-    padding: 0;
-}
-
-#participants-list li {
-    background: #f7f1ed;
-    margin-bottom: 1.2rem;
-    padding: 1rem 1.2rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(169, 116, 110, 0.05);
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-#participants-list .poem-title {
-    font-weight: bold;
-    color: #a9746e;
-    font-size: 1.1rem;
-}
-
-#participants-list .poet-name {
-    font-style: italic;
-    color: #7b5e57;
-    font-size: 0.98rem;
-}
-
-#participants-list .poem-content {
-    margin-top: 0.5rem;
-    color: #3a2c2a;
-    font-size: 1.05rem;
-    white-space: pre-line;
-}
-
-#rules-list {
-    padding-left: 1.2rem;
-    color: #7b5e57;
-}
-
-#registration-form {
-    background: #f7f1ed;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(169, 116, 110, 0.05);
-}
-
-@media (max-width: 800px) {
-    main {
-        padding: 1rem 0.5rem;
+/* Responsive Design */
+@media (max-width: 768px) {
+    .poetry-content {
+        grid-template-columns: 1fr;
     }
-} 
+
+    .poetry-header h1 {
+        font-size: 2em;
+    }
+
+    .poetry-form input[type="text"],
+    .poetry-form textarea {
+        font-size: 14px;
+    }
+}
