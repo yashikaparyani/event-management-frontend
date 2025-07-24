@@ -143,16 +143,13 @@ async function loadRegisteredEvents() {
                 </div>
             </div>
         `).join('');
-    } catch (error) {
+        } catch (error) {
         console.error('Error loading registered events:', error);
         eventsContainer.innerHTML = '<p class="error">Failed to load your registered events. Please try again later.</p>';
-    }
-    } catch (error) {
-        console.error('Error loading registered events:', error);
-        eventsContainer.innerHTML = '<p class="error">Failed to load your registered events. Please try again later.</p>';
-    }
+        }
 }
-
+//change done
+// ✅ FIXED FUNCTION
 function startEvent(eventId, eventType) {
     // Clear any old event data from localStorage
     if (eventType === 'Poetry') {
@@ -173,11 +170,4 @@ function startEvent(eventId, eventType) {
         default:
             alert('Event type not supported');
     }
-}
-
-function joinDebate(eventId, eventTitle) {
-    localStorage.setItem('currentEventId', eventId);
-    localStorage.setItem('currentEventTitle', eventTitle);
-    localStorage.setItem('currentEventRole', 'participant'); // Assuming participant role for now
-    window.location.href = 'coordinator-debate.html';
 }
