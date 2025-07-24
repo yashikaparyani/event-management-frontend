@@ -164,39 +164,31 @@ async function startEvent(eventId, eventType) {
                 break;
             case 'Debate': {
                 try {
-                    // First try to get the debate by event ID
+                    // Try to get the debate by event ID
                     const debateResponse = await fetch(getApiUrl(`/api/debates/event/${eventId}`), {
                         headers: getAuthHeaders()
                     });
                     
                     if (debateResponse.ok) {
                         const debateData = await debateResponse.json();
-                        window.location.href = `debate/participant-debate.html?debateId=${debateData._id}`;
-                    } else {
-                        // If no debate found, try to create one
-                        const createResponse = await fetch(getApiUrl('/api/debates'), {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                ...getAuthHeaders()
-                            },
-                            body: JSON.stringify({
-                                event: eventId,
-                                // Add any default debate settings here if needed
-                            })
-                        });
-                        
-                        if (createResponse.ok) {
-                            const newDebate = await createResponse.json();
-                            window.location.href = `debate/participant-debate.html?debateId=${newDebate._id}`;
+                        // Check if debate is active
+                        if (debateData.status === 'active' || debateData.status === 'waiting') {
+                            window.location.href = `debate/participant-debate.html?debateId=${debateData._id}`;
                         } else {
-                            const error = await createResponse.json();
-                            throw new Error(error.message || 'Failed to create debate session');
+                            throw new Error('The debate has not started yet. Please wait for the coordinator to begin.');
+                        }
+                    } else {
+                        // If no debate found, show appropriate message
+                        if (debateResponse.status === 404) {
+                            throw new Error('No debate session has been created for this event yet. Please wait for the coordinator to start the debate.');
+                        } else {
+                            const error = await debateResponse.json();
+                            throw new Error(error.message || 'Failed to join debate session');
                         }
                     }
                 } catch (error) {
                     console.error('Debate error:', error);
-                    throw new Error('Error setting up debate: ' + (error.message || 'Please try again'));
+                    throw new Error(error.message || 'Error joining debate: Please try again later');
                 }
                 break;
             }
