@@ -163,17 +163,15 @@ async function startEvent(eventId, eventType) {
                 window.location.href = `quiz/index.html?eventId=${eventId}`;
                 break;
             case 'Debate': {
-                // First check if debate exists
-                const response = await fetch(getApiUrl(config.ENDPOINTS.DEBATES.GET(eventId)), {
+                // First check if debate exists for this event
+                const debateResponse = await fetch(getApiUrl(`/api/debates/event/${eventId}`), {
                     headers: getAuthHeaders()
                 });
-                if (!response.ok) {
-                    // Try with eventId as debateId since they might be the same
-                    window.location.href = `debate/participant-debate.html?debateId=${eventId}`;
-                    return;
+                if (!debateResponse.ok) {
+                    throw new Error('No debate found for this event');
                 }
-                const debate = await response.json();
-                window.location.href = `debate/participant-debate.html?debateId=${debate._id || eventId}`;
+                const debateData = await debateResponse.json();
+                window.location.href = `debate/participant-debate.html?debateId=${debateData._id}`;
                 break;
             }
             case 'Poetry':
