@@ -143,39 +143,10 @@ async function loadRegisteredEvents() {
                 </div>
             </div>
         `).join('');
+    } catch (error) {
+        console.error('Error loading registered events:', error);
+        eventsContainer.innerHTML = '<p class="error">Failed to load your registered events. Please try again later.</p>';
     }
-        if (!response.ok) {
-            throw new Error('Failed to load registered events');
-        }
-        const events = await response.json();
-        if (!events.length) {
-            eventsContainer.innerHTML = '<p class="no-data">You have not registered for any events yet.</p>';
-            return;
-        }
-        eventsContainer.innerHTML = events.map(event => {
-            let eventCardHtml = `
-                <div class="event-card">
-                    <img src="${event.imageUrl || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="Event Image" class="event-card-image">
-                    <div class="event-card-content">
-                        <div class="event-header">
-                            <h3>${event.title}</h3>
-                            <span class="event-badge">${event.organizer || ''}</span>
-                        </div>
-                        <div class="event-details">
-                            <p><i class="fas fa-calendar"></i> ${new Date(event.date).toLocaleDateString()} ${event.time ? ('| ' + event.time) : ''}</p>
-                            <p><i class="fas fa-map-marker-alt"></i> ${event.location}</p>
-                        </div>
-                        <div class="event-description">
-                            ${(event.description || '').split(' ').slice(0, 20).join(' ')}${(event.description && event.description.split(' ').length > 20) ? '...' : ''}
-                        </div>
-                        <div class="event-actions">
-                            <button class="btn btn-success" onclick="startEvent('${event._id}', '${event.title}', '${event.type}')">Start Event</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            return eventCardHtml;
-        }).join('');
     } catch (error) {
         console.error('Error loading registered events:', error);
         eventsContainer.innerHTML = '<p class="error">Failed to load your registered events. Please try again later.</p>';
