@@ -168,9 +168,12 @@ async function startEvent(eventId, eventType) {
                     headers: getAuthHeaders()
                 });
                 if (!response.ok) {
-                    throw new Error('Debate not found');
+                    // Try with eventId as debateId since they might be the same
+                    window.location.href = `debate/participant-debate.html?debateId=${eventId}`;
+                    return;
                 }
-                window.location.href = `debate/participant-debate.html?debateId=${eventId}`;
+                const debate = await response.json();
+                window.location.href = `debate/participant-debate.html?debateId=${debate._id || eventId}`;
                 break;
             }
             case 'Poetry':
