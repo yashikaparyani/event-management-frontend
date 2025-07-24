@@ -216,4 +216,3 @@ function displaySubmissions(submissions) {
             </div>
         `).join('');
     }
-}
