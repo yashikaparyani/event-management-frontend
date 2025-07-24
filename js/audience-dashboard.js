@@ -80,13 +80,20 @@ function renderEvents(events) {
         if (words.length > 20) {
             preview = words.slice(0, 20).join(' ') + '...';
         }
+        
+        // Check if user is registered for this event
+        const user = JSON.parse(localStorage.getItem('user'));
+        const isRegistered = event.registrations && event.registrations.some(reg => 
+            reg.user === user.id || reg.user === user._id || reg.email === user.email
+        );
+        
         return `
             <div class="event-card">
                 <img src="${event.imageUrl || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="Event Image" class="event-card-image">
                 <div class="event-card-content">
                     <div class="event-header">
                         <h3>${event.title}</h3>
-                        <span class="event-badge">${event.organizer || ''}</span>
+                        <span class="event-badge">${event.type || event.organizer || ''}</span>
                     </div>
                     <div class="event-details">
                         <p><i class="fas fa-calendar"></i> ${new Date(event.date).toLocaleDateString()} ${event.time ? ('| ' + event.time) : ''}</p>
@@ -96,7 +103,17 @@ function renderEvents(events) {
                         ${preview}
                     </div>
                     ${event.qrCode ? `<div class='event-qr'><img src='${event.qrCode}' alt='QR Code for registration' style='width:120px;height:120px;margin-top:10px;'/></div>` : ''}
-                    <button class="btn btn-secondary view-details-btn" data-event-idx="${idx}">View Details</button>
+                    <div style="margin-top: 1rem;">
+                        ${isRegistered ? 
+                            `<button class="btn btn-primary" onclick="startEvent('${event._id}', '${event.type}')" style="margin-right: 0.5rem;">
+                                <i class="fas fa-play-circle"></i> Start Event
+                            </button>` : 
+                            `<button class="btn btn-success" onclick="registerForEvent('${event._id}')" style="margin-right: 0.5rem;">
+                                <i class="fas fa-user-plus"></i> Register
+                            </button>`
+                        }
+                        <button class="btn btn-secondary view-details-btn" data-event-idx="${idx}">View Details</button>
+                    </div>
                 </div>
             </div>
         `;
@@ -150,12 +167,14 @@ async function loadAllEvents() {
 
 async function registerForEvent(eventId) {
     try {
+        const user = JSON.parse(localStorage.getItem('user'));
         const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.REGISTER(eventId)), {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({ email: user.email })
         });
 
         if (!response.ok) {
@@ -174,3 +193,34 @@ async function registerForEvent(eventId) {
         alert(error.message || 'Failed to register for event. Please try again.');
     }
 }
+
+// Add startEvent function for audience to join debate viewing
+window.startEvent = async function(eventId, eventType) {
+    try {
+        switch(eventType) {
+            case 'Debate': {
+                // First check if debate exists for this event
+                const debateResponse = await fetch(getApiUrl(`/api/debates/event/${eventId}`), {
+                    headers: getAuthHeaders()
+                });
+                if (!debateResponse.ok) {
+                    throw new Error('No debate found for this event');
+                }
+                const debateData = await debateResponse.json();
+                window.location.href = `debate/audience-debate.html?debateId=${debateData._id}`;
+                break;
+            }
+            case 'Quiz':
+                window.location.href = `quiz/audience.html?eventId=${eventId}`;
+                break;
+            case 'Poetry':
+                window.location.href = `poetry/audience.html?eventId=${eventId}`;
+                break;
+            default:
+                alert('Event type not supported for audience viewing');
+        }
+    } catch (error) {
+        console.error('Error starting event:', error);
+        alert(`Failed to start ${eventType} event: ${error.message}`);
+    }
+};
