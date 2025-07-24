@@ -162,7 +162,7 @@ function startEvent(eventId, eventType) {
             window.location.href = `quiz/index.html?eventId=${eventId}`;
             break;
         case 'Debate':
-            window.location.href = `debate/index.html?eventId=${eventId}`;
+            window.location.href = `debate/participant-debate.html?debateId=${eventId}`;
             break;
         case 'Poetry':
             window.location.href = `poetry/index.html?eventId=${eventId}`;
