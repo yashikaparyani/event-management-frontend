@@ -150,24 +150,37 @@ async function loadRegisteredEvents() {
 }
 //change done
 // ✅ FIXED FUNCTION
-function startEvent(eventId, eventType) {
+async function startEvent(eventId, eventType) {
     // Clear any old event data from localStorage
     if (eventType === 'Poetry') {
         localStorage.removeItem('poetryEventData');
         localStorage.removeItem('poetrySubmission');
     }
 
-    switch(eventType) {
-        case 'Quiz':
-            window.location.href = `quiz/index.html?eventId=${eventId}`;
-            break;
-        case 'Debate':
-            window.location.href = `debate/participant-debate.html?debateId=${eventId}`;
-            break;
-        case 'Poetry':
-            window.location.href = `poetry/index.html?eventId=${eventId}`;
-            break;
-        default:
-            alert('Event type not supported');
+    try {
+        switch(eventType) {
+            case 'Quiz':
+                window.location.href = `quiz/index.html?eventId=${eventId}`;
+                break;
+            case 'Debate': {
+                // First check if debate exists
+                const response = await fetch(getApiUrl(config.ENDPOINTS.DEBATES.GET(eventId)), {
+                    headers: getAuthHeaders()
+                });
+                if (!response.ok) {
+                    throw new Error('Debate not found');
+                }
+                window.location.href = `debate/participant-debate.html?debateId=${eventId}`;
+                break;
+            }
+            case 'Poetry':
+                window.location.href = `poetry/index.html?eventId=${eventId}`;
+                break;
+            default:
+                alert('Event type not supported');
+        }
+    } catch (error) {
+        console.error('Error starting event:', error);
+        alert(`Failed to start ${eventType} event: ${error.message}`);
     }
 }
