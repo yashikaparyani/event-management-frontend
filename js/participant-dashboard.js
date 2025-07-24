@@ -163,15 +163,41 @@ async function startEvent(eventId, eventType) {
                 window.location.href = `quiz/index.html?eventId=${eventId}`;
                 break;
             case 'Debate': {
-                // First check if debate exists for this event
-                const debateResponse = await fetch(getApiUrl(`/api/debates/event/${eventId}`), {
-                    headers: getAuthHeaders()
-                });
-                if (!debateResponse.ok) {
-                    throw new Error('No debate found for this event');
+                try {
+                    // First try to get the debate by event ID
+                    const debateResponse = await fetch(getApiUrl(`/api/debates/event/${eventId}`), {
+                        headers: getAuthHeaders()
+                    });
+                    
+                    if (debateResponse.ok) {
+                        const debateData = await debateResponse.json();
+                        window.location.href = `debate/participant-debate.html?debateId=${debateData._id}`;
+                    } else {
+                        // If no debate found, try to create one
+                        const createResponse = await fetch(getApiUrl('/api/debates'), {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                ...getAuthHeaders()
+                            },
+                            body: JSON.stringify({
+                                event: eventId,
+                                // Add any default debate settings here if needed
+                            })
+                        });
+                        
+                        if (createResponse.ok) {
+                            const newDebate = await createResponse.json();
+                            window.location.href = `debate/participant-debate.html?debateId=${newDebate._id}`;
+                        } else {
+                            const error = await createResponse.json();
+                            throw new Error(error.message || 'Failed to create debate session');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Debate error:', error);
+                    throw new Error('Error setting up debate: ' + (error.message || 'Please try again'));
                 }
-                const debateData = await debateResponse.json();
-                window.location.href = `debate/participant-debate.html?debateId=${debateData._id}`;
                 break;
             }
             case 'Poetry':
