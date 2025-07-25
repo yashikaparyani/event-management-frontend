@@ -162,7 +162,7 @@ async function startEvent(eventId, eventType) {
     try {
         switch(eventType) {
             case 'Quiz':
-                window.location.href = `quiz/index.html?eventId=${eventId}`;
+                window.location.href = `participant-quiz.html?eventId=${eventId}`;
                 break;
             case 'Poetry':
                 window.location.href = `poetry/index.html?eventId=${eventId}`;
