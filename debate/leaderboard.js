@@ -40,7 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchDebateInfo() {
         try {
-            const res = await fetch(`/api/events/${eventId}`);
+            const token = localStorage.getItem('token');
+            const res = await fetch(`/api/events/${eventId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             if (!res.ok) throw new Error('Failed to fetch debate event');
             eventDetails = await res.json();
             debateInfo.innerHTML = `<b>Topic:</b> ${eventDetails.topic || '-'}<br><b>Rules:</b> ${eventDetails.rules || '-'}<br><b>Timer:</b> ${eventDetails.timerPerParticipant || '-'}s`;
@@ -51,7 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchLeaderboard() {
         try {
-            const res = await fetch(`/api/events/${eventId}/debate-leaderboard`);
+            const token = localStorage.getItem('token');
+            const res = await fetch(`/api/events/${eventId}/debate-leaderboard`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             if (!res.ok) throw new Error('Failed to fetch leaderboard');
             leaderboardData = await res.json();
             renderLeaderboard();
