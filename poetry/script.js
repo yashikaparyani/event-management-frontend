@@ -85,12 +85,12 @@ async function handlePoetrySubmission(e) {
 
         const pdfFile = document.getElementById('pdfSubmission').files[0];
         if (pdfFile) {
-            formData.append('pdfSubmission', pdfFile);
+            formData.append('pdf', pdfFile);
         }
 
         const audioFile = document.getElementById('audioSubmission').files[0];
         if (audioFile) {
-            formData.append('audioSubmission', audioFile);
+            formData.append('audio', audioFile);
         }
 
         const response = await fetch(getApiUrl(`/api/poetry/${eventId}/submit`), {
