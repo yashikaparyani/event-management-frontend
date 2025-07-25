@@ -162,6 +162,7 @@ async function startEvent(eventId, eventType) {
     try {
         switch(eventType) {
             case 'Quiz':
+                localStorage.setItem('currentEventId', eventId);
                 window.location.href = `participant-quiz.html?eventId=${eventId}`;
                 break;
             case 'Poetry':
