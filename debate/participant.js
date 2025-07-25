@@ -1,26 +1,36 @@
-// Debate Audience Page Logic
+// Debate Participant Page Logic
 
 document.addEventListener('DOMContentLoaded', () => {
     const debateInfo = document.getElementById('debateInfo');
+    const sideModal = new bootstrap.Modal(document.getElementById('sideModal'));
+    const sideModalTopic = document.getElementById('sideModalTopic');
+    const sideModalRules = document.getElementById('sideModalRules');
+    const chooseForBtn = document.getElementById('chooseForBtn');
+    const chooseAgainstBtn = document.getElementById('chooseAgainstBtn');
+    const yourSide = document.getElementById('yourSide');
     const forList = document.getElementById('forList');
     const againstList = document.getElementById('againstList');
     const currentSpeaker = document.getElementById('currentSpeaker');
     const timerValue = document.getElementById('timerValue');
-    const likeBtn = document.getElementById('likeBtn');
-    const dislikeBtn = document.getElementById('dislikeBtn');
-    const likesCount = document.getElementById('likesCount');
     const notificationBlock = document.getElementById('notificationBlock');
+    const notes = document.getElementById('notes');
+    const speakModal = new bootstrap.Modal(document.getElementById('speakModal'));
+    const scoreForm = document.getElementById('scoreForm');
+    const speakTimer = document.getElementById('speakTimer');
 
     const urlParams = new URLSearchParams(window.location.search);
-    const eventId = urlParams.get('eventId');
+    const eventId = urlParams.get('eventId') || localStorage.getItem('currentDebateEventId');
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
+    let eventDetails = null;
     let participants = [];
     let forSideArr = [];
     let againstSideArr = [];
-    let currentSpeakerId = null;
-    let canReact = false;
-    let likes = 0;
+    let mySide = null;
+    let timerDuration = 0;
+    let timer = null;
+    let timerRemaining = 0;
+    let isMyTurn = false;
 
     function showNotification(msg, type = 'info') {
         notificationBlock.textContent = msg;
@@ -50,12 +60,27 @@ function renderCurrentSpeaker(speaker) {
     currentSpeaker.textContent = speaker ? `${safeStr(speaker.name)} (${safeStr(speaker.side)})` : '-';
 }
 
+    function startTurnTimer() {
+        clearInterval(timer);
+        timerRemaining = timerDuration;
+        speakTimer.textContent = `Time left: ${timerRemaining}s`;
+        timer = setInterval(() => {
+            timerRemaining--;
+            speakTimer.textContent = `Time left: ${timerRemaining}s`;
+            if (timerRemaining <= 0) {
+                clearInterval(timer);
+                showNotification('Time up! Submit your scores.');
+            }
+        }, 1000);
+    }
+
     async function fetchDebateInfo() {
         try {
             const res = await fetch(`/api/events/${eventId}`);
             if (!res.ok) throw new Error('Failed to fetch debate event');
-            const eventDetails = await res.json();
+            eventDetails = await res.json();
             debateInfo.innerHTML = `<b>Topic:</b> ${eventDetails.topic || '-'}<br><b>Rules:</b> ${eventDetails.rules || '-'}<br><b>Timer:</b> ${eventDetails.timerPerParticipant || '-'}s`;
+            timerDuration = eventDetails.timerPerParticipant || 120;
         } catch (err) {
             debateInfo.innerHTML = '<span class="text-danger">Failed to load debate info.</span>';
         }
@@ -74,9 +99,17 @@ function renderCurrentSpeaker(speaker) {
         }
     }
 
+    function handleSideSelection(side) {
+        mySide = side;
+        yourSide.textContent = side.charAt(0).toUpperCase() + side.slice(1);
+        // Notify backend of side selection
+        socket.emit('debate-select-side', { eventId, userId: user._id, side });
+        sideModal.hide();
+    }
+
     // --- Socket.IO Setup ---
     const socket = io();
-    socket.emit('join-debate-audience', { eventId, userId: user._id });
+    socket.emit('join-debate', { eventId, userId: user._id });
 
     socket.on('debate-state', data => {
         participants = data.participants;
@@ -84,49 +117,62 @@ function renderCurrentSpeaker(speaker) {
         againstSideArr = participants.filter(p => p.side === 'against');
         renderParticipantLists();
         renderCurrentSpeaker(participants.find(x => x._id === data.currentSpeakerId));
-        timerValue.textContent = data.timerValue ? `${data.timerValue}s` : '';
-        canReact = data.canReact;
-        likes = data.likes || 0;
-        likesCount.textContent = `Likes: ${likes}`;
+        timerDuration = data.timerPerParticipant || timerDuration;
+        if (mySide) yourSide.textContent = mySide.charAt(0).toUpperCase() + mySide.slice(1);
     });
 
     socket.on('debate-next-speaker', data => {
         const speaker = participants.find(x => x._id === data.userId);
         renderCurrentSpeaker(speaker);
-        timerValue.textContent = data.timerValue ? `${data.timerValue}s` : '';
-        canReact = data.canReact;
-        likes = data.likes || 0;
-        likesCount.textContent = `Likes: ${likes}`;
-    });
-
-    socket.on('debate-likes-update', data => {
-        likes = data.likes;
-        likesCount.textContent = `Likes: ${likes}`;
+        if (speaker && speaker._id === user._id) {
+            isMyTurn = true;
+            speakModal.show();
+            startTurnTimer();
+            showNotification("It's your turn!", 'success');
+        } else {
+            isMyTurn = false;
+            speakModal.hide();
+        }
     });
 
     socket.on('debate-show-leaderboard', () => {
         window.location.href = `leaderboard.html?eventId=${eventId}`;
     });
 
-    // --- Like/Dislike Buttons ---
-    likeBtn.onclick = () => {
-        if (!canReact) {
-            showNotification('Reactions are disabled right now.');
-            return;
-        }
-        socket.emit('debate-like', { eventId, userId: user._id });
-    };
-    dislikeBtn.onclick = () => {
-        if (!canReact) {
-            showNotification('Reactions are disabled right now.');
-            return;
-        }
-        socket.emit('debate-dislike', { eventId, userId: user._id });
-    };
-
-    // --- Init ---
+    // --- Modal Side Selection (on first join) ---
     (async function init() {
         await fetchDebateInfo();
         await fetchParticipants();
+        // If user already has a side, skip modal (could check backend)
+        if (!mySide) {
+            sideModalTopic.innerHTML = `<b>Topic:</b> ${eventDetails.topic || '-'}<br>`;
+            sideModalRules.innerHTML = `<b>Rules:</b> ${eventDetails.rules || '-'}`;
+            sideModal.show();
+        }
     })();
+
+    chooseForBtn.onclick = () => handleSideSelection('for');
+    chooseAgainstBtn.onclick = () => handleSideSelection('against');
+
+    // --- Speaking & Score Submission ---
+    scoreForm.onsubmit = (e) => {
+        e.preventDefault();
+        if (!isMyTurn) return;
+        const formData = new FormData(scoreForm);
+        const values = {
+            clarity: Number(formData.get('clarity') || 0),
+            facts: Number(formData.get('facts') || 0),
+            arguments: Number(formData.get('arguments') || 0),
+            presentation: Number(formData.get('presentation') || 0),
+            knowledge: Number(formData.get('knowledge') || 0)
+        };
+        if (Object.values(values).some(v => v < 0 || v > 2)) {
+            showNotification('Scores must be between 0 and 2.', 'danger');
+            return;
+        }
+        socket.emit('debate-score', { eventId, userId: user._id, ...values });
+        isMyTurn = false;
+        speakModal.hide();
+        showNotification('Score submitted.');
+    };
 });

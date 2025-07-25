@@ -91,6 +91,8 @@ async function registerForEvent(eventId) {
             // Redirect based on event type
             if (eventDetails.type === 'Poetry') {
                 window.location.href = `poetry/index.html?eventId=${eventId}`;
+            } else if (eventDetails.type === 'Debate') {
+                window.location.href = `../debate/participant.html?eventId=${eventId}`;
             } else {
                 loadRegisteredEvents();
             }
@@ -162,38 +164,11 @@ async function startEvent(eventId, eventType) {
             case 'Quiz':
                 window.location.href = `quiz/index.html?eventId=${eventId}`;
                 break;
-            case 'Debate': {
-                try {
-                    // Try to get the debate by event ID
-                    const debateResponse = await fetch(getApiUrl(`/api/debates/event/${eventId}`), {
-                        headers: getAuthHeaders()
-                    });
-                    
-                    if (debateResponse.ok) {
-                        const debateData = await debateResponse.json();
-                        // Check if debate is active
-                        if (debateData.status === 'active' || debateData.status === 'waiting') {
-                            window.location.href = `debate/participant-debate.html?debateId=${debateData._id}`;
-                        } else {
-                            throw new Error('The debate has not started yet. Please wait for the coordinator to begin.');
-                        }
-                    } else {
-                        // If no debate found, show appropriate message
-                        if (debateResponse.status === 404) {
-                            throw new Error('No debate session has been created for this event yet. Please wait for the coordinator to start the debate.');
-                        } else {
-                            const error = await debateResponse.json();
-                            throw new Error(error.message || 'Failed to join debate session');
-                        }
-                    }
-                } catch (error) {
-                    console.error('Debate error:', error);
-                    throw new Error(error.message || 'Error joining debate: Please try again later');
-                }
-                break;
-            }
             case 'Poetry':
                 window.location.href = `poetry/index.html?eventId=${eventId}`;
+                break;
+            case 'Debate':
+                window.location.href = `../debate/participant.html?eventId=${eventId}`;
                 break;
             default:
                 alert('Event type not supported');

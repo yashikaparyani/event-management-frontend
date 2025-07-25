@@ -194,27 +194,18 @@ async function registerForEvent(eventId) {
     }
 }
 
-// Add startEvent function for audience to join debate viewing
+// Add startEvent function for audience to join event
 window.startEvent = async function(eventId, eventType) {
     try {
         switch(eventType) {
-            case 'Debate': {
-                // First check if debate exists for this event
-                const debateResponse = await fetch(getApiUrl(`/api/debates/event/${eventId}`), {
-                    headers: getAuthHeaders()
-                });
-                if (!debateResponse.ok) {
-                    throw new Error('No debate found for this event');
-                }
-                const debateData = await debateResponse.json();
-                window.location.href = `debate/audience-debate.html?debateId=${debateData._id}`;
-                break;
-            }
             case 'Quiz':
                 window.location.href = `quiz/audience.html?eventId=${eventId}`;
                 break;
             case 'Poetry':
                 window.location.href = `poetry/audience.html?eventId=${eventId}`;
+                break;
+            case 'Debate':
+                window.location.href = `../debate/audience-debate.html?eventId=${eventId}`;
                 break;
             default:
                 alert('Event type not supported for audience viewing');

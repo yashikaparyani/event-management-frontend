@@ -52,17 +52,6 @@ const config = {
             DELETE_TOPIC: (eventId, topicId) => `/api/poetry/${eventId}/topics/${topicId}`,
             SUBMISSIONS: (eventId) => `/api/poetry/${eventId}/submissions`,
             SUBMIT: (eventId) => `/api/poetry/${eventId}/submit`
-        },
-        DEBATES: {
-            CREATE: '/api/debates',
-            GET: (debateId) => `/api/debates/${debateId}`,
-            REGISTER_TEAM: (debateId) => `/api/debates/${debateId}/teams`,
-            REGISTER_AUDIENCE: (debateId) => `/api/debates/${debateId}/audience`,
-            SESSION: (debateId) => `/api/debates/${debateId}/session`,
-            START_SESSION: (debateId) => `/api/debates/${debateId}/session/start`,
-            END_SESSION: (debateId) => `/api/debates/${debateId}/session/end`,
-            NEXT_SPEAKER: (debateId) => `/api/debates/${debateId}/session/next-speaker`,
-            ASSIGN_SCORE: (debateId) => `/api/debates/${debateId}/session/score`
         }
     }
 };

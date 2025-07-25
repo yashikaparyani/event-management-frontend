@@ -4,172 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Debate Leaderboard</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .leaderboard-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .leaderboard-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 3rem;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 3rem;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-        .leaderboard-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            margin-bottom: 3rem;
-        }
-        .team-leaderboard {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            border-top: 5px solid;
-        }
-        .team-leaderboard.for-motion {
-            border-top-color: #4caf50;
-        }
-        .team-leaderboard.against-motion {
-            border-top-color: #f44336;
-        }
-        .team-title {
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #e0e0e0;
-        }
-        .team-title.for {
-            color: #4caf50;
-        }
-        .team-title.against {
-            color: #f44336;
-        }
-        .participant-rank {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            border-radius: 10px;
-            transition: transform 0.2s ease;
-        }
-        .participant-rank:hover {
-            transform: translateY(-2px);
-        }
-        .participant-rank.rank-1 {
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-            border: 2px solid #ffc107;
-        }
-        .participant-rank.rank-2 {
-            background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
-            border: 2px solid #9e9e9e;
-        }
-        .participant-rank.rank-3 {
-            background: linear-gradient(135deg, #cd7f32 0%, #deb887 100%);
-            border: 2px solid #8d6e63;
-        }
-        .participant-rank.other {
-            background: #f8f9fa;
-            border: 1px solid #e0e0e0;
-        }
-        .rank-number {
-            font-size: 2rem;
-            font-weight: bold;
-            width: 50px;
-            text-align: center;
-        }
-        .participant-info {
-            flex: 1;
-            margin-left: 1rem;
-        }
-        .participant-name {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-        .participant-details {
-            font-size: 0.9rem;
-            color: #666;
-        }
-        .score-info {
-            text-align: right;
-        }
-        .total-score {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #2d6cdf;
-        }
-        .likes-count {
-            font-size: 1rem;
-            color: #4caf50;
-            margin-top: 0.5rem;
-        }
-        .back-button {
-            background: #2d6cdf;
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            display: block;
-            margin: 2rem auto;
-            transition: background 0.3s ease;
-        }
-        .back-button:hover {
-            background: #1976d2;
-        }
-        .debate-summary {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        .trophy-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-    </style>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/debate.css">
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
+    <script defer src="leaderboard.js"></script>
 </head>
 <body>
-    <div class="leaderboard-container">
-        <div class="leaderboard-header">
-            <div class="trophy-icon">🏆</div>
-            <h1>Debate Leaderboard</h1>
-            <p>Final rankings and scores</p>
-        </div>
-
-        <div id="debate-summary" class="debate-summary"></div>
-
-        <div class="leaderboard-grid">
-            <div class="team-leaderboard for-motion">
-                <div class="team-title for">✅ For the Motion</div>
-                <div id="for-leaderboard"></div>
+    <div class="container mt-5">
+        <h2 class="mb-4"><i class="fas fa-trophy"></i> Debate Leaderboard</h2>
+        <div id="debateInfo" class="mb-4"></div>
+        <div class="row">
+            <div class="col-md-6">
+                <h4>For Side</h4>
+                <ul id="forLeaderboard" class="leaderboard-list"></ul>
             </div>
-            <div class="team-leaderboard against-motion">
-                <div class="team-title against">❌ Against the Motion</div>
-                <div id="against-leaderboard"></div>
+            <div class="col-md-6">
+                <h4>Against Side</h4>
+                <ul id="againstLeaderboard" class="leaderboard-list"></ul>
             </div>
         </div>
-
-        <button class="back-button" onclick="backToDashboard()">
-            🏠 Back to Dashboard
-        </button>
+        <div class="mt-4">
+            <button id="backBtn" class="btn btn-secondary">Back to Dashboard</button>
+        </div>
+        <div id="notificationBlock" class="alert alert-info mt-3 d-none"></div>
     </div>
-
-    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <script src="../js/config.js"></script>
-    <script src="leaderboard.js"></script>
+    <script src="https://kit.fontawesome.com/7b5b9e1a2e.js" crossorigin="anonymous"></script>
 </body>
 </html>

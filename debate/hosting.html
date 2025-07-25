@@ -3,19 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Debate Hosting Window</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Debate Hosting - Coordinator</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/debate.css">
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
+    <script defer src="hosting.js"></script>
 </head>
 <body>
-    <header>
-        <h1>Debate Hosting Window</h1>
-    </header>
-    <main>
-        <div id="debate-details"></div>
-        <div id="hosting-window"></div>
-    </main>
-    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <script src="../js/config.js"></script>
-    <script src="hosting.js"></script>
+    <div class="container mt-4">
+        <h2><i class="fas fa-comments"></i> Debate Hosting</h2>
+        <div id="debateInfo" class="mb-3"></div>
+        <div class="row">
+            <div class="col-md-6">
+                <h4>For Side</h4>
+                <ul id="forList" class="participant-list"></ul>
+            </div>
+            <div class="col-md-6">
+                <h4>Against Side</h4>
+                <ul id="againstList" class="participant-list"></ul>
+            </div>
+        </div>
+        <div class="mt-4" id="currentSpeakerBlock">
+            <h5>Current Speaker:</h5>
+            <div id="currentSpeaker"></div>
+            <div id="timerBlock" class="my-2">
+                <span id="timerValue" class="badge bg-primary fs-5"></span>
+            </div>
+            <button id="skipChanceBtn" class="btn btn-warning me-2">Skip Chance</button>
+        </div>
+        <div class="mt-4" id="scoreboardBlock">
+            <h5>Scoreboard</h5>
+            <form id="scoreForm" class="row g-2">
+                <div class="col-md-2">
+                    <label>Clarity</label>
+                    <input type="number" min="0" max="2" class="form-control" name="clarity" required>
+                </div>
+                <div class="col-md-2">
+                    <label>Facts</label>
+                    <input type="number" min="0" max="2" class="form-control" name="facts" required>
+                </div>
+                <div class="col-md-2">
+                    <label>Arguments</label>
+                    <input type="number" min="0" max="2" class="form-control" name="arguments" required>
+                </div>
+                <div class="col-md-2">
+                    <label>Presentation</label>
+                    <input type="number" min="0" max="2" class="form-control" name="presentation" required>
+                </div>
+                <div class="col-md-2">
+                    <label>Knowledge</label>
+                    <input type="number" min="0" max="2" class="form-control" name="knowledge" required>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-success w-100">Submit Score</button>
+                </div>
+            </form>
+        </div>
+        <div class="mt-4">
+            <button id="showLeaderboardBtn" class="btn btn-info">Show Leaderboard</button>
+        </div>
+        <div id="notificationBlock" class="alert alert-info mt-3 d-none"></div>
+    </div>
+    <script src="https://kit.fontawesome.com/7b5b9e1a2e.js" crossorigin="anonymous"></script>
 </body>
-</html> 
+</html>

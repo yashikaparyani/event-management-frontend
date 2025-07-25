@@ -48,15 +48,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 </button>
                             ` : ''}
 
-                            ${event.type === 'Debate' ? `
-                                <button class="btn btn-success" onclick="startDebate('${event._id}', '${event.title}')">
-                                    <i class="fas fa-play-circle"></i> Start Debate
-                                </button>
-                            ` : ''}
-
                             ${event.type === 'Poetry' ? `
                                 <button class="btn btn-primary" onclick="managePoetry('${event._id}', '${event.title}')">
                                     <i class="fas fa-feather-alt"></i> Manage Poetry Event
+                                </button>
+                            ` : ''}
+
+                            ${event.type === 'Debate' ? `
+                                <button class="btn btn-primary" onclick="manageDebate('${event._id}', '${event.title}')">
+                                    <i class="fas fa-comments"></i> Manage Debate
                                 </button>
                             ` : ''}
 
@@ -93,13 +93,6 @@ async function createOrEditQuiz(eventId, eventTitle) {
 } 
 
 
-function startDebate(eventId, eventTitle) {
-    localStorage.setItem('currentDebateId', eventId);
-    localStorage.setItem('currentEventTitle', eventTitle);
-    // Redirect to the debate management page
-    window.location.href = 'debate/index.html?debateId=' + eventId;
-}
-
 function managePoetry(eventId, eventTitle) {
     // Clear any existing poetry management data
     localStorage.removeItem('poetryEventData');
@@ -118,4 +111,11 @@ function manageCodecRaze(eventId, eventTitle) {
     localStorage.setItem('currentCodecRazeEventId', eventId);
     localStorage.setItem('currentEventTitle', eventTitle);
     window.location.href = 'codecraze/problems.html?eventId=' + eventId;
+}
+
+// Add the manageDebate function
+function manageDebate(eventId, eventTitle) {
+    localStorage.setItem('currentDebateEventId', eventId);
+    localStorage.setItem('currentEventTitle', eventTitle);
+    window.location.href = 'debate/setup.html?eventId=' + eventId;
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debate Setup</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/debate.css">
+    <script defer src="setup.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4"><i class="fas fa-comments"></i> Debate Setup</h2>
+        <div id="setupFormBlock">
+            <form id="debateSetupForm">
+                <div class="form-group mb-3">
+                    <label for="debateTopic"><strong>Debate Topic</strong></label>
+                    <input type="text" class="form-control" id="debateTopic" name="topic" required maxlength="200">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="debateRules"><strong>Rules</strong></label>
+                    <textarea class="form-control" id="debateRules" name="rules" rows="4" required maxlength="500"></textarea>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="debateTimer"><strong>Timer per Participant (seconds)</strong></label>
+                    <input type="number" class="form-control" id="debateTimer" name="timer" min="30" max="600" required>
+                </div>
+                <button type="submit" class="btn btn-success">Save & Continue</button>
+            </form>
+        </div>
+        <div id="setupSuccessBlock" class="alert alert-success mt-4 d-none">
+            <h4 class="alert-heading">Debate Setup Saved!</h4>
+            <p>Your debate details have been saved. You can now start the debate when ready.</p>
+            <button id="startDebateBtn" class="btn btn-primary">Start Debate</button>
+        </div>
+        <div id="setupErrorBlock" class="alert alert-danger mt-4 d-none"></div>
+    </div>
+    <script src="https://kit.fontawesome.com/7b5b9e1a2e.js" crossorigin="anonymous"></script>
+</body>
+</html>
