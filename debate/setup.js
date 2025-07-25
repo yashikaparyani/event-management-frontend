@@ -10,14 +10,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const setupFormBlock = document.getElementById('setupFormBlock');
 
     // Prefill if already set (edit mode)
-    fetch(`/api/events/${eventId}`)
-        .then(res => res.json())
+    const token = localStorage.getItem('token');
+    fetch(`/api/events/${eventId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    })
+        .then(async res => {
+            if (!res.ok) throw new Error('Failed to fetch event');
+            const contentType = res.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) throw new Error('Invalid response');
+            return res.json();
+        })
         .then(event => {
             if (event.type === 'Debate') {
                 if (event.topic) document.getElementById('debateTopic').value = event.topic;
                 if (event.rules) document.getElementById('debateRules').value = event.rules;
                 if (event.timerPerParticipant) document.getElementById('debateTimer').value = event.timerPerParticipant;
             }
+        })
+        .catch(err => {
+            setupErrorBlock.textContent = err.message || 'Failed to load event.';
+            setupErrorBlock.classList.remove('d-none');
         });
 
     setupForm.addEventListener('submit', async (e) => {
