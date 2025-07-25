@@ -1,6 +1,79 @@
 // participant-dashboard.js
 
+// Global socket connection
+let socket;
+
+// Initialize socket connection
+function initSocket() {
+    if (!socket) {
+        socket = io(config.SOCKET_URL, {
+            auth: {
+                token: localStorage.getItem('token')
+            }
+        });
+
+        // Handle socket connection
+        socket.on('connect', () => {
+            console.log('Connected to WebSocket server');
+            const eventId = new URLSearchParams(window.location.search).get('eventId');
+            if (eventId) {
+                joinDebateRoom(eventId);
+            }
+        });
+
+        // Handle debate started event
+        socket.on('debate-started', (data) => {
+            console.log('Debate started:', data);
+            // Redirect to waiting screen when debate starts
+            if (data.eventId) {
+                window.location.href = `waiting-screen.html?eventId=${data.eventId}`;
+            }
+        });
+
+        // Handle turn notification
+        socket.on('your-turn', (data) => {
+            console.log('Your turn to speak!', data);
+            // Show notification to user
+            showNotification(`It's your turn to speak! ${data.timeLeft} seconds remaining.`);
+        });
+
+        // Handle error events
+        socket.on('error', (error) => {
+            console.error('Socket error:', error);
+            showNotification('Connection error: ' + (error.message || 'Unknown error'), 'error');
+        });
+    }
+}
+
+// Join debate room
+function joinDebateRoom(eventId) {
+    if (!socket || !socket.connected) {
+        console.error('Socket not connected');
+        return;
+    }
+    
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user || !user._id) {
+        console.error('User not authenticated');
+        return;
+    }
+
+    socket.emit('join-debate', {
+        eventId: eventId,
+        userId: user._id
+    });
+}
+
+// Show notification to user
+function showNotification(message, type = 'info') {
+    // You can implement a better notification system here
+    alert(`${type.toUpperCase()}: ${message}`);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize socket connection
+    initSocket();
+    
     // Load all events when the All Events section is shown
     const allEventsSection = document.getElementById('all-events-section');
     const allEventsNav = document.querySelector('a[href="#all-events"]');
@@ -17,8 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Optionally, load events on first page load if All Events is default
-    // loadAllEvents();
+    // Load events on page load
+    loadRegisteredEvents();
 });
 
 async function loadAllEvents() {
