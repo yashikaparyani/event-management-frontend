@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codec Raze Problem</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 id="problemTitle">Loading...</h1>
+        <div id="problemDescription"></div>
+        <div id="sampleIO"></div>
+        <div class="editor-section">
+            <label for="language">Language:</label>
+            <select id="language">
+                <option value="python">Python</option>
+                <option value="cpp">C++</option>
+                <option value="javascript">JavaScript</option>
+                <option value="java">Java</option>
+            </select>
+            <br><br>
+            <label for="code">Your Code:</label>
+            <textarea id="code" rows="15" cols="80" placeholder="Write your code here..."></textarea>
+            <br>
+            <button id="submitBtn">Submit</button>
+        </div>
+        <div id="feedback" class="feedback-section"></div>
+    </div>
+    <script src="../js/config.js"></script>
+    <script src="problem.js"></script>
+</body>
+</html> 

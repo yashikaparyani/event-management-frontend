@@ -59,6 +59,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     <i class="fas fa-feather-alt"></i> Manage Poetry Event
                                 </button>
                             ` : ''}
+
+                            ${event.type === 'CodecRaze' ? `
+                                <button class="btn btn-primary" onclick="manageCodecRaze('${event._id}', '${event.title}')">
+                                    <i class="fas fa-code"></i> Manage Codec Raze
+                                </button>
+                            ` : ''}
                         </div>
                     </div>
                 `).join('');
@@ -105,4 +111,11 @@ function managePoetry(eventId, eventTitle) {
     
     // Redirect to the poetry management page
     window.location.href = 'poetry/manage.html?eventId=' + eventId;
+}
+
+// Add the manageCodecRaze function
+function manageCodecRaze(eventId, eventTitle) {
+    localStorage.setItem('currentCodecRazeEventId', eventId);
+    localStorage.setItem('currentEventTitle', eventTitle);
+    window.location.href = 'codecraze/problems.html?eventId=' + eventId;
 }
