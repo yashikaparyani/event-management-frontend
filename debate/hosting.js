@@ -175,7 +175,8 @@ function renderCurrentSpeaker() {
 
     // --- Socket.IO Setup ---
     function setupSocket() {
-        socket = io();
+        // Use backend URL for production
+        socket = io('https://event-management-backend-z0ty.onrender.com', { transports: ['websocket'] });
         socket.emit('join-debate', { eventId, userId: user._id });
 
         socket.on('debate-state', data => {

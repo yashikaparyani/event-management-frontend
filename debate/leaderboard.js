@@ -77,7 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
     backBtn.onclick = goBack;
 
     // Real-time updates (refresh leaderboard on event)
-    const socket = io();
+    // Use backend URL for production
+    const socket = io('https://event-management-backend-z0ty.onrender.com', { transports: ['websocket'] });
     socket.emit('join-debate-leaderboard', { eventId, userId: user?._id });
     socket.on('debate-leaderboard-update', fetchLeaderboard);
 
