@@ -1,0 +1,80 @@
+/* --- SpeedCode Manage Page Styles --- */
+#problems-list-section, #problem-form-section {
+    max-width: 700px;
+    margin: 2rem auto;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #0001;
+}
+
+#problems-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#problems-list li {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: 1rem 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#problems-list button {
+    margin-left: 0.7em;
+    border: none;
+    background: #007bff;
+    color: #fff;
+    padding: 0.4em 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.2s;
+}
+
+#problems-list button[style*="color:red"] {
+    background: #e74c3c;
+}
+
+#problems-list button:hover {
+    background: #0056b3;
+}
+
+#problem-form-section form label {
+    font-weight: 600;
+    margin-top: 0.7em;
+    display: block;
+}
+
+#problem-form-section textarea,
+#problem-form-section input,
+#problem-form-section select {
+    width: 100%;
+    margin-top: 0.2em;
+    margin-bottom: 0.8em;
+    padding: 0.6em;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+}
+
+#problem-form-section button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 0.7em 2em;
+    border-radius: 6px;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-top: 0.5em;
+    transition: background 0.2s;
+}
+
+#problem-form-section button:hover {
+    background: #0056b3;
+}
