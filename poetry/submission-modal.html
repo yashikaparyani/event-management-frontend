@@ -1,0 +1,16 @@
+<!-- Poetry Submission View Modal -->
+<div id="submissionModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close" id="closeSubmissionModal">&times;</span>
+    <h3 id="modalSubmissionTitle">Submission Title</h3>
+    <p><strong>Submitted by:</strong> <span id="modalSubmissionAuthor"></span></p>
+    <p><strong>Submission Date:</strong> <span id="modalSubmissionDate"></span></p>
+    <div id="modalSubmissionContent"></div>
+    <div id="modalSubmissionFiles"></div>
+  </div>
+</div>
+<style>
+  .modal { position: fixed; z-index: 1000; left: 0; top: 0; width: 100vw; height: 100vh; overflow: auto; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; }
+  .modal-content { background: #fff; padding: 2rem; border-radius: 8px; width: 100%; max-width: 500px; position: relative; box-shadow: 0 2px 24px #0003; }
+  .close { position: absolute; top: 12px; right: 18px; font-size: 2rem; color: #444; cursor: pointer; }
+</style>

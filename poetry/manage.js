@@ -203,16 +203,45 @@ function displaySubmissions(submissions) {
         return;
     }
 
-        submissionsList.innerHTML = submissionsArray.map(submission => `
+        submissionsList.innerHTML = submissionsArray.map((submission, idx) => `
             <div class="submission-item">
                 <h4>${submission.title || 'Untitled'}</h4>
                 <p><strong>Submitted by:</strong> ${submission.participant?.name || 'Anonymous'}</p>
                 <p><strong>Submission Date:</strong> ${new Date(submission.createdAt || Date.now()).toLocaleString()}</p>
-                <div class="submission-content">
-                    ${submission.content ? `<p>${submission.content}</p>` : ''}
-                    ${submission.pdfUrl ? `<a href="${submission.pdfUrl}" target="_blank" class="btn btn-sm"><i class="fas fa-file-pdf"></i> View PDF</a>` : ''}
-                    ${submission.audioUrl ? `<audio controls src="${submission.audioUrl}"></audio>` : ''}
-                </div>
+                <button class="btn btn-primary btn-sm view-submission-btn" data-idx="${idx}"><i class="fas fa-eye"></i> View</button>
             </div>
         `).join('');
+
+        // Add event listeners for view buttons
+        document.querySelectorAll('.view-submission-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = this.getAttribute('data-idx');
+                openSubmissionModal(submissionsArray[idx]);
+            });
+        });
     }
+
+// Modal logic
+function openSubmissionModal(submission) {
+    document.getElementById('modalSubmissionTitle').textContent = submission.title || 'Untitled';
+    document.getElementById('modalSubmissionAuthor').textContent = submission.participant?.name || 'Anonymous';
+    document.getElementById('modalSubmissionDate').textContent = new Date(submission.createdAt || Date.now()).toLocaleString();
+    document.getElementById('modalSubmissionContent').innerHTML = submission.content ? `<p>${submission.content}</p>` : '<em>No content</em>';
+    let filesHtml = '';
+    if (submission.pdfUrl) filesHtml += `<a href="${submission.pdfUrl}" target="_blank" class="btn btn-sm"><i class="fas fa-file-pdf"></i> View PDF</a> `;
+    if (submission.audioUrl) filesHtml += `<audio controls src="${submission.audioUrl}"></audio>`;
+    document.getElementById('modalSubmissionFiles').innerHTML = filesHtml || '<em>No files</em>';
+    document.getElementById('submissionModal').style.display = 'flex';
+}
+
+// Close modal logic
+window.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('submissionModal');
+    const closeBtn = document.getElementById('closeSubmissionModal');
+    if (closeBtn && modal) {
+        closeBtn.onclick = () => { modal.style.display = 'none'; };
+        window.onclick = (event) => {
+            if (event.target === modal) modal.style.display = 'none';
+        };
+    }
+});
