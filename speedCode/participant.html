@@ -2,34 +2,149 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SpeedCode - Participate</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="../css/speedCode.css">
 </head>
 <body>
-  <h1>SpeedCode Event</h1>
-  <section id="problems-section">
-    <h2>Problems</h2>
-    <div id="problems-list"></div>
-  </section>
-  <section id="submission-section" style="display:none;">
-    <h2 id="problem-title"></h2>
-    <pre id="problem-description"></pre>
-    <form id="submission-form">
-      <label>Language:
-        <select id="language">
-          <option value="python">Python</option>
-          <option value="cpp">C++</option>
-          <option value="java">Java</option>
-        </select>
-      </label><br>
-      <label>Your Code:<br>
-        <textarea id="code" rows="10" cols="60" required></textarea>
-      </label><br>
-      <button type="submit">Submit Code</button>
-      <button type="button" id="back-btn">Back to Problems</button>
-    </form>
-    <div id="submission-result"></div>
-  </section>
+  <div class="container">
+    <header class="header">
+      <h1>SpeedCode Event</h1>
+      <div class="event-status">
+        <span id="event-timer"><i class="fas fa-clock"></i> --:--:--</span>
+        <span id="submission-status"><i class="fas fa-lock-open"></i> Submissions Open</span>
+      </div>
+    </header>
+
+    <!-- Problems List View -->
+    <section id="problems-section">
+      <div class="section-header">
+        <h2>Problems</h2>
+        <div class="problem-filters">
+          <input type="text" id="problem-search" placeholder="Search problems...">
+          <select id="difficulty-filter">
+            <option value="">All Difficulties</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+      </div>
+      <div id="problems-list" class="problems-grid">
+        <!-- Problems will be loaded here -->
+      </div>
+    </section>
+
+    <!-- Problem Solving View -->
+    <section id="problem-view" class="problem-view" style="display: none;">
+      <div class="problem-header">
+        <button id="back-to-problems" class="btn btn-outline">
+          <i class="fas fa-arrow-left"></i> Back to Problems
+        </button>
+        <h2 id="problem-title">Problem Title</h2>
+        <div class="problem-meta">
+          <span class="difficulty-badge" id="problem-difficulty">Medium</span>
+          <span class="time-limit"><i class="far fa-clock"></i> 1s</span>
+          <span class="memory-limit"><i class="fas fa-memory"></i> 256MB</span>
+        </div>
+      </div>
+
+      <div class="problem-container">
+        <!-- Problem Description -->
+        <div class="problem-description">
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="description">Description</button>
+            <button class="tab-btn" data-tab="examples">Examples</button>
+            <button class="tab-btn" data-tab="submissions">My Submissions</button>
+          </div>
+          
+          <div class="tab-content">
+            <div id="description" class="tab-pane active">
+              <div id="problem-statement"></div>
+              <div id="problem-constraints"></div>
+            </div>
+            <div id="examples" class="tab-pane">
+              <div id="problem-examples"></div>
+            </div>
+            <div id="submissions" class="tab-pane">
+              <div id="submission-history">
+                <p>Loading submission history...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Code Editor -->
+        <div class="code-editor-container">
+          <div class="editor-header">
+            <select id="language-selector" class="language-selector">
+              <option value="javascript">JavaScript</option>
+              <option value="python">Python</option>
+              <option value="java">Java</option>
+              <option value="cpp">C++</option>
+            </select>
+            <div class="editor-actions">
+              <button id="run-code" class="btn">
+                <i class="fas fa-play"></i> Run Code
+              </button>
+              <button id="submit-code" class="btn btn-primary">
+                <i class="fas fa-paper-plane"></i> Submit
+              </button>
+            </div>
+          </div>
+          
+          <div id="editor" class="code-editor"></div>
+          
+          <!-- Test Cases -->
+          <div class="test-cases">
+            <div class="test-cases-header">
+              <h3>Test Cases</h3>
+              <div class="test-case-actions">
+                <button id="run-test-case" class="btn btn-sm">
+                  <i class="fas fa-play"></i> Run Test Cases
+                </button>
+                <button id="add-test-case" class="btn btn-sm">
+                  <i class="fas fa-plus"></i> Add Test Case
+                </button>
+              </div>
+            </div>
+            
+            <div id="test-cases-list" class="test-cases-list">
+              <!-- Test cases will be added here -->
+            </div>
+          </div>
+          
+          <!-- Submission Result -->
+          <div id="submission-result" class="submission-result" style="display: none;">
+            <div class="result-header">
+              <h3>Result</h3>
+              <span id="submission-status-badge" class="status-badge">Pending</span>
+            </div>
+            <div id="result-details" class="result-details">
+              <!-- Result details will be shown here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div id="loading-spinner" class="spinner-overlay" style="display: none;">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/clike/clike.min.js"></script>
   <script src="participant.js"></script>
 </body>
 </html>
