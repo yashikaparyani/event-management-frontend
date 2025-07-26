@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage SpeedCode Problems</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <h1>Manage SpeedCode Problems</h1>
+  
+  <!-- Problem List -->
+  <section id="problems-list-section">
+    <h2>Current Problems</h2>
+    <ul id="problems-list"></ul>
+  </section>
+
+  <!-- Add/Edit Problem Form -->
+  <section id="problem-form-section">
+    <h2 id="form-title">Add New Problem</h2>
+    <form id="problem-form">
+      <input type="hidden" id="problem-id" value="">
+      <label>Title: <input type="text" id="title" required></label><br>
+      <label>Description:<br>
+        <textarea id="description" required></textarea>
+      </label><br>
+      <label>Sample Input:<br>
+        <textarea id="sample-input"></textarea>
+      </label><br>
+      <label>Sample Output:<br>
+        <textarea id="sample-output"></textarea>
+      </label><br>
+      <label>Time Limit (seconds): <input type="number" id="time-limit" min="1" value="1"></label><br>
+      <label>Difficulty:
+        <select id="difficulty">
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
+      </label><br>
+      <label>Test Cases (JSON Array):<br>
+        <textarea id="test-cases" placeholder='[{"input":"1 2","output":"3","isHidden":false}]'></textarea>
+      </label><br>
+      <button type="submit" id="submit-btn">Add Problem</button>
+      <button type="button" id="cancel-btn" style="display:none;">Cancel</button>
+    </form>
+  </section>
+
+  <script src="manage.js"></script>
+</body>
+</html>

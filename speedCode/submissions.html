@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SpeedCode Submissions</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <h1>SpeedCode Submissions & Leaderboard</h1>
+  <section>
+    <label>Problem:
+      <select id="problem-filter"></select>
+    </label>
+    <button id="refresh-btn">Refresh</button>
+  </section>
+  <section>
+    <h2>Submissions</h2>
+    <table border="1" id="submissions-table">
+      <thead>
+        <tr>
+          <th>Participant</th>
+          <th>Problem</th>
+          <th>Result</th>
+          <th>Score</th>
+          <th>Submitted At</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+  <section>
+    <h2>Leaderboard</h2>
+    <div id="leaderboard"></div>
+  </section>
+  <script src="submissions.js"></script>
+</body>
+</html>

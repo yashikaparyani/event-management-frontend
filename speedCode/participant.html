@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SpeedCode - Participate</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <h1>SpeedCode Event</h1>
+  <section id="problems-section">
+    <h2>Problems</h2>
+    <div id="problems-list"></div>
+  </section>
+  <section id="submission-section" style="display:none;">
+    <h2 id="problem-title"></h2>
+    <pre id="problem-description"></pre>
+    <form id="submission-form">
+      <label>Language:
+        <select id="language">
+          <option value="python">Python</option>
+          <option value="cpp">C++</option>
+          <option value="java">Java</option>
+        </select>
+      </label><br>
+      <label>Your Code:<br>
+        <textarea id="code" rows="10" cols="60" required></textarea>
+      </label><br>
+      <button type="submit">Submit Code</button>
+      <button type="button" id="back-btn">Back to Problems</button>
+    </form>
+    <div id="submission-result"></div>
+  </section>
+  <script src="participant.js"></script>
+</body>
+</html>

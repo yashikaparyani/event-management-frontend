@@ -60,11 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 </button>
                             ` : ''}
 
-                            ${event.type === 'CodecRaze' ? `
-                                <button class="btn btn-primary" onclick="manageCodecRaze('${event._id}', '${event.title}')">
-                                    <i class="fas fa-code"></i> Manage Codec Raze
-                                </button>
-                            ` : ''}
+
                         </div>
                     </div>
                 `).join('');
