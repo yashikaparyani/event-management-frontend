@@ -122,3 +122,64 @@ h1{
 .toggle-btn:hover {
     background: #0056b3;
 }
+#event-controls-section {
+    max-width: 700px;
+    margin: 2rem auto 1.5rem auto;
+    background: #f9fafb;
+    padding: 1.5rem 2rem;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px #0001;
+}
+#event-controls-status {
+    font-size: 1.1em;
+    margin-bottom: 0.8em;
+}
+#event-controls-actions .toggle-btn {
+    margin: 0 0.5em 0.5em 0;
+}
+#export-csv-btn, #export-json-btn {
+    margin: 0 0.5em 1em 0;
+}
+#analytics-section {
+    max-width: 700px;
+    margin: 2rem auto 1.5rem auto;
+    background: #f5f7fa;
+    padding: 1.5rem 2rem;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px #0001;
+}
+#analytics-content {
+    font-size: 1.05em;
+    margin-bottom: 0.8em;
+}
+#submissions-table td button {
+    padding: 0.2em 0.6em;
+    margin: 0 0.2em;
+    font-size: 0.95em;
+}
+#test-cases-modal {
+    max-width: 600px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px #0003;
+    padding: 2em;
+    z-index: 1000;
+}
+#modal-overlay {
+    background: #0005;
+    z-index: 999;
+}
+.spinner {
+    border: 8px solid #eee;
+    border-top: 8px solid #007bff;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    100% { transform: rotate(360deg); }
+  }
+  #global-spinner {
+    display: none;
+  }
