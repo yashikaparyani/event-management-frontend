@@ -59,6 +59,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     <i class="fas fa-comments"></i> Manage Debate
                                 </button>
                             ` : ''}
+                            ${event.type === 'SpeedCode' || event.title.toLowerCase().includes('speedcode') ? `
+                                <button class="btn btn-primary" onclick="manageSpeedCode('${event._id}', '${event.title}')">
+                                    <i class="fas fa-bolt"></i> Manage SpeedCode
+                                </button>
+                            ` : ''}
 
 
                         </div>
@@ -102,16 +107,16 @@ function managePoetry(eventId, eventTitle) {
     window.location.href = 'poetry/manage.html?eventId=' + eventId;
 }
 
-// Add the manageCodecRaze function
-function manageCodecRaze(eventId, eventTitle) {
-    localStorage.setItem('currentCodecRazeEventId', eventId);
-    localStorage.setItem('currentEventTitle', eventTitle);
-    window.location.href = 'codecraze/problems.html?eventId=' + eventId;
-}
+
 
 // Add the manageDebate function
 function manageDebate(eventId, eventTitle) {
     localStorage.setItem('currentDebateEventId', eventId);
     localStorage.setItem('currentEventTitle', eventTitle);
     window.location.href = 'debate/setup.html?eventId=' + eventId;
+}
+function manageSpeedCode(eventId, eventTitle) {
+    localStorage.setItem('currentSpeedCodeEventId', eventId);
+    localStorage.setItem('currentEventTitle', eventTitle);
+    window.location.href = '/speedCode/manage.html?eventId=' + eventId;
 }
