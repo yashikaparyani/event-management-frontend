@@ -32,9 +32,18 @@ async function fetchProblems() {
         list.innerHTML = '';
         problems.forEach(problem => {
             const li = document.createElement('li');
-            li.innerHTML = `<b>${problem.title}</b> (${problem.difficulty})
-                <button onclick="editProblem('${problem._id}')">Edit</button>
-                <button onclick="deleteProblem('${problem._id}')">Delete</button>`;
+            li.className = 'problem-card';
+            li.innerHTML = `
+                <div class="problem-info">
+                    <span class="problem-title">${problem.title}</span>
+                    <span class="problem-difficulty">${problem.difficulty}</span>
+                    <div style="font-size:0.95em;color:#555;margin-top:0.3em;">${problem.description || ''}</div>
+                </div>
+                <div class="problem-actions">
+                    <button onclick="editProblem('${problem._id}')">Edit</button>
+                    <button class="delete" onclick="deleteProblem('${problem._id}')">Delete</button>
+                </div>
+            `;
             list.appendChild(li);
         });
     } catch (err) {
