@@ -166,6 +166,95 @@ document.getElementById('problem-form').addEventListener('submit', async functio
         }
     }
 });
+// Toggle between manage and submissions
+document.getElementById('manage-problems-btn').onclick = function() {
+    document.getElementById('problem-form-section').style.display = '';
+    document.getElementById('problems-list-section').style.display = '';
+    document.getElementById('submissions-section').style.display = 'none';
+};
+document.getElementById('view-submissions-btn').onclick = function() {
+    document.getElementById('problem-form-section').style.display = 'none';
+    document.getElementById('problems-list-section').style.display = 'none';
+    document.getElementById('submissions-section').style.display = '';
+    fetchProblemsForSubmissions();
+    fetchSubmissions();
+};
+
+// Submissions logic (from submissions.js)
+let submissionProblems = [];
+
+async function fetchProblemsForSubmissions() {
+    const { token } = getAuth();
+    const eventId = getEventId();
+    const res = await fetch(`/api/speedcode/problems/${eventId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    submissionProblems = await res.json();
+    const select = document.getElementById('problem-filter');
+    select.innerHTML = `<option value="">All Problems</option>`;
+    submissionProblems.forEach(p => {
+        select.innerHTML += `<option value="${p._id}">${p.title}</option>`;
+    });
+}
+
+async function fetchSubmissions() {
+    const { token } = getAuth();
+    const eventId = getEventId();
+    const problemId = document.getElementById('problem-filter').value;
+    let url = `/api/speedcode/submissions?eventId=${eventId}`;
+    if (problemId) url += `&problemId=${problemId}`;
+    const res = await fetch(url, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const submissions = await res.json();
+    renderSubmissions(submissions);
+    renderLeaderboard(submissions);
+}
+
+function renderSubmissions(submissions) {
+    const tbody = document.querySelector('#submissions-table tbody');
+    tbody.innerHTML = '';
+    submissions.forEach(sub => {
+        tbody.innerHTML += `<tr>
+            <td>${sub.participantId?.name || 'N/A'}</td>
+            <td>${sub.problemId?.title || 'N/A'}</td>
+            <td>${sub.result}</td>
+            <td>${sub.score}</td>
+            <td>${new Date(sub.submittedAt).toLocaleString()}</td>
+        </tr>`;
+    });
+}
+
+function renderLeaderboard(submissions) {
+    // Simple leaderboard: sum of best scores per participant
+    const leaderboard = {};
+    submissions.forEach(sub => {
+        const user = sub.participantId?.name || 'N/A';
+        if (!leaderboard[user]) leaderboard[user] = {};
+        const pid = sub.problemId?._id || '';
+        if (!leaderboard[user][pid] || sub.score > leaderboard[user][pid]) {
+            leaderboard[user][pid] = sub.score;
+        }
+    });
+    // Compute total scores
+    const scores = [];
+    for (const user in leaderboard) {
+        let total = 0;
+        for (const pid in leaderboard[user]) total += leaderboard[user][pid];
+        scores.push({ user, total });
+    }
+    scores.sort((a, b) => b.total - a.total);
+    let html = '<ol>';
+    scores.forEach(s => {
+        html += `<li><b>${s.user}</b>: ${s.total} pts</li>`;
+    });
+    html += '</ol>';
+    document.getElementById('leaderboard').innerHTML = html;
+}
+
+// Event listeners for filter and refresh
+document.getElementById('refresh-btn').onclick = fetchSubmissions;
+document.getElementById('problem-filter').onchange = fetchSubmissions;
 
 // Fetch problems on page load
 window.onload = fetchProblems;

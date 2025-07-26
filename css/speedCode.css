@@ -1,4 +1,7 @@
 /* --- SpeedCode Manage Page Styles --- */
+h1{
+    text-align: center;
+}
 #problems-list-section, #problem-form-section {
     max-width: 700px;
     margin: 2rem auto;
@@ -38,7 +41,7 @@
 }
 
 #problems-list button[style*="color:red"] {
-    background: #e74c3c;
+    background: #a83e32;
 }
 
 #problems-list button:hover {
@@ -76,5 +79,46 @@
 }
 
 #problem-form-section button:hover {
+    background: #0056b3;
+}
+/* --- Submissions Table and Leaderboard Styles --- */
+#submissions-section {
+    max-width: 900px;
+    margin: 2rem auto;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #0001;
+}
+#submissions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+#submissions-table th, #submissions-table td {
+    border: 1px solid #e2e8f0;
+    padding: 0.7em 1em;
+    text-align: center;
+}
+#submissions-table th {
+    background: #f0f2f5;
+    font-weight: 700;
+}
+#leaderboard {
+    margin-top: 1.5rem;
+    font-size: 1.15em;
+}
+.toggle-btn {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 0.7em 2em;
+    border-radius: 6px;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin: 0 0.5em;
+    transition: background 0.2s;
+}
+.toggle-btn:hover {
     background: #0056b3;
 }

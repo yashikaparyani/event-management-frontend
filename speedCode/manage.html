@@ -44,6 +44,34 @@
       <button type="button" id="cancel-btn" style="display:none;">Cancel</button>
     </form>
   </section>
+  <!-- Toggle Buttons -->
+<div id="toggle-section" style="text-align:center;margin:2em 0;">
+    <button id="manage-problems-btn" class="toggle-btn">Manage Problems</button>
+    <button id="view-submissions-btn" class="toggle-btn">View Submissions</button>
+  </div>
+  
+  <!-- Submissions Section (initially hidden) -->
+  <section id="submissions-section" style="display:none;">
+    <h2>Submissions</h2>
+    <label>Problem:
+      <select id="problem-filter"></select>
+    </label>
+    <button id="refresh-btn">Refresh</button>
+    <table id="submissions-table">
+      <thead>
+        <tr>
+          <th>Participant</th>
+          <th>Problem</th>
+          <th>Result</th>
+          <th>Score</th>
+          <th>Submitted At</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <h2>Leaderboard</h2>
+    <div id="leaderboard"></div>
+  </section>
 
   <script src="manage.js"></script>
 </body>
