@@ -4,189 +4,47 @@
   <meta charset="UTF-8">
   <title>Manage SpeedCode Problems</title>
   <link rel="stylesheet" href="../css/style.css">
-  <style>
-    body {
-      background: #f3f4f7;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    .sc-container {
-      max-width: 800px;
-      margin: 2rem auto;
-      background: #fff;
-      padding: 2.5rem 2rem 2rem 2rem;
-      border-radius: 14px;
-      box-shadow: 0 2px 12px #0002;
-    }
-    h1, h2, h3 {
-      color: #2c3e50;
-      margin-top: 0;
-    }
-    .sc-current {
-      margin-bottom: 2.5rem;
-    }
-    .problem-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .problem-card {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      padding: 1rem 1.2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .problem-info {
-      flex: 1;
-    }
-    .problem-title {
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: #007bff;
-    }
-    .problem-difficulty {
-      font-size: 0.95em;
-      color: #888;
-      margin-left: 0.5em;
-      background: #e3eafe;
-      padding: 0.1em 0.6em;
-      border-radius: 1em;
-    }
-    .problem-actions button {
-      margin-left: 0.5em;
-      border: none;
-      background: #007bff;
-      color: #fff;
-      padding: 0.3em 0.9em;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 0.97em;
-      transition: background 0.2s;
-    }
-    .problem-actions button.delete {
-      background: #e74c3c;
-    }
-    .problem-actions button:hover {
-      background: #0056b3;
-    }
-    .problem-actions button.delete:hover {
-      background: #c0392b;
-    }
-    .sc-form-section {
-      background: #f8fafc;
-      padding: 1.5rem;
-      border-radius: 10px;
-      border: 1px solid #e2e8f0;
-    }
-    .sc-form-row {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .sc-form-row .sc-field {
-      flex: 1;
-    }
-    .sc-field {
-      margin-bottom: 1rem;
-      display: flex;
-      flex-direction: column;
-    }
-    .sc-field label {
-      font-weight: 500;
-      margin-bottom: 0.3em;
-      color: #34495e;
-    }
-    .sc-field input, .sc-field textarea, .sc-field select {
-      padding: 0.5em;
-      border: 1px solid #bfc9d1;
-      border-radius: 5px;
-      font-size: 1em;
-      resize: vertical;
-    }
-    .sc-form-btn {
-      background: #007bff;
-      color: #fff;
-      border: none;
-      padding: 0.7em 2em;
-      border-radius: 6px;
-      font-size: 1.1em;
-      cursor: pointer;
-      margin-top: 0.5em;
-      transition: background 0.2s;
-    }
-    .sc-form-btn:hover {
-      background: #0056b3;
-    }
-    .sc-alert {
-      background: #eafaf1;
-      color: #218838;
-      border: 1px solid #b7e3cd;
-      border-radius: 6px;
-      padding: 0.7em 1em;
-      margin-bottom: 1em;
-      font-size: 1em;
-    }
-  </style>
 </head>
 <body>
-  <div class="sc-container">
-    <h1>Manage SpeedCode Problems</h1>
-    
-    <section class="sc-current">
-      <h2>Current Problems</h2>
-      <ul id="problems-list" class="problem-list"></ul>
-    </section>
+  <h1>Manage SpeedCode Problems</h1>
+  
+  <!-- Problem List -->
+  <section id="problems-list-section">
+    <h2>Current Problems</h2>
+    <ul id="problems-list"></ul>
+  </section>
 
-    <section class="sc-form-section">
-      <h2 id="form-title">Add New Problem</h2>
-      <form id="problem-form">
-        <input type="hidden" id="problem-id" value="">
-        <div class="sc-field">
-          <label for="title">Title</label>
-          <input type="text" id="title" required placeholder="e.g. Simple Sum">
-        </div>
-        <div class="sc-field">
-          <label for="description">Description</label>
-          <textarea id="description" required rows="3" placeholder="Describe the problem..."></textarea>
-        </div>
-        <div class="sc-form-row">
-          <div class="sc-field">
-            <label for="sample-input">Sample Input</label>
-            <textarea id="sample-input" rows="2" placeholder="e.g. 3 5"></textarea>
-          </div>
-          <div class="sc-field">
-            <label for="sample-output">Sample Output</label>
-            <textarea id="sample-output" rows="2" placeholder="e.g. 8"></textarea>
-          </div>
-        </div>
-        <div class="sc-form-row">
-          <div class="sc-field">
-            <label for="time-limit">Time Limit (seconds)</label>
-            <input type="number" id="time-limit" value="1" min="1" required>
-          </div>
-          <div class="sc-field">
-            <label for="difficulty">Difficulty</label>
-            <select id="difficulty">
-              <option>Easy</option>
-              <option>Medium</option>
-              <option>Hard</option>
-            </select>
-          </div>
-        </div>
-        <div class="sc-field">
-          <label for="test-cases">Test Cases (JSON Array)</label>
-          <textarea id="test-cases" rows="4" placeholder='[{"input":"3 5","expectedOutput":"8"}]'></textarea>
-        </div>
-        <button type="submit" class="sc-form-btn">Add Problem</button>
-        <button type="button" id="cancel-edit" class="sc-form-btn" style="background:#888;display:none;">Cancel</button>
-      </form>
-    </section>
-  </div>
+  <!-- Add/Edit Problem Form -->
+  <section id="problem-form-section">
+    <h2 id="form-title">Add New Problem</h2>
+    <form id="problem-form">
+      <input type="hidden" id="problem-id" value="">
+      <label>Title: <input type="text" id="title" required></label><br>
+      <label>Description:<br>
+        <textarea id="description" required></textarea>
+      </label><br>
+      <label>Sample Input:<br>
+        <textarea id="sample-input"></textarea>
+      </label><br>
+      <label>Sample Output:<br>
+        <textarea id="sample-output"></textarea>
+      </label><br>
+      <label>Time Limit (seconds): <input type="number" id="time-limit" min="1" value="1"></label><br>
+      <label>Difficulty:
+        <select id="difficulty">
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
+      </label><br>
+      <label>Test Cases (JSON Array):<br>
+        <textarea id="test-cases" placeholder='[{"input":"1 2","output":"3","isHidden":false}]'></textarea>
+      </label><br>
+      <button type="submit" id="submit-btn">Add Problem</button>
+      <button type="button" id="cancel-btn" style="display:none;">Cancel</button>
+    </form>
+  </section>
+
   <script src="manage.js"></script>
 </body>
 </html>
