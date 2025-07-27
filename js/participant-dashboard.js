@@ -1,5 +1,91 @@
 // participant-dashboard.js
 
+// Show toast notification
+function showToast(message, type = 'info', duration = 3000) {
+    // Create toast container if it doesn't exist
+    let toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.style.position = 'fixed';
+        toastContainer.style.bottom = '20px';
+        toastContainer.style.right = '20px';
+        toastContainer.style.zIndex = '1000';
+        document.body.appendChild(toastContainer);
+    }
+    
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.style.minWidth = '250px';
+    toast.style.padding = '12px 20px';
+    toast.style.marginBottom = '10px';
+    toast.style.borderRadius = '4px';
+    toast.style.color = 'white';
+    toast.style.display = 'flex';
+    toast.style.justifyContent = 'space-between';
+    toast.style.alignItems = 'center';
+    toast.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+    
+    // Set background color based on type
+    const colors = {
+        success: '#4CAF50',
+        error: '#F44336',
+        warning: '#FF9800',
+        info: '#2196F3'
+    };
+    toast.style.backgroundColor = colors[type] || colors.info;
+    
+    // Add message
+    const messageSpan = document.createElement('span');
+    messageSpan.textContent = message;
+    toast.appendChild(messageSpan);
+    
+    // Add close button
+    const closeButton = document.createElement('button');
+    closeButton.innerHTML = '&times;';
+    closeButton.style.background = 'none';
+    closeButton.style.border = 'none';
+    closeButton.style.color = 'white';
+    closeButton.style.fontSize = '20px';
+    closeButton.style.cursor = 'pointer';
+    closeButton.style.marginLeft = '15px';
+    closeButton.style.padding = '0';
+    closeButton.style.width = '20px';
+    closeButton.style.height = '20px';
+    closeButton.style.display = 'flex';
+    closeButton.style.alignItems = 'center';
+    closeButton.style.justifyContent = 'center';
+    closeButton.style.lineHeight = '1';
+    
+    closeButton.onclick = () => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    };
+    
+    toast.appendChild(closeButton);
+    
+    // Add to container
+    toastContainer.appendChild(toast);
+    
+    // Animate in
+    setTimeout(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+    }, 10);
+    
+    // Auto-remove after duration
+    if (duration > 0) {
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(20px)';
+            setTimeout(() => toast.remove(), 300);
+        }, duration);
+    }
+    
+    return toast;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Load all events when the All Events section is shown
     const allEventsSection = document.getElementById('all-events-section');
