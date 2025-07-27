@@ -170,6 +170,9 @@ async function registerForEvent(eventId) {
             registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registering...';
         }
         
+        console.log('Attempting to register for event:', eventId);
+        console.log('Sending user data:', { userId: user.id, email: user.email });
+        
         const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.REGISTER(eventId)), {
             method: 'POST',
             headers: {
@@ -182,7 +185,16 @@ async function registerForEvent(eventId) {
             })
         });
         
-        const result = await response.json();
+        const result = await response.json().catch(e => ({
+            error: 'Failed to parse response',
+            details: e.message
+        }));
+        
+        console.log('Registration response:', {
+            status: response.status,
+            statusText: response.statusText,
+            result: result
+        });
         
         if (response.ok && result.success) {
             showToast('Registered successfully!', 'success');
