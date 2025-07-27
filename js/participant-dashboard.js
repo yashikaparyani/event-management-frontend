@@ -88,8 +88,13 @@ async function registerForEvent(eventId) {
             });
             const eventDetails = await eventResponse.json();
             
-            // Registration successful, refresh registered events
-            loadRegisteredEvents();
+            // Redirect based on event type
+            if (eventDetails.type === 'Poetry') {
+                window.location.href = `poetry/index.html?eventId=${eventId}`;
+            } else if (eventDetails.type === 'Debate') {
+                window.location.href = `../debate/participant.html?eventId=${eventId}`;
+            } else {
+                loadRegisteredEvents();
             }
         } else {
             alert(result.message || 'Failed to register for event.');
