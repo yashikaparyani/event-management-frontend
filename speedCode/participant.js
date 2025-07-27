@@ -189,7 +189,7 @@ function showToast(message, type = 'info', duration = 3000) {
 
 // Fetch and display all problems for this event
 async function fetchProblems() {
-    const { token } = getAuth();
+    const { token, user } = getAuth();
     const eventId = getEventId();
     
     if (!eventId) {
@@ -200,6 +200,47 @@ async function fetchProblems() {
     showSpinner(true);
     
     try {
+        // First, check if user is registered for this event
+        const eventRes = await fetch(`/api/events/${eventId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (!eventRes.ok) {
+            const error = await eventRes.json().catch(() => ({}));
+            throw new Error(error.message || 'Failed to fetch event details');
+        }
+        
+        const event = await eventRes.json();
+        const isRegistered = event.registeredParticipants && 
+                            event.registeredParticipants.includes(user.id);
+        
+        if (!isRegistered) {
+            // Show registration prompt
+            if (confirm('You need to register for this event first. Would you like to register now?')) {
+                // Register the user
+                const registerRes = await fetch(`/api/events/${eventId}/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ email: user.email })
+                });
+                
+                if (!registerRes.ok) {
+                    const error = await registerRes.json().catch(() => ({}));
+                    throw new Error(error.message || 'Failed to register for event');
+                }
+                
+                showToast('Successfully registered for the event!', 'success');
+            } else {
+                // If user chooses not to register, redirect to events page
+                window.location.href = '/events.html';
+                return;
+            }
+        }
+        
+        // Fetch problems if registered
         const res = await fetch(`/api/speedcode/problems/${eventId}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -216,7 +257,9 @@ async function fetchProblems() {
         await fetchEventControls();
     } catch (err) {
         showToast(err.message, 'error');
-        console.error('Error fetching problems:', err);
+        console.error('Error:', err);
+        // Redirect to events page on error
+        setTimeout(() => window.location.href = '/events.html', 2000);
     } finally {
         showSpinner(false);
     }
