@@ -68,39 +68,83 @@ async function loadAllEvents() {
 async function registerForEvent(eventId) {
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
+    
+    if (!user || !user.id) {
+        alert('User information is missing. Please log in again.');
+        window.location.href = '/login.html';
+        return;
+    }
+    
     try {
+        // Show loading state
+        const registerBtn = document.querySelector(`button[onclick*="registerForEvent('${eventId}')"]`);
+        const originalBtnText = registerBtn?.innerHTML || 'Register';
+        if (registerBtn) {
+            registerBtn.disabled = true;
+            registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registering...';
+        }
+        
         const response = await fetch(getApiUrl(config.ENDPOINTS.EVENTS.REGISTER(eventId)), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ email: user.email }) // Send email as required by backend
+            body: JSON.stringify({ 
+                userId: user.id,
+                email: user.email 
+            })
         });
+        
         const result = await response.json();
-        if (response.ok) {
-            alert('Registered successfully!');
-            // Get event details to check event type
-            const eventResponse = await fetch(getApiUrl(`/api/events/${eventId}`), {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            const eventDetails = await eventResponse.json();
+        
+        if (response.ok && result.success) {
+            showToast('Registered successfully!', 'success');
             
-            // Redirect based on event type
-            if (eventDetails.type === 'Poetry') {
-                window.location.href = `poetry/index.html?eventId=${eventId}`;
-            } else if (eventDetails.type === 'Debate') {
-                window.location.href = `../debate/participant.html?eventId=${eventId}`;
-            } else {
+            // Get event details to check event type
+            try {
+                const eventResponse = await fetch(getApiUrl(`/api/events/${eventId}`), {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (eventResponse.ok) {
+                    const eventDetails = await eventResponse.json();
+                    
+                    // Small delay for better UX
+                    setTimeout(() => {
+                        // Redirect based on event type
+                        if (eventDetails.type === 'Poetry') {
+                            window.location.href = `poetry/index.html?eventId=${eventId}`;
+                        } else if (eventDetails.type === 'Debate') {
+                            window.location.href = `../debate/participant.html?eventId=${eventId}`;
+                        } else if (eventDetails.type === 'codecRaze') {
+                            window.location.href = `../speedCode/participant.html?eventId=${eventId}`;
+                        } else {
+                            loadRegisteredEvents();
+                        }
+                    }, 1000);
+                } else {
+                    loadRegisteredEvents();
+                }
+            } catch (e) {
+                console.error('Error fetching event details:', e);
                 loadRegisteredEvents();
             }
         } else {
-            alert(result.message || 'Failed to register for event.');
+            showToast(result.message || 'Failed to register for event.', 'error');
+            if (registerBtn) {
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = originalBtnText;
+            }
         }
     } catch (error) {
-        alert('Error registering for event.');
+        console.error('Registration error:', error);
+        showToast('Error registering for event. Please try again.', 'error');
+        const registerBtn = document.querySelector(`button[onclick*="registerForEvent('${eventId}')"]`);
+        if (registerBtn) {
+            registerBtn.disabled = false;
+            registerBtn.innerHTML = 'Register';
+        }
     }
 }
 

@@ -59,9 +59,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     <i class="fas fa-comments"></i> Manage Debate
                                 </button>
                             ` : ''}
-                            ${event.type === 'SpeedCode' || event.title.toLowerCase().includes('speedcode') ? `
+                            ${event.type === 'codecRaze' ? `
                                 <button class="btn btn-primary" onclick="manageSpeedCode('${event._id}', '${event.title}')">
-                                    <i class="fas fa-bolt"></i> Manage SpeedCode
+                                    <i class="fas fa-bolt"></i> Manage CodeCraze
                                 </button>
                             ` : ''}
 
