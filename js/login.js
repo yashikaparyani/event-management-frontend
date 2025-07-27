@@ -35,7 +35,7 @@ function redirectToDashboard(roleName) {
             redirectUrl = 'audience-dashboard.html';
             break;
         default:
-            redirectUrl = 'home.html';
+            redirectUrl = 'index.html';
     }
     
     console.log('Performing redirect to:', redirectUrl);

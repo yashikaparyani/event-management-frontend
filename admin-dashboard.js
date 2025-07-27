@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (user.role.name !== 'admin') {
-        window.location.href = 'home.html';
+        window.location.href = 'index.html';
         return;
     }
 
