@@ -838,9 +838,70 @@ function init() {
         window.location.href = '/login.html';
         return;
     }
-    
-    // Load problems
-    fetchProblems();
+
+    // Registration check and logic
+    const eventId = getEventId();
+    async function checkRegistration() {
+        try {
+            const res = await fetch(`/api/events/${eventId}` , {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Failed to fetch event info');
+            const event = await res.json();
+            // If user is registered, proceed
+            if (event.registeredParticipants && event.registeredParticipants.includes(user._id || user.id)) {
+                document.getElementById('problems-section').style.display = '';
+                document.getElementById('problem-view').style.display = 'none';
+                fetchProblems();
+            } else {
+                // Block UI and show registration button
+                document.getElementById('problems-section').style.display = 'none';
+                document.getElementById('problem-view').style.display = 'none';
+                let regDiv = document.getElementById('registration-block');
+                if (!regDiv) {
+                    regDiv = document.createElement('div');
+                    regDiv.id = 'registration-block';
+                    regDiv.style.textAlign = 'center';
+                    regDiv.innerHTML = `<h2>You are not registered for this event.</h2><button id="register-btn" class="btn btn-primary">Register for Speed Code</button>`;
+                    document.querySelector('.container').prepend(regDiv);
+                } else {
+                    regDiv.style.display = '';
+                }
+                document.getElementById('register-btn').onclick = async function() {
+                    this.disabled = true;
+                    this.textContent = 'Registering...';
+                    try {
+                        const regRes = await fetch(`/api/events/${eventId}/register`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({ email: user.email })
+                        });
+                        const regResult = await regRes.json();
+                        if (regRes.ok) {
+                            showToast('Registered successfully!', 'success');
+                            regDiv.remove();
+                            document.getElementById('problems-section').style.display = '';
+                            fetchProblems();
+                        } else {
+                            showToast(regResult.message || 'Registration failed', 'error');
+                            this.disabled = false;
+                            this.textContent = 'Register for Speed Code';
+                        }
+                    } catch (err) {
+                        showToast('Registration error', 'error');
+                        this.disabled = false;
+                        this.textContent = 'Register for Speed Code';
+                    }
+                };
+            }
+        } catch (err) {
+            showToast('Error checking registration', 'error');
+        }
+    }
+    checkRegistration();
 }
 
 // Start the application when the DOM is loaded
