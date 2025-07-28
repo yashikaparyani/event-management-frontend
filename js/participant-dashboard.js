@@ -185,18 +185,22 @@ async function registerForEvent(eventId) {
             })
         });
         
-        const result = await response.json().catch(e => ({
-            error: 'Failed to parse response',
-            details: e.message
-        }));
+        let result;
+        try {
+            result = await response.json();
+            console.log('Registration response:', {
+                status: response.status,
+                statusText: response.statusText,
+                result: result
+            });
+        } catch (e) {
+            console.error('Failed to parse response:', e);
+            const text = await response.text();
+            console.error('Raw response text:', text);
+            throw new Error(`Failed to parse server response: ${text}`);
+        }
         
-        console.log('Registration response:', {
-            status: response.status,
-            statusText: response.statusText,
-            result: result
-        });
-        
-        if (response.ok && result.success) {
+        if (response.ok && result && result.success) {
             showToast('Registered successfully!', 'success');
             
             // Get event details to check event type
