@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="../css/speedCode.css">
+  
 </head>
 <body>
   <div class="container">
@@ -45,15 +46,16 @@
           <i class="fas fa-arrow-left"></i> Back to Problems
         </button>
         <h2 id="problem-title">Problem Title</h2>
-        <div class="problem-meta">
+        <div id="problem-meta" class="problem-meta">
           <span class="difficulty-badge" id="problem-difficulty">Medium</span>
           <span class="time-limit"><i class="far fa-clock"></i> 1s</span>
           <span class="memory-limit"><i class="fas fa-memory"></i> 256MB</span>
         </div>
       </div>
-
-      <div class="problem-container">
-        <!-- Problem Description -->
+      
+      <div class="problem-content">
+        <div id="problem-description" class="problem-description">
+          <!-- Problem description will be loaded here -->
         <div class="problem-description">
           <div class="tabs">
             <button class="tab-btn active" data-tab="description">Description</button>
